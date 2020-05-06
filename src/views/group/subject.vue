@@ -2,7 +2,7 @@
   <div>
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
-      <el-breadcrumb-item>年龄段管理</el-breadcrumb-item>
+      <el-breadcrumb-item>基础数据管理</el-breadcrumb-item>
       <el-breadcrumb-item>话题列表</el-breadcrumb-item>
     </el-breadcrumb>
 
@@ -28,7 +28,7 @@
         v-loading="listLoading"
         border
         element-loading-text="拼命加载中"
-        style="width: 541px;"
+        style="width: 661px;"
         @selection-change="selectionChange"
       >
         <el-table-column align="center" type="selection" width="60"></el-table-column>
@@ -41,9 +41,17 @@
             ></el-input>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="isShow" label="是否推荐" width="100">
+        <el-table-column align="center" prop="isShow" label="是否推荐(显示)" width="120">
           <template slot-scope="scope">
             <el-select v-model="scope.row.isShow" @change="changeisShow(scope.row)">
+              <el-option label="是" value="1"></el-option>
+              <el-option label="否" value="0"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="isTop" label="是否置顶" width="100">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.isTop" @change="changeIsTop(scope.row)">
               <el-option label="是" value="1"></el-option>
               <el-option label="否" value="0"></el-option>
             </el-select>
@@ -80,6 +88,12 @@
         </el-form-item>
         <el-form-item label="是否设为推荐" prop="isShow">
           <el-radio-group v-model="addForm.isShow">
+            <el-radio label="1">是</el-radio>
+            <el-radio label="0">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="是否置顶" prop="isTop">
+          <el-radio-group v-model="addForm.isTop">
             <el-radio label="1">是</el-radio>
             <el-radio label="0">否</el-radio>
           </el-radio-group>
@@ -126,7 +140,8 @@ export default {
       },
       addForm: {
         subjectName: "",
-        isShow: "0"
+        isShow: "0",
+        isTop: "0"
       },
       addrules: {
         subjectName: [
@@ -200,6 +215,11 @@ export default {
             } else if (element.isShow == 0) {
               element.isShow = "否";
             }
+            if (element.isTop == 1) {
+              element.isTop = "是";
+            } else if (element.isTop == 0) {
+              element.isTop = "否";
+            }
           });
         } else {
           this.listLoading = false;
@@ -224,14 +244,15 @@ export default {
       this.title = "新增";
       this.addForm = {
         subjectName: "",
-        isShow: "0"
+        isShow: "0",
+        isTop: "0"
       };
     },
     // 新增
     submitAdd(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          console.log(this.addForm);
+          console.log("addForm",this.addForm);
           const res = await subjectsAdd(this.addForm);
           if (res.status == 200) {
             this.addVisible = false;
@@ -302,7 +323,7 @@ export default {
         });
       }
     },
-    // 课程置顶
+    // 课程推荐（显示）
     async changeisShow(row) {
       console.log(row);
       var form = {
@@ -335,6 +356,41 @@ export default {
         console.log(err);
       }
     },
+
+    //课程置顶
+    async changeIsTop(row) {
+      console.log(row);
+      var form = {
+        subjectName: row.subjectName,
+        subjectId: row.subjectId,
+        isTop: row.isTop
+      };
+      console.log(form);
+      try {
+        const res = await subjectsPut(form);
+        console.log(res);
+        if (res.status == 200) {
+          this.$message({
+            type: "success",
+            message: "修改成功"
+          });
+          this.getSubject();
+        } else {
+          this.$message({
+            type: "error",
+            message: res.error
+          });
+          console.log(res);
+        }
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: "请重试"
+        });
+        console.log(err);
+      }
+    },
+
     closeDialog() {
       this.addVisible = false;
     },

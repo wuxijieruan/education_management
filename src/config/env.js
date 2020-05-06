@@ -4,13 +4,11 @@
 
 // let baseFileUrl = 'https://www.bolekids.com' //线上服务器
 
-// let baseUrl = 'http://192.168.3.151:4080/learn' //本地联调
-// 
-let baseUrl = 'https://zhjy.917tou.com/learn' //测试服务器
+//let baseUrl = 'https://zhjy.917tou.com/learn' //测试服务器
 
 let baseFileUrl = 'https://zhjy.917tou.com' //测试服务器
 
-// let baseUrl = 'http://192.168.0.129:8080/learn';// 本地服务器
+let baseUrl = 'http://127.0.0.1:8080/learn';// 本地服务器
 
 let imgUrl = baseFileUrl+'/file-local-1.0.0/img/upload'//上传图片接口
 

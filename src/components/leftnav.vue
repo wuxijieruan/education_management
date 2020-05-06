@@ -51,7 +51,7 @@ export default {
           {
             menuid: 2,
             icon: "li-icon-xiangmuguanli",
-            menuname: "年龄段管理",
+            menuname: "基本数据管理",
             hasThird: null,
             url: null,
             menus: [
