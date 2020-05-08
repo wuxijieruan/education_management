@@ -170,6 +170,7 @@ export default {
       this.form.currentPage = parm.currentPage;
       this.form.pageSize = parm.pageSize;
       this.actList();
+      console.log('this.form',this.form)
     },
     // 禁用
     async del(row) {
