@@ -150,7 +150,7 @@ export default {
     async actList() {
       try {
         this.listLoading = true;
-        console.log(this.form);
+        console.log("获取时this.form",this.form);
         const res = await actList(this.form);
         console.log(res);
         this.actsList = res.data.list;
@@ -167,7 +167,7 @@ export default {
     },
     // 分页插件事件
     callFather(parm) {
-      this.form.currentPage = parm.currentPage;
+      this.form.page = parm.currentPage;
       this.form.pageSize = parm.pageSize;
       this.actList();
       console.log('this.form',this.form)

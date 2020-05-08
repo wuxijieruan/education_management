@@ -73,11 +73,11 @@ import { actEdit,courseGet ,enterpriseGet } from "@/api/getData";
 export default {
   data() {
     return {
-      enterpriseGetList:[],
-      awb:{courseId:'',courseName:'无'},
-      asd:{enterpriseId:'',enterpriseName:'无'},
+      enterpriseGetList:[
+        {enterpriseId:'',enterpriseName:'无'}
+      ],
       subjectsGetList: [
-        
+        {courseId:'',courseName:'无'}
       ],
       ruleForm: {
         activityId:"",
@@ -107,8 +107,12 @@ export default {
         const res = await courseGet();
         if (res.status == 200) {
           console.log("课程列表", res.data);
-          res.data.list.push(this.awb)
-          this.subjectsGetList =res.data.list;
+          res.data.list.forEach(element => {
+            this.subjectsGetList.push(element)
+          })
+
+          
+          // this.subjectsGetList =res.data.list;
         } else {
           this.$message({
             type: "error",
@@ -130,8 +134,10 @@ export default {
         const res = await enterpriseGet();
         if (res.status == 200) {
           console.log("企业列表", res.data);
-          res.data.list.push(this.asd)
-          this.enterpriseGetList = res.data.list;
+           res.data.list.forEach(element => {
+            this.enterpriseGetList.push(element)
+          })
+         
         } else {
           this.$message({
             type: "error",
