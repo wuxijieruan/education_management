@@ -123,6 +123,23 @@ export default {
                 menus: null
               }
             ]
+          },
+          {
+            menuid: 5,
+            icon: "li-icon-xiangmuguanli",
+            menuname: "活动管理",
+            hasThird: null,
+            url: null,
+             menus: [
+              {
+                menuid: 51,
+                icon: "icon-cat-skuQuery",
+                menuname: "活动列表",
+                hasThird: "N",
+                url: "actList",
+                menus: null
+              }
+            ]
           }
         ],
         msg: "success"

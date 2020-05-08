@@ -70,3 +70,18 @@ export const adminresetPassword = (id, newPassword) => fetch('/resetPassword?id=
 export const getConStudentExercisesList = data => fetch('/userMessageManger/getConStudentExercisesList', data, 'GET') // 查看作业列表
 
 export const reviewStudentExercises = data => fetch('/userMessageManger/reviewStudentExercises', data, 'GET') // 审核作业
+
+
+
+//获取活动列表
+export const actList = data => fetch('/activity', data, 'GET') // 获取活动列表
+
+export const actAdd = data => fetch('/activity', data, 'POST') // 添加
+
+export const actEdit = data => fetch('/activity', data, 'PUT') // 修改
+
+export const actDel = id => fetch('/activity?ids=' + id , {}, 'DELETE') // 删除
+
+export const actDetail = courseId => fetch('/activity/' + courseId, {}, 'GET') // 根据id查看课程详情
+
+export const enterpriseGet = data => fetch('/enterprise', data, 'GET') // 查看企业

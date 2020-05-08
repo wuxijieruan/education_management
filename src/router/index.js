@@ -139,6 +139,42 @@ export default new Router({
             requireAuth: true
           }
         },
+        {
+          path: '/actList',
+          name: '课程资源包编辑',
+          component: resolve =>
+            require(['@/views/act/actList'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/actAdd',
+          name: '活动添加',
+          component: resolve =>
+            require(['@/views/act/actAdd'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/actEdit',
+          name: '活动编辑',
+          component: resolve =>
+            require(['@/views/act/actEdit'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/actDetial',
+          name: '活动详情',
+          component: resolve =>
+            require(['@/views/act/actDetial'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
       ]
     }
   ]
