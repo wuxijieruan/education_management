@@ -44,7 +44,7 @@
               <el-option
                 v-for="item in subjectsGetList"
                 :key="item.courseId"
-                :label="item.subjectName"
+                :label="item.courseName"
                 :value="item.courseId"
               ></el-option>
             </el-select>
@@ -74,7 +74,11 @@ export default {
   data() {
     return {
       enterpriseGetList:[],
-      subjectsGetList: [],
+      awb:{courseId:'',courseName:'无'},
+      asd:{enterpriseId:'',enterpriseName:'无'},
+      subjectsGetList: [
+        
+      ],
       ruleForm: {
         activityId:"",
         activityName: "",
@@ -103,7 +107,8 @@ export default {
         const res = await courseGet();
         if (res.status == 200) {
           console.log("课程列表", res.data);
-          this.subjectsGetList = res.data.list;
+          res.data.list.push(this.awb)
+          this.subjectsGetList =res.data.list;
         } else {
           this.$message({
             type: "error",
@@ -125,6 +130,7 @@ export default {
         const res = await enterpriseGet();
         if (res.status == 200) {
           console.log("企业列表", res.data);
+          res.data.list.push(this.asd)
           this.enterpriseGetList = res.data.list;
         } else {
           this.$message({

@@ -44,7 +44,7 @@
               <el-option
                 v-for="item in subjectsGetList"
                 :key="item.courseId"
-                :label="item.subjectName"
+                :label="item.courseName"
                 :value="item.courseId"
               ></el-option>
             </el-select>

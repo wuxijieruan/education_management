@@ -154,7 +154,7 @@ export default {
         const res = await actList(this.form);
         console.log(res);
         this.actsList = res.data.list;
-        // this.pageparm.total = res.total;
+        this.pageparm.total = res.data.total;
         console.log(this.actsList);
         // this.searchVisible = false; //搜索
       } catch (err) {
@@ -169,7 +169,7 @@ export default {
     callFather(parm) {
       this.form.currentPage = parm.currentPage;
       this.form.pageSize = parm.pageSize;
-      this.getAdmin();
+      this.actList();
     },
     // 禁用
     async del(row) {
