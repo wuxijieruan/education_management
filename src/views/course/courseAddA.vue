@@ -131,7 +131,11 @@
       >
         <el-table-column align="center" prop="fileName" label="音频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="音频地址"></el-table-column>
-        <el-table-column align="center" prop="coursePicUrl" label="封面地址" ></el-table-column>
+        <el-table-column align="center"   label="音频封面" >
+          <template>
+      　　　　<img v-if="audioform.coursePicUrl" :src="audioform.coursePicUrl" width="80" height="40" class="head_pic"/>
+      　　</template>
+        </el-table-column>
         <el-table-column align="center" prop="teacherName" label="主讲老师" width="150"></el-table-column>
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
@@ -826,6 +830,7 @@ export default {
           };
           this.audioEdit = false;
           this.audioVisible = false;
+          this.$forceUpdate()
         } else {
           this.$message({
             type: "error",
