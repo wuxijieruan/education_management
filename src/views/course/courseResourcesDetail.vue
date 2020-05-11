@@ -132,8 +132,8 @@
         <el-table-column align="center" prop="fileName" label="音频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="音频地址"></el-table-column>
         <el-table-column align="center"  label="音频封面" >
-          <template >
-      　　　　<img v-if="audioform.coursePicUrl" :src="audioform.coursePicUrl" width="80" height="40" class="head_pic"/>
+          <template slot-scope="scope">
+      　　　　<img v-if="scope.row.fileImgUrl" :src="scope.row.fileImgUrl" width="80" height="40" class="head_pic"/>
       　　</template>
         </el-table-column>
         <el-table-column align="center" prop="teacherName" label="主讲老师" width="150"></el-table-column>
@@ -280,7 +280,7 @@
             style="width:80%"
           ></el-input>
         </el-form-item>
-        <el-form-item label="封面图片" prop="coursePicUrl" style="display:block">
+        <el-form-item label="封面图片" prop="fileImgUrl" style="display:block">
           <el-upload
             class="avatar-uploader"
             :action="imgUrl"
@@ -288,7 +288,7 @@
             :on-success="vhandleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="audioform.coursePicUrl" :src="audioform.coursePicUrl" class="avatar" />
+            <img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为700*265</div>
           </el-upload>
