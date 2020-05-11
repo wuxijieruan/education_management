@@ -131,6 +131,8 @@
       >
         <el-table-column align="center" prop="fileName" label="音频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="音频地址"></el-table-column>
+        <el-table-column align="center" prop="coursePicUrl" label="封面地址" ></el-table-column>
+        <el-table-column align="center" prop="teacherName" label="主讲老师" width="150"></el-table-column>
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileContentTag" label="内容标签" width="100"></el-table-column>
@@ -272,6 +274,28 @@
             auto-complete="off"
             placeholder="请输入音频地址"
             style="width:80%"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="封面图片" prop="coursePicUrl" style="display:block">
+          <el-upload
+            class="avatar-uploader"
+            :action="imgUrl"
+            :show-file-list="false"
+            :on-success="vhandleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="audioform.coursePicUrl" :src="audioform.coursePicUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为700*265</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="主讲老师" prop="teacherName">
+          <el-input
+            size="small"
+            v-model="audioform.teacherName"
+            auto-complete="off"
+            placeholder="请输入主讲老师"
+            style="width:90%"
           ></el-input>
         </el-form-item>
         <el-form-item label="语种标签" prop="fileLanguageTag">
@@ -969,6 +993,12 @@ export default {
       console.log(file);
       this.pictureBookform.fileImgUrl = file.url;
       console.log(this.pictureBookform);
+    },
+     vhandleAvatarSuccess(file) {
+      console.log(file);
+      this.audioform.coursePicUrl = file.url;
+      console.log(this.audioform);
+      this.$forceUpdate()
     },
     uploadpictureBook() {
       //上传电子书

@@ -131,6 +131,8 @@
       >
         <el-table-column align="center" prop="fileName" label="音频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="音频地址"></el-table-column>
+        <el-table-column align="center" prop="coursePicUrl" label="封面地址" ></el-table-column>
+        <el-table-column align="center" prop="teacherName" label="主讲老师" width="150"></el-table-column>
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileContentTag" label="内容标签" width="100"></el-table-column>
@@ -273,6 +275,28 @@
             style="width:80%"
           ></el-input>
         </el-form-item>
+        <el-form-item label="封面图片" prop="coursePicUrl" style="display:block">
+          <el-upload
+            class="avatar-uploader"
+            :action="imgUrl"
+            :show-file-list="false"
+            :on-success="vhandleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="audioform.coursePicUrl" :src="audioform.coursePicUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为700*265</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="主讲老师" prop="teacherName">
+          <el-input
+            size="small"
+            v-model="audioform.teacherName"
+            auto-complete="off"
+            placeholder="请输入主讲老师"
+            style="width:90%"
+          ></el-input>
+        </el-form-item>
         <el-form-item label="语种标签" prop="fileLanguageTag">
           <el-input
             size="small"
@@ -313,55 +337,55 @@
       width="900px"
       :visible.sync="pictureBookVisible"
       @click="closepictureBookDialog"
-    >
-      <el-form
-        label-width="120px"
-        :model="pictureBookform"
-        ref="pictureBookform"
-        style="width:850px"
       >
-        <el-form-item label="* 电子书名称" prop="fileName">
-          <el-input
-            size="small"
-            v-model="pictureBookform.fileName"
-            auto-complete="off"
-            placeholder="请输入电子书名称"
-            style="width:90%"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="* 电子书地址" prop="fileUrl">
-          <input
-            type="file"
-            v-loading.fullscreen.lock="fullscreenLoading"
-            @change="uploadpictureBook($event)"
-            element-loading-text="拼命加载中，正在对上传文件进行技术处理，此过程可能需要几分钟，请耐心等待"
-          />
-          <el-input
-            size="small"
-            v-model="pictureBookform.fileUrl"
-            auto-complete="off"
-            placeholder="请输入电子书地址"
-            style="width:80%"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="* 绘本封面图片" prop="fileImgUrl">
-          <el-upload
-            class="avatar-uploader"
-            :action="imgUrl"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-          >
-            <img v-if="pictureBookform.fileImgUrl" :src="pictureBookform.fileImgUrl" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为265*265</div>
-          </el-upload>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="closepictureBookDialog">取消</el-button>
-        <el-button type="primary" @click="submitpictureBookUrl">确定</el-button>
-      </span>
+        <el-form
+          label-width="120px"
+          :model="pictureBookform"
+          ref="pictureBookform"
+          style="width:850px"
+        >
+          <el-form-item label="* 电子书名称" prop="fileName">
+            <el-input
+              size="small"
+              v-model="pictureBookform.fileName"
+              auto-complete="off"
+              placeholder="请输入电子书名称"
+              style="width:90%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="* 电子书地址" prop="fileUrl">
+            <input
+              type="file"
+              v-loading.fullscreen.lock="fullscreenLoading"
+              @change="uploadpictureBook($event)"
+              element-loading-text="拼命加载中，正在对上传文件进行技术处理，此过程可能需要几分钟，请耐心等待"
+            />
+            <el-input
+              size="small"
+              v-model="pictureBookform.fileUrl"
+              auto-complete="off"
+              placeholder="请输入电子书地址"
+              style="width:80%"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="* 绘本封面图片" prop="fileImgUrl">
+            <el-upload
+              class="avatar-uploader"
+              :action="imgUrl"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+            >
+              <img v-if="pictureBookform.fileImgUrl" :src="pictureBookform.fileImgUrl" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为265*265</div>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="closepictureBookDialog">取消</el-button>
+          <el-button type="primary" @click="submitpictureBookUrl">确定</el-button>
+        </span>
     </el-dialog>
   </div>
 </template>
@@ -406,6 +430,8 @@ export default {
       Videoform: {
         fileName: "",
         fileUrl: "",
+        coursePicUrl:'',
+        teacherName:'',
         fileLanguageTag: "",
         fileSceneTypeTag: "",
         fileContentTag: ""
@@ -414,6 +440,8 @@ export default {
       audioform: {
         fileName: "",
         fileUrl: "",
+        coursePicUrl:'',
+        teacherName:'',
         fileLanguageTag: "",
         fileSceneTypeTag: "",
         fileContentTag: ""
@@ -790,6 +818,8 @@ export default {
           this.audioform = {
             fileName: "",
             fileUrl: "",
+            coursePicUrl:'',
+            teacherName:'',
             fileLanguageTag: "",
             fileSceneTypeTag: "",
             fileContentTag: ""
@@ -859,13 +889,21 @@ export default {
       }
     },
     handleImageSuccess(file) {
-      // console.log("添加图片", file);
+      console.log("添加图片", file);
       var list = {
         fileUrl: file.url
       };
       this.imgList.push(list);
-      // console.log(this.imgList);
+      console.log(this.imgList);
     },
+    // 上传封面图片成功
+     vhandleAvatarSuccess(file) {
+      console.log(file);
+      this.audioform.coursePicUrl = file.url;
+      console.log(this.audioform);
+      this.$forceUpdate()
+    },
+
     handleRemoveimg(file) {
       // 删除图片
       console.log(file);
