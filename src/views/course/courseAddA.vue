@@ -131,11 +131,11 @@
       >
         <el-table-column align="center" prop="fileName" label="音频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="音频地址"></el-table-column>
-        <el-table-column align="center"   label="音频封面" >
+        <!-- <el-table-column align="center"   label="音频封面" >
           <template>
       　　　　<img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" width="80" height="40" class="head_pic"/>
       　　</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column align="center" prop="teacherName" label="主讲老师" width="150"></el-table-column>
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
@@ -1077,6 +1077,9 @@ export default {
         var courseResourceBundle = this.form;
         var videoFileList = this.VideoList;
         var audioFileList = this.audioList;
+        for(let item of audioFileList) {
+          item.fileImgUrl = item.coursePicUrl
+        }
         var imgFileList = this.imgList;
         var pictureBookFileList = this.pictureBookList;
         console.log("videoFileList", videoFileList);
