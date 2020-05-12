@@ -133,7 +133,7 @@
         <el-table-column align="center" prop="fileUrl" label="音频地址"></el-table-column>
         <el-table-column align="center"   label="音频封面" >
           <template>
-      　　　　<img v-if="audioform.coursePicUrl" :src="audioform.coursePicUrl" width="80" height="40" class="head_pic"/>
+      　　　　<img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" width="80" height="40" class="head_pic"/>
       　　</template>
         </el-table-column>
         <el-table-column align="center" prop="teacherName" label="主讲老师" width="150"></el-table-column>
@@ -279,7 +279,7 @@
             style="width:80%"
           ></el-input>
         </el-form-item>
-        <el-form-item label="封面图片" prop="coursePicUrl" style="display:block">
+        <el-form-item label="封面图片" prop="fileImgUrl" style="display:block">
           <el-upload
             class="avatar-uploader"
             :action="imgUrl"
@@ -287,7 +287,7 @@
             :on-success="vhandleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="audioform.coursePicUrl" :src="audioform.coursePicUrl" class="avatar" />
+            <img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为700*265</div>
           </el-upload>
@@ -434,7 +434,7 @@ export default {
       Videoform: {
         fileName: "",
         fileUrl: "",
-        coursePicUrl:'',
+        fileImgUrl:'',
         teacherName:'',
         fileLanguageTag: "",
         fileSceneTypeTag: "",
@@ -444,7 +444,7 @@ export default {
       audioform: {
         fileName: "",
         fileUrl: "",
-        coursePicUrl:'',
+        fileImgUrl:'',
         teacherName:'',
         fileLanguageTag: "",
         fileSceneTypeTag: "",
@@ -822,7 +822,7 @@ export default {
           this.audioform = {
             fileName: "",
             fileUrl: "",
-            coursePicUrl:'',
+            fileImgUrl:'',
             teacherName:'',
             fileLanguageTag: "",
             fileSceneTypeTag: "",
@@ -904,7 +904,7 @@ export default {
     // 上传封面图片成功
      vhandleAvatarSuccess(file) {
       console.log(file);
-      this.audioform.coursePicUrl = file.url;
+      this.audioform.fileImgUrl = file.url;
       console.log(this.audioform);
       this.$forceUpdate()
     },

@@ -131,9 +131,9 @@
       >
         <el-table-column align="center" prop="fileName" label="音频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="音频地址"></el-table-column>
-        <el-table-column align="center"  label="音频封面" >
-          <template >
-      　　　　<img v-if="audioform.coursePicUrl" :src="audioform.coursePicUrl" width="80" height="40" class="head_pic"/>
+        <el-table-column align="center" prop="fileImgUrl" label="音频封面" >
+          <template>
+      　　　　<img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" width="80" height="40" class="head_pic"/>
       　　</template>
         </el-table-column>
         <el-table-column align="center" prop="teacherName" label="主讲老师" width="150"></el-table-column>
@@ -280,7 +280,7 @@
             style="width:80%"
           ></el-input>
         </el-form-item>
-        <el-form-item label="封面图片" prop="coursePicUrl" style="display:block">
+        <el-form-item label="封面图片" prop="fileImgUrl" style="display:block">
           <el-upload
             class="avatar-uploader"
             :action="imgUrl"
@@ -288,7 +288,7 @@
             :on-success="vhandleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="audioform.coursePicUrl" :src="audioform.coursePicUrl" class="avatar" />
+            <img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为700*265</div>
           </el-upload>
@@ -766,7 +766,8 @@ export default {
     },
     audioedit(row) {
       console.log(row);
-      this.audioform = row;
+      var list =row
+      this.audioform = list;
       this.audioVisible = true;
       this.audioEdit = true;
     },
@@ -774,6 +775,8 @@ export default {
       this.audioform = {
         fileName: "",
         fileUrl: "",
+        fileImgUrl:'',
+        teacherName:'',
         fileLanguageTag: "",
         fileSceneTypeTag: "",
         fileContentTag: ""
@@ -854,6 +857,7 @@ export default {
           var list = this.audioform;
           if (this.audioEdit) {
             console.log("编辑");
+            // this.$set(table,index,this.audioform)
           } else {
             console.log("新增");
             this.audioList.push(list);
@@ -863,7 +867,7 @@ export default {
           this.audioform = {
             fileName: "",
             fileUrl: "",
-            coursePicUrl:'',
+            fileImgUrl:'',
             teacherName:'',
             fileLanguageTag: "",
             fileSceneTypeTag: "",
@@ -1003,9 +1007,12 @@ export default {
     },
      vhandleAvatarSuccess(file) {
       console.log(file);
-      this.audioform.coursePicUrl = file.url;
+      this.audioform.fileImgUrl = file.url;
       console.log(this.audioform);
       this.$forceUpdate()
+      var aa=this.audioform.teacherName
+      this.audioform.teacherName="abc"
+      this.audioform.teacherName=aa
     },
     uploadpictureBook() {
       //上传电子书
