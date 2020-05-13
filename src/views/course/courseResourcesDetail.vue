@@ -1009,10 +1009,11 @@ export default {
       console.log(file);
       this.audioform.fileImgUrl = file.url;
       console.log(this.audioform);
+      // var aa=this.audioform.teacherName
+      // this.audioform.teacherName="abc"
+      // this.audioform.teacherName=aa
       this.$forceUpdate()
-      var aa=this.audioform.teacherName
-      this.audioform.teacherName="abc"
-      this.audioform.teacherName=aa
+      
     },
     uploadpictureBook() {
       //上传电子书
