@@ -132,8 +132,9 @@
         <el-table-column align="center" prop="fileName" label="音频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="音频地址"></el-table-column>
         <el-table-column align="center" prop="fileImgUrl" label="音频封面" >
-          <template>
-      　　　　<img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" width="80" height="40" class="head_pic"/>
+          <template slot-scope="scope">
+      　　　　<img v-if="scope.row.fileImgUrl" :src="scope.row.fileImgUrl" width="80" height="40" class="head_pic"/>
+              <span v-else>无</span>
       　　</template>
         </el-table-column>
         <el-table-column align="center" prop="teacherName" label="主讲老师" width="150"></el-table-column>
