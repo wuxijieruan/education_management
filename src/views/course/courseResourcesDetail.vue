@@ -255,7 +255,7 @@
     </el-dialog>
 
     <!-- 上传音频 -->
-    <el-dialog title="音频内容" width="900px" :visible.sync="audioVisible" @click="closeaudioDialog">
+    <el-dialog title="音频内容" width="900px" :visible.sync="audioVisible" @click="closeaudioDialog" close="closeaudioDialog">
       <el-form label-width="120px" :model="audioform" ref="audioform" style="width:850px">
         <el-form-item label="* 音频名称" prop="fileName">
           <el-input
@@ -448,6 +448,8 @@ export default {
       audioform: {
         fileName: "",
         fileUrl: "",
+        fileImgUrl:'',
+        teacherName:'',
         fileLanguageTag: "",
         fileSceneTypeTag: "",
         fileContentTag: ""
@@ -556,6 +558,23 @@ export default {
       this.pictureBookShow = true;
       this.pictureBookList = data.data.pictureBookFileList;
     }
+
+  
+  },
+  watch: {
+          'audioVisible': function(newVal){
+              if(!newVal){
+                this.audioform={
+                  fileName: "",
+                  fileUrl: "",
+                  fileImgUrl:'',
+                  teacherName:'',
+                  fileLanguageTag: "",
+                  fileSceneTypeTag: "",
+                  fileContentTag: ""
+                }
+              }
+          },
   },
   methods: {
     videoType() {

@@ -494,6 +494,21 @@ export default {
   components: {
     videoPlayer
   },
+  watch: {
+          'audioVisible': function(newVal){
+              if(!newVal){
+                this.audioform={
+                  fileName: "",
+                  fileUrl: "",
+                  fileImgUrl:'',
+                  teacherName:'',
+                  fileLanguageTag: "",
+                  fileSceneTypeTag: "",
+                  fileContentTag: ""
+                }
+              }
+          },
+  },
   mounted() {
     var data = this.$route.query;
     console.log("路由数据", data);
@@ -816,7 +831,7 @@ export default {
           if (this.audioEdit) {
             console.log("编辑");
           } else {
-            console.log("新增");
+            console.log("新增",this.audioList);
             this.audioList.push(list);
             this.audioUrl = this.audioform.fileUrl;
           }
@@ -1078,9 +1093,9 @@ export default {
         var courseResourceBundle = this.form;
         var videoFileList = this.VideoList;
         var audioFileList = this.audioList;
-        for(let item of audioFileList) {
-          item.fileImgUrl = item.coursePicUrl
-        }
+        // for(let item of audioFileList) {
+        //   item.fileImgUrl = item.coursePicUrl
+        // }
         var imgFileList = this.imgList;
         var pictureBookFileList = this.pictureBookList;
         console.log("videoFileList", videoFileList);
