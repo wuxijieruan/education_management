@@ -22,6 +22,9 @@
           <el-form-item label="活动名称" prop="activityName">
             <el-input v-model="ruleForm.activityName" placeholder="请输入活动名称"></el-input>
           </el-form-item>
+           <el-form-item label="活动代码" prop="activityCode">
+            <el-input v-model="ruleForm.activityCode" placeholder="请输入活动代码"></el-input>
+          </el-form-item>
           <el-form-item label="活动规则" prop="rule">
             <el-input  type="textarea" :rows="5" v-model="ruleForm.rule" placeholder="请输入活动规则"></el-input>
           </el-form-item>
@@ -59,6 +62,29 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="优秀作品" prop="videoUrl">
+            <input
+                type="file"
+                v-loading.fullscreen.lock="fullscreenLoading"
+                @change="uploadVideo($event)"
+                element-loading-text="拼命加载中，正在对上传文件进行技术处理，此过程可能需要几分钟，请耐心等待"
+              />
+              <el-input
+                size="small"
+                v-model="playerOptions.sources"
+                auto-complete="off"
+                placeholder="腾讯视频请直接输入VID"
+                style="width:80%"
+              ></el-input>
+          </el-form-item>
+          <video-player
+            class="video-player"
+            ref="videoPlayer"
+            :playsinline="true"
+            :options="playerOptions"
+            v-if="playerOptions.sources"
+            style="margin-left:130px;margin-bottom: 20px;"
+          ></video-player>
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
             <el-button @click="goback()">取消</el-button>
@@ -69,7 +95,12 @@
   </div>
 </template>
 <script>
-import { actEdit,courseGet ,enterpriseGet } from "@/api/getData";
+import { videoPlayer } from "vue-video-player";
+import "video.js/dist/video-js.css";
+import { actEdit,courseGet ,enterpriseGet ,courseResourcesFileDel} from "@/api/getData";
+import {
+  newVideoUrl,
+} from "@/config/env";
 export default {
   data() {
     return {
@@ -90,8 +121,43 @@ export default {
       },
       rules: {
         activityName: [{ required: true, message: "请输入用户名", trigger: "blur" }]
-      }
+      },
+      VideoVisible:false,
+      Videoform: {
+        fileName: "",
+        fileUrl: "",
+        fileLanguageTag: "",
+        fileSceneTypeTag: "",
+        fileContentTag: ""
+      },
+      fullscreenLoading: false,
+       videoShow: false,
+       VideoList: [],
+       playerOptions: {
+        playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+        autoplay: false, //如果true,浏览器准备好时开始回放。
+        muted: false, // 默认情况下将会消除任何音频。
+        loop: false, // 导致视频一结束就重新开始。
+        preload: "auto", // 建议浏览器在<Video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+        language: "zh-CN",
+        aspectRatio: "16:9", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+        fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+        sources: "", //视频地址
+        poster: "", //你的封面地址
+        notSupportedMessage: "此视频暂无法播放，请稍后再试", //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+        controlBar: {
+          timeDivider: true,
+          durationDisplay: true,
+          remainingTimeDisplay: false,
+          fullscreenToggle: true //全屏按钮
+        }
+      },
+      newVideoUrl: newVideoUrl, 
     };
+  },
+  // 注册组件
+  components: {
+    videoPlayer
   },
   mounted() {
     var data = this.$route.query;
@@ -99,8 +165,127 @@ export default {
     this.ruleForm = data.row;
     this.getCourse();
     this.getenterprise();
+    this.playerOptions.sources=this.ruleForm.videoUrl
   },
   methods: {
+    VideoAdd() {
+      this.VideoVisible = true;
+    },
+    Videoedit(row) {
+      console.log(row);
+      this.Videoform = row;
+      this.VideoVisible = true;
+      this.VideoEdit = true;
+    },
+    closeVideoDialog() {
+      this.Videoform = {
+        fileName: "",
+        fileUrl: "",
+        fileLanguageTag: "",
+        fileSceneTypeTag: "",
+        fileContentTag: ""
+      };
+      this.VideoVisible = false;
+    },
+    uploadVideo() {
+      //上传视频
+      var _this = this;
+      var Videofile = event.target.files;
+      console.log(Videofile);
+      var myfile = Videofile[0];
+      if (myfile != undefined) {
+        console.log(myfile);
+        var urlname = myfile.name;
+        var index2 = urlname.lastIndexOf(".");
+        var suffix = urlname.substring(index2);
+        // console.log(suffix);
+        if (
+          suffix === ".mp4" ||
+          suffix === ".avi" ||
+          suffix === ".mov" ||
+          suffix === ".rmvb" ||
+          suffix === ".flv" ||
+          suffix === ".3gp"
+        ) {
+          _this.fullscreenLoading = true;
+          var newVideoCreateTime = Date.parse(new Date());
+          var copyFile = new File([myfile], `${newVideoCreateTime}${suffix}`);
+          // console.log(copyFile);
+          var file = new FormData();
+          file.append("file", copyFile);
+          file.append("submit", false);
+          console.log(this.newVideoUrl)
+          $.ajax({
+            url: this.newVideoUrl,
+            type: "post",
+            data: file,
+            headers: {
+              Authorization: localStorage.learn_token
+            },
+            processData: false,
+            contentType: false,
+            success: function(res) {
+              // console.log(res);
+              _this.fullscreenLoading = false;
+              _this.playerOptions.sources = res.data;
+            },
+            error: function(res) {
+              console.log(res);
+              _this.fullscreenLoading = false;
+              this.$message({
+                type: "error",
+                message: res.error
+              });
+            }
+          });
+          event.target.value = "";
+        } else {
+          this.$message({
+            type: "error",
+            message: "上传的视频文件格式错误，请选择正确的文件格式"
+          });
+          event.target.value = "";
+        }
+      }
+    },
+    submitVideoUrl() {
+      console.log(this.Videoform);
+      if (this.Videoform.fileName != "") {
+        if (this.Videoform.fileUrl != "") {
+          var fileUrl = this.Videoform.fileUrl;
+          var list = this.Videoform;
+          if (this.VideoEdit) {
+            console.log("编辑");
+          } else {
+            console.log("新增");
+            this.VideoList.push(list);
+            if (fileUrl.indexOf("https") != -1) {
+              this.playerOptions.sources = this.Videoform.fileUrl;
+            }
+            this.ruleForm.videoUrl=this.Videoform.fileUrl
+          }
+          this.Videoform = {
+            fileName: "",
+            fileUrl: "",
+            fileLanguageTag: "",
+            fileSceneTypeTag: "",
+            fileContentTag: ""
+          };
+          this.VideoEdit = false;
+          this.VideoVisible = false;
+        } else {
+          this.$message({
+            type: "error",
+            message: "请填写视频地址"
+          });
+        }
+      } else {
+        this.$message({
+          type: "error",
+          message: "请填写视频名称"
+        });
+      }
+    },
      // 获取课程列表
     async getCourse(e) {
       try {
@@ -156,6 +341,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
+          this.ruleForm.videoUrl=this.playerOptions.sources
           console.log(this.ruleForm);
           const res = await actEdit(this.ruleForm);
           console.log(res);

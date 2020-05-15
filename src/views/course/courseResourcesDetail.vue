@@ -93,7 +93,7 @@
         element-loading-text="拼命加载中"
         style="width: 80%;margin-left:130px;margin-bottom: 20px;"
         v-if="VideoList!=''"
-      >
+        >
         <el-table-column align="center" prop="fileName" label="视频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="视频地址"></el-table-column>
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
