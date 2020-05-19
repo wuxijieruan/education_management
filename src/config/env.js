@@ -1,12 +1,12 @@
 // 公共地址
 
-// let baseUrl = 'https://www.bolekids.com/learn' //线上服务器
+let baseUrl = 'https://www.bolekids.com/learn' //线上服务器
 
-// let baseFileUrl = 'https://www.bolekids.com' //线上服务器
+let baseFileUrl = 'https://www.bolekids.com' //线上服务器
 
-let baseUrl = 'https://zhjy.917tou.com/learn' //测试服务器
+// let baseUrl = 'https://zhjy.917tou.com/learn' //测试服务器
 
-let baseFileUrl = 'https://zhjy.917tou.com' //测试服务器
+// let baseFileUrl = 'https://zhjy.917tou.com' //测试服务器
 
 // let baseUrl = 'http://127.0.0.1:8080/learn';// 开发服务器
 
