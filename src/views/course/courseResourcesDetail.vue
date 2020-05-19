@@ -291,7 +291,7 @@
           >
             <img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为700*265</div>
+            <div slot="tip" class="el-upload__tip">图片最佳上传为正方形</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="主讲老师" prop="teacherName">
