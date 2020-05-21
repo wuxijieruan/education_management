@@ -70,6 +70,26 @@
           placeholder="请输入课程浏览数"
         ></el-input>
       </el-form-item>
+      <el-form-item label="课程所需积分" prop="unlockPoints">
+        <el-input
+          size="small"
+          style="width:350px"
+          v-model="form.unlockPoints"
+          auto-complete="off"
+          
+          placeholder="请输入课程所需积分"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="课程有效时间" prop="unlockValidDay">
+        <el-input
+          size="small"
+          style="width:170px"
+          v-model="form.unlockValidDay"
+          auto-complete="off"
+          
+          placeholder="请输入课程有效时间"
+        ></el-input>天
+      </el-form-item>
       <el-form-item label="课程话题" prop="subjectId">
         <el-select v-model="form.subjectId" filterable placeholder="请选择课程话题" style="width:350px">
           <el-option
@@ -130,7 +150,9 @@ export default {
         courseType: "1", //是否是主课程
         linkId: "", //关联主课程ID
         playTag: "", //作业游戏标签
-        playType: "录播" //播放类型
+        playType: "录播", //播放类型
+        unlockPoints:0,//所需积分
+        unlockValidDay:0,//有效期
       },
       rules: {
         subjectId: [
@@ -144,6 +166,12 @@ export default {
         ],
         coursePicUrl: [
           { required: true, message: "请上传课程封面", trigger: "blur" }
+        ],
+        unlockPoints: [
+          { required: true, message: "请输入课程所需积分", trigger: "blur" }
+        ],
+        unlockValidDay: [
+          { required: true, message: "请输入课程有效时间", trigger: "blur" }
         ]
       }
     };
