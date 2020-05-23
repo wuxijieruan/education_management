@@ -140,7 +140,24 @@ export default {
                 menus: null
               }
             ]
-          }
+          },
+          {
+            menuid: 6,
+            icon: "li-icon-xiangmuguanli",
+            menuname: "作业管理",
+            hasThird: null,
+            url: null,
+            menus: [
+              {
+                menuid: 61,
+                icon: "icon-cat-skuQuery",
+                menuname: "作业列表",
+                hasThird: "N",
+                url: "homework",
+                menus: null
+              }
+            ]
+          },
         ],
         msg: "success"
       };
