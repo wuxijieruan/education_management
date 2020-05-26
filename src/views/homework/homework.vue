@@ -23,92 +23,48 @@
         size="small"
         type="danger"
         icon="el-icon-delete"
-        v-if="batchDeletionStatus"
+        
         @click="batchDel"
-      >批量下架</el-button>
+      >批量导出</el-button>
     </div>
 
     <!--列表-->
-    <el-form ref="form" :model="form">
+    <!-- <el-form ref="hwsList" :model="hwsList"> -->
       <el-table
         size="small"
-        :data="list"
+        :data="hwsList"
         stripe
         highlight-current-row
         v-loading="listLoading"
         border
         element-loading-text="拼命加载中"
-        style="width: 100%;"
+        style="width: 70%;"
         @selection-change="selectionChange"
-      >
-        <el-table-column align="center" type="selection" width="60"></el-table-column>
-        <el-table-column align="center" prop="courseType" label="作业ID" width="80"></el-table-column>
-        <el-table-column align="center" prop="subjectName" label="学生ID" width="100"></el-table-column>
-        <el-table-column align="center" prop="coursePicUrl" label="kechengID" width="240"></el-table-column>
-        <el-table-column align="center" prop="courseName" label="作业标签" min-width="200"></el-table-column>
-        <!-- <el-table-column align="center" prop="teacherName" label="课程老师" min-width="100"></el-table-column> -->
-        <el-table-column align="center" prop="remarks" label="作业类型" width="100"></el-table-column>
-        <el-table-column align="center" prop="isVail" label="审核状态" width="100">
+        >
+        <!-- <el-table-column align="center" type="selection" width="60"></el-table-column> -->
+        <el-table-column align="center" prop="activityName" label="活动名称" width="280"></el-table-column>
+        <!-- <el-table-column align="center" type="index" label="序号" width="100"></el-table-column> -->
+        <el-table-column align="center" prop="studentName" label="宝贝昵称" width="180"></el-table-column>
+        <el-table-column align="center" prop="studentAge" label="年龄" min-width="80"></el-table-column>
+        <el-table-column align="center" prop="hwtype" label="作业类型" width="140"></el-table-column>
+        <el-table-column align="center" prop="courseName" label="课程" width="200"></el-table-column>
+        <el-table-column align="center" prop="createTime" label="作业日期" width="200"></el-table-column>
+        <!-- <el-table-column align="center" label="操作" width="260" fixed="right">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.isVail" @change="changeisVail(scope.row)">
-              <el-option label="未审核" value="1"></el-option>
-              <el-option label="审核中" value="2"></el-option>
-              <el-option label="已审核" value="3"></el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="courseName" label="创建时间" width="100"></el-table-column>
-        <el-table-column align="center" label="操作" width="260" fixed="right">
-          <template slot-scope="scope">
-            <el-button type="small">
-              <el-dropdown>
-                <span class="el-dropdown-link">
-                  新增
-                  <i class="el-icon-arrow-down el-icon--right"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>
-                    <router-link
-                      :to="{ path: '/courseAddA',query: {courseId:scope.row.courseId,resourceType:1,router:1,courseData:form}}"
-                    >课程导读</router-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <router-link
-                      :to="{ path: '/courseAddA',query: {courseId:scope.row.courseId,resourceType:2,router:1,courseData:form}}"
-                    >课程绘本</router-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <router-link
-                      :to="{ path: '/courseAddA',query: {courseId:scope.row.courseId,resourceType:4,router:1,courseData:form}}"
-                    >课程互动游戏</router-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <router-link
-                      :to="{ path: '/courseAddA',query: {courseId:scope.row.courseId,resourceType:3,router:1,courseData:form}}"
-                    >课程知识点</router-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <router-link
-                      :to="{ path: '/courseAddA',query: {courseId:scope.row.courseId,resourceType:5,router:1,courseData:form}}"
-                    >课程互动作业</router-link>
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </el-button>
             <router-link
-              :to="{ path: '/courseDetail',query: {courseId:scope.row.courseId,courseData:form}}"
+              :to="{ path: '/homeworkDetail',query: {homework:scope.row,homeworkData:hwsList}}"
             >
-              <el-button size="small" style="margin-left:10px">编辑</el-button>
+              <el-button size="small" style="margin-left:10px">详情</el-button>
             </router-link>
             <el-button
               size="small"
               style="margin-left:10px"
               @click="courseSetTop(scope.row.courseId)"
-            >置顶</el-button>
+            >导出</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
-    </el-form>
+    <!-- </el-form> -->
     <!-- 分页组件 -->
     <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
 
@@ -116,53 +72,73 @@
     <el-dialog title="搜索" width="900px" :visible.sync="searchVisible" @click="closeDialog">
       <el-form
         label-width="100px"
-        :model="form"
-        ref="form"
+        :model="searchList"
+        ref="searchList"
         style="width:850px"
         v-loading="listLoading"
       >
-        <el-form-item label="课程名称" prop="courseName">
+        <el-form-item label="宝贝昵称" prop="studentName">
           <el-input
             size="small"
-            v-model="form.courseName"
+            v-model="searchList.studentName"
             auto-complete="off"
-            placeholder="请输入课程名称"
+            placeholder="请输入用户名"
             style="width:220px"
           ></el-input>
         </el-form-item>
-        <el-form-item label="课程话题" prop="subjectId">
-          <el-select v-model="form.subjectId" filterable placeholder="请选择话题">
-            <el-option value>请选择话题</el-option>
+        <el-form-item label="课程名称" prop="courseName">
+          <el-input
+            size="small"
+            v-model="searchList.courseName"
+            auto-complete="off"
+            placeholder="请输入用户名"
+            style="width:220px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="活动名称" prop="activityName">
+          <el-select v-model="searchList.activityName" filterable placeholder="请选择活动">
+            <el-option value>请选择活动</el-option>
             <el-option
-              v-for="item in subjectsGetList"
-              :key="item.subjectId"
-              :label="item.subjectName"
-              :value="item.subjectId"
+              v-for="item in actsList"
+              :key="item.activityId"
+              :label="item.activityName"
+              :value="item.activityName"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="课程类型" prop="courseType">
-          <el-select v-model="form.courseType" placeholder="请选择课程类型">
-            <el-option value="1" label="主课程">主课程</el-option>
-            <el-option value="2" label="拓展课程">拓展课程</el-option>
+        <el-form-item label="作业类型" prop="exercisesType">
+          <el-select v-model="searchList.exercisesType" placeholder="请选择课程类型">
+            <el-option value="1" label="作业">作业</el-option>
+            <el-option value="2" label="游戏">游戏</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="课程状态" prop="isVail">
-          <el-select v-model="form.isVail" placeholder="请选择课程状态">
-            <el-option value="-1" label="下架">下架</el-option>
-            <el-option value="1" label="上架">上架</el-option>
-          </el-select>
+        <el-form-item label="开始日期" prop="startTime">
+            <el-date-picker
+              value-format="yyyy-MM-dd"
+              v-model="searchList.startTime"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+        </el-form-item>
+        <el-form-item label="结束日期" prop="endTime">
+            <el-date-picker
+              value-format="yyyy-MM-dd"
+              v-model="searchList.endTime"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeDialog">取消</el-button>
-        <el-button type="primary" @click="getCourse">搜索</el-button>
+        <el-button type="primary" @click="gethomework">搜索</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script>
 import Pagination from "@/components/Pagination";
+import { allactList,homeworkList ,homeworkdownload} from "@/api/getData";
 import {
   courseGet,
   courseDel,
@@ -195,7 +171,20 @@ export default {
       batchDeletionStatus: false,
       batchList: [],
       searchVisible: false,
-      hotCourseName: ""
+      hotCourseName: "",
+
+      plist: {
+        page: 1,
+        pageSize: 10
+      },
+      actsList:[],//活动列表
+      hwsList:[],//作业列表
+      coursesList:[],//课程列表
+      searchList:{
+        page: 1,
+        pageSize: 10,
+      },//搜索列表
+      excelData:""
     };
   },
   // 注册组件
@@ -214,10 +203,53 @@ export default {
     }
   },
   mounted() {
-    this.getCourse();
-    this.getSubject();
+    this.actList();
+    this.gethomework();
   },
   methods: {
+    // 导出
+            outExe() {
+                this.$confirm('此操作将导出excel文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.excelData = this.hwsList //你要导出的数据list。
+                    this.export2Excel()
+                }).catch(() => {
+                
+                });
+            },
+            export2Excel() {
+                var that = this;
+                require.ensure([], () => {
+                    const { export_json_to_excel } = require('../../excel/Export2Excel'); //这里必须使用绝对路径
+                    const filterVal = ['activityName','studentName', 'studentAge', 'hwtype','courseName','createTime',"answerImg","answerTest"]; // 导出的表头名
+                    const tHeader = ['活动名称','宝贝昵称','年龄', '作业类型','课程','作业日期','图片','文字']; // 导出的表头字段名
+                    const list = that.excelData;
+                    const data = that.formatJson(filterVal, list);
+                    let datetime=new Date()
+                    var seperator1 = "-";
+                    var year = datetime.getFullYear();
+                    var month = datetime.getMonth() + 1;
+                    var strDate = datetime.getDate();
+                    if (month >= 1 && month <= 9) {
+                      month = "0" + month;
+                    }
+                    if (strDate >= 0 && strDate <= 9) {
+                      strDate = "0" + strDate;
+                    }
+                    var currentdate = year + seperator1 + month + seperator1 + strDate;
+                    export_json_to_excel(tHeader, data, `${currentdate}作业列表excel`);// 导出的表格名称，根据需要自己命名
+                })
+            },
+            formatJson(filterVal, jsonData) {
+                return jsonData.map(v => filterVal.map(j => v[j]))
+            },
+
+
+
+
     // 多选/全选
     selectionChange(e) {
       if (e.length != 0) {
@@ -228,24 +260,37 @@ export default {
         this.batchDeletionStatus = false;
       }
     },
-    //批量删除
-    batchDel() {
-      var courseId = [];
+    //批量导出
+    async batchDel() {
+      var studentExercisesId = [];
       this.batchList.forEach(element => {
-        courseId.push(element.courseId);
+        studentExercisesId.push(element.studentExercisesId);
       });
-      courseId = courseId.join(",");
+      studentExercisesId = studentExercisesId.join(",");
       var row = {
-        courseId: courseId
+        ids: this.hwsList
       };
-      this.handleDel(row);
+      try {
+        this.listLoading = true;
+        const res = await homeworkdownload(row);
+         console.log("作业导出", res);
+          if (res.status == 200) {
+            this.listLoading = false;
+          }
+      }catch (err) {
+        this.$message({
+          type: "error",
+          message: "请重试"
+        });
+        console.log(err);
+      }
     },
     // 分页插件事件
     callFather(parm) {
       // console.log(parm)
       this.form.page = parm.currentPage;
       this.form.pageSize = parm.pageSize;
-      this.getCourse();
+      this.gethomework();
     },
     // 重置
     reset() {
@@ -256,7 +301,7 @@ export default {
       this.form.page = 1;
       this.form.pageSize = 10;
       this.pageparm.currentPage = 1;
-      this.getCourse();
+      this.gethomework();
     },
     // 获取课程列表
     async getCourse() {
@@ -267,6 +312,7 @@ export default {
         if (res.status == 200) {
           console.log("课程列表", res.data);
           this.list = res.data.list;
+          this.coursesList = res.data.list;
           this.list.forEach(element => {
             // console.log(element);
             if (element.isVail == 1) {
@@ -309,15 +355,69 @@ export default {
         console.log(err);
       }
     },
-    // 获取话题列表
-    async getSubject() {
+    // 搜索页面
+    submitSearch() {
+      this.searchVisible = true;
+    },
+    // 关闭弹出框
+    closeDialog() {
+      this.searchList={
+                            page: 1,
+                            pageSize: 10,
+                          }
+      this.searchVisible = false; //搜索
+    },
+
+
+
+  //获取活动列表
+    async actList() {
       try {
         this.listLoading = true;
-        const res = await subjectsGet();
+        const res = await allactList();
+        console.log("获取活动时返回",res);
+        if(res.status==200){
+          this.actsList = res.data;
+        
+          console.log(this.actsList);
+        }
+        
+        // this.searchVisible = false; //搜索
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: "请重试"
+        });
+        console.log(err);
+      }
+    },
+    // 获取作业列表
+    async gethomework() {
+      console.log("searchList",this.searchList)
+      try {
+        this.listLoading = true;
+        const res = await homeworkList(this.searchList);
         if (res.status == 200) {
-          // console.log("话题列表", res.data);
-          this.subjectsGetList = res.data.list;
+          console.log("作业列表", res.data);
+          this.hwsList = res.data.list;
+          this.searchList={
+                            page: 1,
+                            pageSize: 10,
+                          }
+          this.hwsList.forEach(item => {
+            if(item.answerImg){
+                item.hwtype="图片"
+            }else if(item.answerVideo){
+                  item.hwtype="视频"
+            }else if(item.answerVoice){
+                  item.hwtype="视频"
+            }else{
+              item.hwtype="文字"
+            }
+          });
+          this.pageparm.total = res.data.total;
           this.listLoading = false;
+          this.searchVisible = false; //搜索
         } else {
           this.$message({
             type: "error",
@@ -333,87 +433,6 @@ export default {
         console.log(err);
       }
     },
-    // 搜索页面
-    submitSearch() {
-      this.searchVisible = true;
-    },
-    // 关闭弹出框
-    closeDialog() {
-      this.searchVisible = false; //搜索
-    },
-    // 修改上下架
-    async changeisVail(row) {
-      console.log(row);
-      if (row.isVail == 1) {
-        this.$confirm("确认上架该课程?", "提示", { type: "warning" })
-          .then(async () => {
-            const res = await courseputOn(row.courseId);
-            console.log(res);
-            if (res.status == 200) {
-              this.$message({
-                message: "上架成功",
-                type: "success"
-              });
-            } else {
-              this.$message({
-                type: "error",
-                message: res.msg
-              });
-              console.log(res.msg);
-            }
-          })
-          .catch(() => {
-            this.listLoading = false;
-          });
-      } else {
-        this.$confirm("确认下架该课程?", "提示", { type: "warning" })
-          .then(async () => {
-            const res = await courseDel(row.courseId);
-            console.log(res);
-            if (res.status == 200) {
-              this.$message({
-                message: "下架成功",
-                type: "success"
-              });
-            } else {
-              this.$message({
-                type: "error",
-                message: res.msg
-              });
-              console.log(res.msg);
-            }
-          })
-          .catch(() => {
-            this.listLoading = false;
-          });
-      }
-    },
-    // 课程置顶
-    async courseSetTop(courseId) {
-      // console.log(courseId);
-      var hotCourseName=this.hotCourseName
-      var content="确认置顶该课程?  当前主课程为："+hotCourseName
-      this.$confirm(content, "提示", { type: "warning" })
-        .then(async () => {
-          const res = await courseSetTop(courseId);
-          console.log(res);
-          if (res.status == 200) {
-            this.$message({
-              message: "置顶成功",
-              type: "success"
-            });
-          } else {
-            this.$message({
-              type: "error",
-              message: res.msg
-            });
-            console.log(res.msg);
-          }
-        })
-        .catch(() => {
-          this.listLoading = false;
-        });
-    }
   }
 };
 </script>

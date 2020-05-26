@@ -8,7 +8,7 @@
     </el-breadcrumb>
 
     <!-- 搜索筛选 -->
-    <el-button size="small" type="danger" style="margin: 20px 0;" @click="back">返回列表</el-button>
+    <el-button size="small" type="danger" style="margin: 20px 0;" @click="backback">返回列表</el-button>
     <!--列表-->
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="课程基本信息" name="zero">
@@ -206,7 +206,7 @@ export default {
     }
   },
   methods: {
-    back() {
+    backback() {
       this.$router.push({
         path: "/course",
         query: {

@@ -183,6 +183,14 @@ export default new Router({
             requireAuth: true
           }
         },
+        {
+          path: '/homeworkDetail',
+          name: '作业详情',
+          component: resolve =>require(['@/views/homework/homeworkDetail'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
       ]
     }
   ]

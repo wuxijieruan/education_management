@@ -85,3 +85,13 @@ export const actDel = id => fetch('/activity?ids=' + id , {}, 'DELETE') // 删�
 export const actDetail = courseId => fetch('/activity/' + courseId, {}, 'GET') // 根据id查看课程详情
 
 export const enterpriseGet = data => fetch('/enterprise', data, 'GET') // 查看企业
+
+
+//获取作业
+export const homeworkList = data => fetch('/StudentExercises/list', data, 'GET') // 获取作业列表
+
+export const searchhomework = data => fetch('/StudentExercises/getActivity', data, 'GET') // 搜素作业
+
+export const allactList = data => fetch('/StudentExercises/getActivity', data, 'GET') // 获取所有活动
+
+export const homeworkdownload = data => fetch('/activity/getManyStudentExercisesByIds', data, 'GET') // 搜素作业

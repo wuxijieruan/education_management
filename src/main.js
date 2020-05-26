@@ -16,6 +16,9 @@ import 'jquery'
 
 // 配置百度编辑器
 
+import Blob from './excel/Blob.js'
+import Export2Excel from './excel/Export2Excel.js'
+
 import Print from 'vue-print-nb'
 Vue.use(Print); //注册
 
