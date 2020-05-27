@@ -262,19 +262,20 @@ export default {
     },
     //批量导出
     async batchDel() {
-      var studentExercisesId = [];
-      this.batchList.forEach(element => {
-        studentExercisesId.push(element.studentExercisesId);
+      var studentExercisesId = "";
+      this.hwsList.forEach(element => {
+        studentExercisesId = studentExercisesId+",";
+        studentExercisesId=studentExercisesId+element.studentExercisesId;
+        
       });
-      studentExercisesId = studentExercisesId.join(",");
-      var row = {
-        ids: this.hwsList
-      };
+      // studentExercisesId = studentExercisesId.substr(1);
+      
+     console.log(studentExercisesId)
       try {
         this.listLoading = true;
-        const res = await homeworkdownload(row);
+        const res = await homeworkdownload(studentExercisesId);
          console.log("作业导出", res);
-          if (res.status == 200) {
+          if (res!= "") {
             this.listLoading = false;
           }
       }catch (err) {

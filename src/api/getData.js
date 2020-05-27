@@ -94,4 +94,4 @@ export const searchhomework = data => fetch('/StudentExercises/getActivity', dat
 
 export const allactList = data => fetch('/StudentExercises/getActivity', data, 'GET') // 获取所有活动
 
-export const homeworkdownload = data => fetch('/activity/getManyStudentExercisesByIds', data, 'GET') // 搜素作业
+export const homeworkdownload = data => fetch('/activity/getManyStudentExercisesByIds?ids='+data, {}, 'GET') // 导出
