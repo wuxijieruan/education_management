@@ -38,7 +38,7 @@
         v-loading="listLoading"
         border
         element-loading-text="拼命加载中"
-        style="width: 70%;"
+        style="width: 100%;"
         @selection-change="selectionChange"
         >
         <!-- <el-table-column align="center" type="selection" width="60"></el-table-column> -->
@@ -49,20 +49,16 @@
         <el-table-column align="center" prop="hwtype" label="作业类型" width="140"></el-table-column>
         <el-table-column align="center" prop="courseName" label="课程" width="200"></el-table-column>
         <el-table-column align="center" prop="createTime" label="作业日期" width="200"></el-table-column>
-        <!-- <el-table-column align="center" label="操作" width="260" fixed="right">
+        <el-table-column align="center" label="操作" width="260" fixed="right">
           <template slot-scope="scope">
             <router-link
               :to="{ path: '/homeworkDetail',query: {homework:scope.row,homeworkData:hwsList}}"
             >
               <el-button size="small" style="margin-left:10px">详情</el-button>
             </router-link>
-            <el-button
-              size="small"
-              style="margin-left:10px"
-              @click="courseSetTop(scope.row.courseId)"
-            >导出</el-button>
+        
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </el-table>
     <!-- </el-form> -->
     <!-- 分页组件 -->
@@ -106,6 +102,17 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="企业名称" prop="enterpriseName">
+          <el-select v-model="searchList.enterpriseId" filterable placeholder="请选择企业">
+            <el-option value>请选择企业</el-option>
+            <el-option
+              v-for="item in enterpriseList"
+              :key="item.enterpriseId"
+              :label="item.enterpriseName"
+              :value="item.enterpriseId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="作业类型" prop="exercisesType">
           <el-select v-model="searchList.exercisesType" placeholder="请选择课程类型">
             <el-option value="1" label="作业">作业</el-option>
@@ -138,7 +145,8 @@
 </template>
 <script>
 import Pagination from "@/components/Pagination";
-import { allactList,homeworkList ,homeworkdownload} from "@/api/getData";
+import { allactList,homeworkList,enterpriseGet } from "@/api/getData";
+import { baseUrl ,baseFileUrl} from '@/config/env'
 import {
   courseGet,
   courseDel,
@@ -154,11 +162,6 @@ export default {
       gradeGetList: [],
       subjectsGetList: [],
       form: {
-        createUserId: "",
-        subjectId: "", //话题id
-        courseName: "", //课程名称
-        isVail: "",
-        courseType: "",
         page: 1,
         pageSize: 10
       },
@@ -178,6 +181,7 @@ export default {
         pageSize: 10
       },
       actsList:[],//活动列表
+      enterpriseList:[],//企业列表
       hwsList:[],//作业列表
       coursesList:[],//课程列表
       searchList:{
@@ -205,6 +209,7 @@ export default {
   mounted() {
     this.actList();
     this.gethomework();
+    this.getenterprise()
   },
   methods: {
     // 导出
@@ -271,44 +276,71 @@ export default {
       // studentExercisesId = studentExercisesId.substr(1);
       
      console.log(studentExercisesId)
-      try {
-        this.listLoading = true;
-        const res = await homeworkdownload(studentExercisesId);
-         console.log("作业导出", res);
-          if (res!= "") {
-            this.listLoading = false;
-          }
-      }catch (err) {
-        this.$message({
-          type: "error",
-          message: "请重试"
-        });
-        console.log(err);
-      }
+     console.log(baseFileUrl+ "/learn/activity/getManyStudentExercisesByIds?ids="+studentExercisesId)
+     window.location.href = baseFileUrl+ "/learn/activity/getManyStudentExercisesByIds?ids="+studentExercisesId
+      // try {
+      //   // this.listLoading = true;
+      //   const res = await homeworkdownload(studentExercisesId);
+      //    console.log("作业导出", res);
+      //     // if (res!= "") {
+      //       // this.listLoading = false;
+      //     // }
+      // }catch (err) {
+      //   this.$message({
+      //     type: "error",
+      //     message: "请重试"
+      //   });
+      //   console.log(err);
+      // }
     },
     // 分页插件事件
     callFather(parm) {
-      // console.log(parm)
+      console.log(parm)
+      this.searchList.page = parm.currentPage;
+      this.searchList.pageSize = parm.pageSize;
       this.form.page = parm.currentPage;
       this.form.pageSize = parm.pageSize;
       this.gethomework();
     },
     // 重置
     reset() {
-      this.form.subjectId = "";
-      this.form.courseName = "";
-      this.form.isVail = "";
-      this.form.courseType = "";
+      this.searchList.page = 1;
+      this.searchList.pageSize = 10;
       this.form.page = 1;
       this.form.pageSize = 10;
       this.pageparm.currentPage = 1;
       this.gethomework();
     },
+    //获取企业列表
+  async getenterprise(e) {
+      try {
+        const res = await enterpriseGet();
+        if (res.status == 200) {
+          console.log("企业列表", res.data);
+           res.data.list.forEach(element => {
+            this.enterpriseList.push(element)
+          })
+         
+        } else {
+          this.$message({
+            type: "error",
+            message: res.error
+          });
+          console.log("企业列表",res);
+        }
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: "请重试"
+        });
+        console.log(err);
+      }
+  },
     // 获取课程列表
     async getCourse() {
       try {
         this.listLoading = true;
-        // console.log("this.form", this.form);
+        console.log("this.form", this.form);
         const res = await courseGet(this.form);
         if (res.status == 200) {
           console.log("课程列表", res.data);
@@ -363,7 +395,7 @@ export default {
     // 关闭弹出框
     closeDialog() {
       this.searchList={
-                            page: 1,
+                            page: this.form.page,
                             pageSize: 10,
                           }
       this.searchVisible = false; //搜索
@@ -402,7 +434,7 @@ export default {
           console.log("作业列表", res.data);
           this.hwsList = res.data.list;
           this.searchList={
-                            page: 1,
+                            page: this.form.page,
                             pageSize: 10,
                           }
           this.hwsList.forEach(item => {
@@ -411,7 +443,7 @@ export default {
             }else if(item.answerVideo){
                   item.hwtype="视频"
             }else if(item.answerVoice){
-                  item.hwtype="视频"
+                  item.hwtype="音频"
             }else{
               item.hwtype="文字"
             }

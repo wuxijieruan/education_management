@@ -191,6 +191,38 @@ export default new Router({
             requireAuth: true
           }
         },
+        {
+          path: '/user',
+          name: '用户列表',
+          component: resolve => require(['@/views/user/user'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/userDetail',
+          name: '用户详情',
+          component: resolve =>require(['@/views/user/userDetail'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/platesCourseReView',
+          name: '课程维度统计详情',
+          component: resolve =>require(['@/views/statics/platesCourseReView'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/userStatic',
+          name: '用户维度统计详情',
+          component: resolve =>require(['@/views/statics/userStatic'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
       ]
     }
   ]

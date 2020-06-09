@@ -158,6 +158,49 @@ export default {
               }
             ]
           },
+          {
+            menuid: 7,
+            icon: "li-icon-xiangmuguanli",
+            menuname: "用戶管理",
+            hasThird: null,
+            url: null,
+            menus: [
+              {
+                menuid: 71,
+                icon: "icon-cat-skuQuery",
+                menuname: "用戶列表",
+                hasThird: "N",
+                url: "user",
+                menus: null
+              }
+            ]
+          },
+          {
+            menuid: 8,
+            icon: "li-icon-xiangmuguanli",
+            menuname: "统计管理",
+            hasThird: null,
+            url: null,
+            menus: [
+              {
+                menuid: 81,
+                icon: "icon-cat-skuQuery",
+                menuname: "课程维度",
+                hasThird: "N",
+                url: "platesCourseReView",
+                menus: null
+              },
+              {
+                menuid: 82,
+                icon: "icon-cat-skuQuery",
+                menuname: "用户维度",
+                hasThird: "N",
+                url: "userStatic",
+                menus: null
+              }
+              
+            ]
+          },
         ],
         msg: "success"
       };

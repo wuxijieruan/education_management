@@ -94,4 +94,32 @@ export const searchhomework = data => fetch('/StudentExercises/getActivity', dat
 
 export const allactList = data => fetch('/StudentExercises/getActivity', data, 'GET') // 获取所有活动
 
-export const homeworkdownload = data => fetch('/activity/getManyStudentExercisesByIds?ids='+data, {}, 'GET') // 导出
+// export const homeworkdownload = data => fetch('/activity/getManyStudentExercisesByIds?ids='+data, {}, 'GET') // 导出
+
+//用户列表
+export const userList = data => fetch('/wechat/getStudentListByFilter', data, 'GET') // 获取作业列表
+
+
+//统计
+//复刷板块
+export const plateList = data => fetch('/StudentBrowseDetal/selectPlatesReViewCount', data, 'GET') 
+
+//热门课程统计
+export const hotCourseList = data => fetch('/StudentBrowseDetal/selectCourseHotCount', data, 'GET') 
+
+//热门标签统计
+export const hotTagList = data => fetch('/StudentBrowseDetal/selectTagHotCount', data, 'GET') 
+
+//课程复刷统计
+export const reCourseList = data => fetch('/StudentBrowseDetal/getCourseReViewCount', data, 'GET') 
+
+//资源使用统计
+export const sourceList = data => fetch('/StudentBrowseDetal/selectResourcesCount', data, 'GET') 
+
+//用户时长统计
+export const timeList = data => fetch('/StudentBrowseDetal/selectUseIntervalCount', data, 'GET') 
+
+//用户深度统计
+export const deepList = data => fetch('/StudentBrowseDetal/selectStuProfundityCount', data, 'GET') 
+
+export const returnBackStu = data => fetch('/StudentBrowseDetal/updateStuIsReturn' , data, 'GET') // 邀请回访
