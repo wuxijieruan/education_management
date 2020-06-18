@@ -797,40 +797,48 @@ export default {
     },
     handleRemoveimg(file) {
       // 删除
-      console.log(file);
-      var Delindex;
-      var audioarry = [];
-      this.allfileList.forEach((element, index) => {
-        console.log("element", element);
-        var url = element.fileUrl;
-        if (url == file.response.url) {
-          Delindex = index;
-        }
-      });
-      console.log(Delindex);
-      console.log(this.allfileList[Delindex].fileType);
-      if (this.allfileList[Delindex].fileType == 2) {
-        this.allfileList.splice(Delindex, 1);
-        console.log("删除后allfileList", this.allfileList);
-        this.allfileList.forEach((element, index) => {
-          // console.log("element", element);
-          if (element.fileType == 2) {
-            audioarry.push(element);
+      this.$confirm("确认要删除吗?", "提示", {
+        type: "warning"
+      })
+      .then(async () => {
+          console.log(file);
+          var Delindex;
+          var audioarry = [];
+          this.allfileList.forEach((element, index) => {
+            console.log("element", element);
+            var url = element.fileUrl;
+            if (url == file.response.url) {
+              Delindex = index;
+            }
+          });
+          console.log(Delindex);
+          console.log(this.allfileList[Delindex].fileType);
+          if (this.allfileList[Delindex].fileType == 2) {
+            this.allfileList.splice(Delindex, 1);
+            console.log("删除后allfileList", this.allfileList);
+            this.allfileList.forEach((element, index) => {
+              // console.log("element", element);
+              if (element.fileType == 2) {
+                audioarry.push(element);
+              }
+            });
+            // console.log("audioarry", audioarry);
+            if (audioarry.length != 0) {
+              this.audioUrl = audioarry[0].fileUrl;
+            } else {
+              this.audioUrl = "";
+            }
+          } else if (this.allfileList[Delindex].fileType == 3) {
+            this.allfileList.splice(Delindex, 1);
+            console.log("删除后allfileList", this.allfileList);
+          } else if (this.allfileList[Delindex].fileType == 4) {
+            this.allfileList.splice(Delindex, 1);
+            console.log("删除后allfileList", this.allfileList);
           }
-        });
-        // console.log("audioarry", audioarry);
-        if (audioarry.length != 0) {
-          this.audioUrl = audioarry[0].fileUrl;
-        } else {
-          this.audioUrl = "";
-        }
-      } else if (this.allfileList[Delindex].fileType == 3) {
-        this.allfileList.splice(Delindex, 1);
-        console.log("删除后allfileList", this.allfileList);
-      } else if (this.allfileList[Delindex].fileType == 4) {
-        this.allfileList.splice(Delindex, 1);
-        console.log("删除后allfileList", this.allfileList);
-      }
+      })
+        .catch(() => {
+          this.listLoading = false;
+      });
     },
     // 上传图片结束
        // 上传书评图片成功

@@ -470,9 +470,17 @@ export default {
       });
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
-      this.form.answerImg = "";
-      console.log(this.form);
+      this.$confirm("确认要删除吗?", "提示", {
+        type: "warning"
+      })
+      .then(async () => {
+        console.log(file, fileList);
+        this.form.answerImg = "";
+        console.log(this.form);
+      })
+        .catch(() => {
+          
+      });
     },
     // 保存
     submitAdd(formName) {

@@ -158,6 +158,7 @@ export default {
             element.isCan = "禁用";
           }
         });
+        this.pageparm.total = res.data.list.length
         this.searchVisible = false; //搜索
       } catch (err) {
         this.$message({

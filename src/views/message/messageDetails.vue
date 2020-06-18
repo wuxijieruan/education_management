@@ -2,9 +2,9 @@
     <div>
         <!-- 面包屑导航 -->
         <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
-        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-        <el-breadcrumb-item>用户详情</el-breadcrumb-item>
+        <el-breadcrumb-item>消息管理</el-breadcrumb-item>
+        <el-breadcrumb-item>消息列表</el-breadcrumb-item>
+        <el-breadcrumb-item>消息详情</el-breadcrumb-item>
         </el-breadcrumb>
 
         <el-button size="small" type="danger" style="margin: 20px 0;" @click="backback">返回列表</el-button>

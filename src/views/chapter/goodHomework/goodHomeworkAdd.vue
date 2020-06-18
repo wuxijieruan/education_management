@@ -433,8 +433,16 @@ export default {
     },
     handleRemove() {
       // 删除图片
-      this.form.answerImg = "";
-      console.log("删除图片后的form", this.form);
+      this.$confirm("确认要删除吗?", "提示", {
+        type: "warning"
+      })
+      .then(async () => {
+        this.form.answerImg = "";
+        console.log("删除图片后的form", this.form);
+      })
+        .catch(() => {
+          
+      });
     },
     // 上传图片结束
     // 保存

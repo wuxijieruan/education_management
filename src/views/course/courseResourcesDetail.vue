@@ -29,7 +29,7 @@
           placeholder="请输入绘本名称"
         ></el-input>
       </el-form-item>
-      <el-form-item label="* 知识点名称" prop="resourceTitle" v-show="resourceTypeC">
+      <el-form-item label="知识点名称" prop="resourceTitle" v-show="resourceTypeC">
         <el-input
           size="small"
           v-model="form.resourceTitle"
@@ -38,7 +38,7 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item label="* 知识点互动游戏名称" prop="resourceTitle" v-show="resourceTypeD">
+      <el-form-item label="知识点互动游戏名称" prop="resourceTitle" v-show="resourceTypeD">
         <el-input
           size="small"
           v-model="form.resourceTitle"
@@ -54,7 +54,7 @@
           placeholder="请输入作业名称"
         ></el-input>
       </el-form-item>
-      <el-form-item label="* 适合年龄段" prop="gradeId" v-show="resourceTypeH">
+      <el-form-item label="适合年龄段" prop="gradeId" v-show="resourceTypeH">
         <el-select v-model="form.gradeId" placeholder="请选择适合年龄段" style="width:350px">
           <el-option
             v-for="item in gradeGetList"
@@ -99,6 +99,7 @@
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileContentTag" label="内容标签" width="100"></el-table-column>
+        <el-table-column align="center" prop="fileIndex" label="内容标签" width="100"></el-table-column>
         <el-table-column align="center" label="操作" width="240">
           <template slot-scope="scope">
             <el-button size="small" type="primary" @click="Videoedit(scope.row)">编辑</el-button>
@@ -155,9 +156,11 @@
           :action="imgUrl"
           list-type="picture-card"
           :on-success="handleImageSuccess"
-          :on-remove="handleRemoveimg"
+          :before-remove="handleRemoveimg"
           :file-list="imgList"
           :before-upload="beforeAvatarUpload"
+          :on-preview="handlePictureCardPreview"
+          
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -288,6 +291,7 @@
             :show-file-list="false"
             :on-success="vhandleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
+            :on-preview="handlePictureCardPreview"
           >
             <img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -381,6 +385,7 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
+            :on-preview="handlePictureCardPreview"
           >
             <img v-if="pictureBookform.fileImgUrl" :src="pictureBookform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -392,6 +397,9 @@
         <el-button @click="closepictureBookDialog">取消</el-button>
         <el-button type="primary" @click="submitpictureBookUrl">确定</el-button>
       </span>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="50%" style="margin-left: 25%;" :src="dialogImageUrl" alt="">
     </el-dialog>
   </div>
 </template>
@@ -413,6 +421,9 @@ import {
 export default {
   data() {
     return {
+      dialogVisible:false,
+      dialogImageUrl:'',
+
       newVideoUrl: newVideoUrl,
       VideoUrl: VideoUrl,
       imgUrl: imgUrl,
@@ -981,33 +992,46 @@ export default {
       console.log(this.imgFileList);
     },
     async handleRemoveimg(file) {
-      // 删除图片
-      console.log(file);
-      var courseResourceBundleFileId, num;
-      this.imgFileList.forEach((element, index) => {
-        console.log("imgFileListelement", element);
-        if (
-          element.fileUrl == file.url ||
-          element.fileUrl == file.response.url
-        ) {
-          courseResourceBundleFileId = element.courseResourceBundleFileId;
-          num = index;
+       return this.$confirm("确认要删除吗?", "提示", {
+        type: "warning"
+      })
+      .then(async () => {
+        // 删除图片
+        console.log(file);
+        var courseResourceBundleFileId, num;
+        this.imgFileList.forEach((element, index) => {
+          console.log("imgFileListelement", element);
+          if (
+            element.fileUrl == file.url ||
+            element.fileUrl == file.response.url
+          ) {
+            courseResourceBundleFileId = element.courseResourceBundleFileId;
+            num = index;
+          }
+        });
+        console.log(courseResourceBundleFileId);
+        if (courseResourceBundleFileId != undefined) {
+          const res = await courseResourcesFileDel(courseResourceBundleFileId);
+          if (res.status == 200) {
+          } else {
+            this.$message({
+              type: "error",
+              message: res.msg
+            });
+            console.log(res.msg);
+          }
         }
-      });
-      console.log(courseResourceBundleFileId);
-      if (courseResourceBundleFileId != undefined) {
-        const res = await courseResourcesFileDel(courseResourceBundleFileId);
-        if (res.status == 200) {
-        } else {
-          this.$message({
-            type: "error",
-            message: res.msg
-          });
-          console.log(res.msg);
-        }
-      }
-      this.imgFileList.splice(num, 1);
-      console.log(this.imgFileList);
+        this.imgFileList.splice(num, 1);
+        console.log(this.imgFileList);
+      })
+      //   .catch(() => {
+      //     this.listLoading = false;
+      // });
+    },
+    handlePictureCardPreview(file) {
+      console.log(file)
+        this.dialogImageUrl = file.response.url;
+        this.dialogVisible = true;
     },
     pictureBookAdd() {
       this.pictureBookVisible = true;
@@ -1159,7 +1183,7 @@ export default {
       console.log("audioList", this.audioList);
       console.log("imgFileList", this.imgFileList);
       if (this.form.resourceType == 3 || this.form.resourceType == 4) {
-        if (this.form.resourceTitle != "" && this.form.resourceTitle != null) {
+        // if (this.form.resourceTitle != "" && this.form.resourceTitle != null) {
           if (this.form.gradeId != "" && this.form.gradeId != null) {
             isdata = true;
           } else {
@@ -1169,13 +1193,13 @@ export default {
             });
             isdata = false;
           }
-        } else {
-          this.$message({
-            type: "error",
-            message: "请输入资源包名称"
-          });
-          isdata = false;
-        }
+        // } else {
+        //   this.$message({
+        //     type: "error",
+        //     message: "请输入资源包名称"
+        //   });
+        //   isdata = false;
+        // }
       }
 
       if (this.form.resourceType == 5) {

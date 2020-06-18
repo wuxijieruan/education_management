@@ -27,6 +27,8 @@ export const subjectsPut = data => fetch('/subjects', data, 'PUT') // 修改话�
 
 export const subjectsGet = data => fetch('/subjects', data, 'GET') // 查看话题列表
 
+export const updateSubjectsWeightByID = data => fetch('/subjects/updateSubjectsWeightByID' , data, 'POST') // 修改权重
+
 
 //课程管理
 export const courseAdd = data => fetch('/course', data, 'POST') // 添加课程
@@ -52,6 +54,13 @@ export const courseResourcesDel = courseResourceBundleId => fetch('/courseResour
 export const courseResourcesFileDel = courseResourceBundleFileId => fetch('/courseResourceBundle/deleteBunbdleFile?courseResourceBundleFileId=' + courseResourceBundleFileId, {}, 'DELETE') // 删除课程资源包文件明细
 
 export const courseSetTop = id => fetch('/course/setTop?id=' + id, {},  'PUT') // 置顶课程
+
+export const updateCourseIndexByID = data => fetch('/course/updateCourseIndexByID' , data, 'POST') // 修改课程的序号
+
+export const updateCourseResourceBundleIndex = data => fetch('/courseResourceBundle/updateCourseResourceBundleIndex' , data, 'POST') // 修改资源的排列序号
+
+
+
 
 //管理员管理
 export const adminAdd = data => fetch('/addUser', data, 'POST') // 添加
@@ -99,6 +108,10 @@ export const allactList = data => fetch('/StudentExercises/getActivity', data, '
 //用户列表
 export const userList = data => fetch('/wechat/getStudentListByFilter', data, 'GET') // 获取作业列表
 
+export const changejifen = data => fetch('/wechat/updateStudentStudentIdentityOverdueTimeByID', data, 'POST') // 修改积分和会员到期时间
+
+export const toSubscribe = data => fetch('/wechat/updateStudentIsSubscribeByOPen', data, 'POST') // 邀请订阅
+
 
 //统计
 //复刷板块
@@ -123,3 +136,12 @@ export const timeList = data => fetch('/StudentBrowseDetal/selectUseIntervalCoun
 export const deepList = data => fetch('/StudentBrowseDetal/selectStuProfundityCount', data, 'GET') 
 
 export const returnBackStu = data => fetch('/StudentBrowseDetal/updateStuIsReturn' , data, 'GET') // 邀请回访
+
+export const getNewList = data => fetch('/wechat/selectNewUserQtyTotalDay' , data, 'GET') // 总共新增人数统计
+
+export const getPerNewList = data => fetch('/wechat/selectNewUserQtyPerDay' , data, 'GET') // 每日新增人数统计
+
+export const getMessList = data => fetch('/MessageTemplate/selectStudentTemplateFilter' , data, 'POST') // 获取消息列表
+
+
+

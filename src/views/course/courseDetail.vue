@@ -33,6 +33,21 @@
           
           <el-table-column align="center" prop="courseResourceBundle.courseResourceBundleId" label="课程导读id"></el-table-column>
           <el-table-column align="center" prop="courseResourceBundle.resourceTitle" label="课程导读名称"></el-table-column>
+            <el-table-column align="center" prop="courseResourceBundle.resourceIndex" label="排列序号">
+              <template slot-scope="scope">
+                    <el-input-number 
+                      size="small"
+                      style="width:100px"
+                      v-model="scope.row.courseResourceBundle.resourceIndex"
+                      auto-complete="off"         
+                      @change="changeresourceIndex(scope.row.courseResourceBundle)"
+                        :min="0"
+                    >
+                    </el-input-number>
+                </template>
+
+
+           </el-table-column>
           <el-table-column align="center" label="操作" width="200">
             <template slot-scope="scope">
               <router-link :to="{ path: '/courseResourcesDetail',query: {data:scope.row}}">
@@ -62,6 +77,21 @@
           
           <el-table-column align="center" prop="courseResourceBundle.courseResourceBundleId" label="课程绘本id"></el-table-column>
           <el-table-column align="center" prop="courseResourceBundle.resourceTitle" label="课程绘本名称"></el-table-column>
+           <el-table-column align="center" prop="courseResourceBundle.resourceIndex" label="排列序号">
+  <template slot-scope="scope">
+        <el-input-number 
+          size="small"
+          style="width:100px"
+          v-model="scope.row.courseResourceBundle.resourceIndex"
+          auto-complete="off"         
+            @change="changeresourceIndex(scope.row.courseResourceBundle)"
+            :min="0"
+        >
+        </el-input-number>
+          </template>
+
+
+           </el-table-column>
           <el-table-column align="center" label="操作" width="200">
             <template slot-scope="scope">
               <router-link :to="{ path: '/courseResourcesDetail',query: {data:scope.row}}">
@@ -90,6 +120,21 @@
         >
         <el-table-column align="center" prop="courseResourceBundle.courseResourceBundleId" label="课程知识点id"></el-table-column>
           <el-table-column align="center" prop="courseResourceBundle.resourceTitle" label="课程知识点名称"></el-table-column>
+           <el-table-column align="center" prop="courseResourceBundle.resourceIndex" label="排列序号">
+  <template slot-scope="scope">
+        <el-input-number 
+          size="small"
+          style="width:100px"
+          v-model="scope.row.courseResourceBundle.resourceIndex"
+          auto-complete="off"         
+           @change="changeresourceIndex(scope.row.courseResourceBundle)"
+            :min="0"
+        >
+        </el-input-number>
+          </template>
+
+
+           </el-table-column>
           <el-table-column align="center" label="操作" width="200">
             <template slot-scope="scope">
               <router-link :to="{ path: '/courseResourcesDetail',query: {data:scope.row}}">
@@ -122,6 +167,21 @@
             prop="courseResourceBundle.resourceTitle"
             label="课程互动游戏名称"
           ></el-table-column>
+          <el-table-column align="center" prop="courseResourceBundle.resourceIndex" label="排列序号">
+  <template slot-scope="scope">
+        <el-input-number 
+          size="small"
+          style="width:100px"
+          v-model="scope.row.courseResourceBundle.resourceIndex"
+          auto-complete="off"         
+            @change="changeresourceIndex(scope.row.courseResourceBundle)"
+            :min="0"
+        >
+        </el-input-number>
+          </template>
+
+
+           </el-table-column>
           <el-table-column align="center" label="操作" width="200">
             <template slot-scope="scope">
               <router-link :to="{ path: '/courseResourcesDetail',query: {data:scope.row}}">
@@ -150,6 +210,21 @@
         >
         <el-table-column align="center" prop="courseResourceBundle.courseResourceBundleId" label="互动作业id"></el-table-column>
           <el-table-column align="center" prop="courseResourceBundle.resourceTitle" label="互动作业名称"></el-table-column>
+           <el-table-column align="center" prop="courseResourceBundle.resourceIndex" label="排列序号">
+  <template slot-scope="scope">
+        <el-input-number 
+          size="small"
+          style="width:100px"
+          v-model="scope.row.courseResourceBundle.resourceIndex"
+          auto-complete="off"         
+           @change="changeresourceIndex(scope.row.courseResourceBundle)"
+            :min="0"
+        >
+        </el-input-number>
+          </template>
+
+
+           </el-table-column>
           <el-table-column align="center" label="操作" width="200">
             <template slot-scope="scope">
               <router-link :to="{ path: '/courseResourcesDetail',query: {data:scope.row}}">
@@ -164,7 +239,7 @@
   </div>
 </template>
 <script>
-import { courseDetails, courseResourcesDel } from "@/api/getData";
+import { courseDetails, courseResourcesDel,updateCourseResourceBundleIndex } from "@/api/getData";
 import courseEdit from "./courseEdit.vue";
 export default {
   data() {
@@ -235,6 +310,49 @@ export default {
         this.getcourseDetails();
       }
     },
+
+// 修改资源包顺序
+    async changeresourceIndex(row) {
+      console.log(row.resourceIndex);
+      if (row.resourceIndex != "") {
+        var data = {
+          resourceIndex: row.resourceIndex,
+          courseResourceBundleId: row.courseResourceBundleId
+        };
+        
+        console.log(data);
+        try {
+          const res = await updateCourseResourceBundleIndex(data);
+          console.log(res);
+          if (res.status == 200) {
+            this.$message({
+              type: "success",
+              message: "成功"
+            });
+            this.getcourseDetails();
+          } else {
+            this.$message({
+              type: "error",
+              message: res.error
+            });
+            console.log(res);
+          }
+        } catch (err) {
+          this.$message({
+            type: "error",
+            message: "请重试"
+          });
+          console.log(err);
+        }
+      } else {
+        this.$message({
+          type: "error",
+          message: "请输入排序"
+        });
+      }
+    },
+  
+
     async getcourseDetails() {
       // console.log(this.form);
       const res = await courseDetails(this.form);
@@ -268,7 +386,8 @@ export default {
           this.listLoading = false;
         });
     }
-  }
+  },
+  
 };
 </script>
 <style scoped>

@@ -29,7 +29,7 @@
           placeholder="请输入绘本名称"
         ></el-input>
       </el-form-item>
-      <el-form-item label="* 知识点名称" prop="resourceTitle" v-show="resourceTypeC">
+      <el-form-item label="知识点名称" prop="resourceTitle" v-show="resourceTypeC">
         <el-input
           size="small"
           v-model="form.resourceTitle"
@@ -38,7 +38,7 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item label="* 知识点互动游戏名称" prop="resourceTitle" v-show="resourceTypeD">
+      <el-form-item label="知识点互动游戏名称" prop="resourceTitle" v-show="resourceTypeD">
         <el-input
           size="small"
           v-model="form.resourceTitle"
@@ -46,7 +46,7 @@
           placeholder="请输入知识点互动游戏名称"
         ></el-input>
       </el-form-item>
-      <el-form-item label="* 互动作业名称" prop="resourceTitle" v-show="resourceTypeE">
+      <el-form-item label="互动作业名称" prop="resourceTitle" v-show="resourceTypeE">
         <el-input
           size="small"
           v-model="form.resourceTitle"
@@ -54,7 +54,7 @@
           placeholder="请输入互动作业名称"
         ></el-input>
       </el-form-item>
-      <el-form-item label="* 适合年龄段" prop="gradeId" v-show="resourceTypeH">
+      <el-form-item label="适合年龄段" prop="gradeId" v-show="resourceTypeH">
         <el-select v-model="form.gradeId" placeholder="请选择适合年龄段" style="width:350px">
           <el-option
             v-for="item in gradeGetList"
@@ -150,14 +150,18 @@
         </el-table-column>
       </el-table>
 
-      <el-form-item label="图片" v-show="imgShow">
+      <el-form-item  v-show="imgShow">
         <el-upload
-          :action="imgUrl"
+          class="upload-demo"
           list-type="picture-card"
+          :action="imgUrl"
           :on-success="handleImageSuccess"
-          :on-remove="handleRemoveimg"
+          :before-remove="handleRemoveimg"
+          :on-preview="handlePictureCardPreview"
           :before-upload="beforeAvatarUpload"
+          
         >
+          <!-- <el-button size="small" type="primary">上传图片</el-button> -->
           <i class="el-icon-plus"></i>
         </el-upload>
       </el-form-item>
@@ -285,6 +289,7 @@
             class="avatar-uploader"
             :action="imgUrl"
             :show-file-list="false"
+            :on-preview="handlePictureCardPreview"
             :on-success="vhandleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
@@ -380,6 +385,7 @@
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
+              :on-preview="handlePictureCardPreview"
             >
               <img v-if="pictureBookform.fileImgUrl" :src="pictureBookform.fileImgUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -391,6 +397,9 @@
           <el-button @click="closepictureBookDialog">取消</el-button>
           <el-button type="primary" @click="submitpictureBookUrl">确定</el-button>
         </span>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
   </div>
 </template>
@@ -408,6 +417,9 @@ import {
 export default {
   data() {
     return {
+      dialogVisible:false,
+      dialogImageUrl:'',
+
       newVideoUrl: newVideoUrl,
       VideoUrl: VideoUrl,
       imgUrl: imgUrl,
@@ -555,6 +567,7 @@ export default {
         if (res.status == 200) {
           // console.log("年龄段列表", res.data);
           this.gradeGetList = res.data.list;
+          this.form.gradeId = this.gradeGetList[0].gradeId
           this.listLoading = false;
         } else {
           this.$message({
@@ -927,13 +940,27 @@ export default {
 
     handleRemoveimg(file) {
       // 删除图片
-      console.log(file);
-      this.imgList.forEach((element, index) => {
-        console.log("element", element);
-        if (element.fileUrl == file.response.url) {
-          this.imgList.splice(index, 1);
-        }
-      });
+      return this.$confirm("确认要删除吗?", "提示", {
+        type: "warning"
+      })
+      .then(async () => {
+          console.log(file);
+          this.imgList.forEach((element, index) => {
+            console.log("element", element);
+            if (element.fileUrl == file.response.url) {
+              this.imgList.splice(index, 1);
+            }
+          });
+      })
+      // .catch(() => {
+      //   this.listLoading = false;   
+      // });
+       
+    },
+    handlePictureCardPreview(file) {
+      console.log(file)
+        this.dialogImageUrl = file.response.url;
+        this.dialogVisible = true;
     },
     pictureBookAdd() {
       this.pictureBookVisible = true;
@@ -1056,23 +1083,23 @@ export default {
     async submit() {
       var isdata = true;
       if (this.form.resourceType == 3 || this.form.resourceType == 4) {
-        if (this.form.resourceTitle != "" && this.form.resourceTitle != null) {
-          if (this.form.gradeId != "" && this.form.gradeId != null) {
-            isdata = true;
-          } else {
-            this.$message({
-              type: "error",
-              message: "请选择关联年龄段组"
-            });
-            isdata = false;
-          }
-        } else {
-          this.$message({
-            type: "error",
-            message: "请输入资源包名称"
-          });
-          isdata = false;
-        }
+        // if (this.form.resourceTitle != "" && this.form.resourceTitle != null) {
+        //   if (this.form.gradeId != "" && this.form.gradeId != null) {
+        //     isdata = true;
+        //   } else {
+        //     this.$message({
+        //       type: "error",
+        //       message: "请选择关联年龄段组"
+        //     });
+        //     isdata = false;
+        //   }
+        // } else {
+        //   this.$message({
+        //     type: "error",
+        //     message: "请输入资源包名称"
+        //   });
+        //   isdata = false;
+        // }
       }
 
       if (this.form.resourceType == 5) {

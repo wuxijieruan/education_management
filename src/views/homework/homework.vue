@@ -9,13 +9,7 @@
     <!-- 搜索筛选 -->
     <div style="margin-bottom:10px;">
       <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button>
-      <el-button
-        size="small"
-        type="primary"
-        icon="el-icon-refresh"
-        @click="reset"
-        style="margin-right:10px"
-      >重置</el-button>
+      
       <!-- <router-link to="/courseAdd">
         <el-button size="small" type="primary" icon="el-icon-plus">添加</el-button>
       </router-link> -->
@@ -32,6 +26,8 @@
     <!-- <el-form ref="hwsList" :model="hwsList"> -->
       <el-table
         size="small"
+        min-height="200"
+         max-height="680"
         :data="hwsList"
         stripe
         highlight-current-row
@@ -137,6 +133,13 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <el-button
+        size="small"
+        type="danger"
+        icon="el-icon-refresh"
+        @click="reset"
+        style="margin-right:10px"
+      >重置</el-button>
         <el-button @click="closeDialog">取消</el-button>
         <el-button type="primary" @click="gethomework">搜索</el-button>
       </span>
@@ -208,7 +211,7 @@ export default {
   },
   mounted() {
     this.actList();
-    this.gethomework();
+    // this.gethomework();
     this.getenterprise()
   },
   methods: {
@@ -410,6 +413,7 @@ export default {
         const res = await allactList();
         console.log("获取活动时返回",res);
         if(res.status==200){
+          this.listLoading = false;
           this.actsList = res.data;
         
           console.log(this.actsList);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height:42rem;overflow-x: hidden;overflow-y: scroll;">
     <!-- 面包屑导航 -->
     <!-- <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
       <el-breadcrumb-item>课程管理</el-breadcrumb-item>
@@ -111,6 +111,7 @@
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
+          :on-preview="handlePictureCardPreview"
         >
           <img v-if="form.coursePicUrl" :src="form.coursePicUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -121,6 +122,9 @@
         <el-button size="small" type="primary" @click="submitAdd('form')">保存</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -130,6 +134,9 @@ export default {
   name: "First",
   data() {
     return {
+      dialogVisible:false,
+      dialogImageUrl:'',
+
       listLoading: false,
       imgUrl: imgUrl,
       subjectsGetList: [],
@@ -321,6 +328,11 @@ export default {
     handleAvatarSuccess(file) {
       // console.log(file);
       this.form.coursePicUrl = file.url;
+    },
+    handlePictureCardPreview(file) {
+      console.log(file)
+        this.dialogImageUrl = file.response.url;
+        this.dialogVisible = true;
     },
     //保存
     submitAdd(formName) {

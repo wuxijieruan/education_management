@@ -327,7 +327,7 @@ export default {
     },
     // 删除
     handleDel: function(row) {
-      this.$confirm("此操作会删除相关课程，请谨慎操作！确认要删除吗?", "提示", {
+      this.$confirm("确认要删除吗?", "提示", {
         type: "warning"
       })
         .then(async () => {

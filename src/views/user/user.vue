@@ -9,43 +9,37 @@
     <!-- 搜索筛选 -->
     <div style="margin-bottom:10px;">
       <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button>
-      <el-button
-        size="small"
-        type="primary"
-        icon="el-icon-refresh"
-        @click="reset"
-        style="margin-right:10px"
-      >重置</el-button>
+      
       <!-- <router-link to="/courseAdd">
         <el-button size="small" type="primary" icon="el-icon-plus">添加</el-button>
       </router-link> -->
       <el-button
         size="small"
         type="danger"
-        icon="el-icon-delete"
-        v-if="batchDeletionStatus"
-        @click="batchDel"
-      >批量导出</el-button>
+        
+        @click="ispostexcel=true"
+      >导出</el-button>
       <el-button
         size="small"
         type="danger"
-        icon="el-icon-delete"
         v-if="batchDeletionStatus"
-        @click="batchDel"
-      >邀请回访</el-button>
+        @click="tosub"
+      >邀请订阅</el-button>
     </div>
     
 
     <!--列表-->
       <el-table
         size="small"
+        min-height="200"
+        max-height="550"
         :data="usersList"
         stripe
         highlight-current-row
         v-loading="listLoading"
         border
         element-loading-text="拼命加载中"
-        style="width: 100%;"
+        style="width: 90%;"
         @selection-change="selectionChange"
         
         >
@@ -55,9 +49,10 @@
         <el-table-column align="center" prop="phone" label="电话" width="120"></el-table-column>
         <el-table-column align="center" prop="studentAge" label="年龄" width="140"></el-table-column>
         <el-table-column align="center" prop="studentSex" :formatter="stateFormat" label="性别" width="100"></el-table-column>
-        <el-table-column align="center" prop="createTime" label="注册时间" width="200"></el-table-column>
-        <el-table-column align="center" prop="isAcceptReturn" :formatter="returnFormat" label="回访邀请" width="130"></el-table-column>
-        <!-- <el-table-column align="center" prop="is_subscribe" :formatter="subFormat" label="是否订阅模板消息" width="130"></el-table-column> -->
+        <el-table-column align="center" prop="enterPriseNameCourse"  label="企业名称" width="130"></el-table-column>
+        <el-table-column align="center" prop="createTime" label="注册时间" min-width="130"></el-table-column>
+        <el-table-column align="center" prop="isAcceptReturn"  label="回访邀请" width="130"></el-table-column>
+        <el-table-column align="center" prop="isSubscribe"  label="是否订阅模板消息" width="130"></el-table-column>
         <!-- <el-table-column align="center" prop="registered_activity"  label="注册时参与的活动" min-width="160"></el-table-column> -->
         <!-- <el-table-column align="center" prop="registered_way" label="注册途径" width="160"></el-table-column> -->
         <el-table-column align="center" label="操作" width="100" fixed="right">
@@ -83,6 +78,12 @@
         style="width:850px"
         v-loading="listLoading"
       >
+        <el-form-item label="宝贝昵称" prop="studentName">
+          <el-input v-model="searchList.studentName" style="width:30%;"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="searchList.phone" style="width:36%;"></el-input>
+        </el-form-item>
         <el-form-item label="用户身份" prop="studentIdentity">
           <el-select v-model="searchList.studentIdentity" placeholder="请选择用户身份">
             <el-option value="游客" label="游客">游客</el-option>
@@ -135,6 +136,14 @@
           <el-radio v-model="searchList.isAcceptReturn" label="1" style="margin-left:50px;">是</el-radio>
           <el-radio v-model="searchList.isAcceptReturn" label="-1">否</el-radio>
         </el-form-item>
+        <el-form-item label="订阅状态" prop="isSubscribe">
+          <el-select v-model="searchList.isSubscribe" placeholder="请选择订阅状态">
+            <el-option value="未邀请" label="未邀请">未邀请</el-option>
+            <el-option value="已邀请" label="已邀请">已邀请</el-option>
+            <el-option value="已订阅" label="已订阅">已订阅</el-option>
+            <el-option value="未订阅" label="未订阅">未订阅</el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="注册时间">
             <el-date-picker
               value-format="yyyy-MM-dd"
@@ -153,8 +162,27 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <el-button
+        size="small"
+        type="danger"
+        icon="el-icon-refresh"
+        @click="reset"
+        style="margin-right:10px"
+      >重置</el-button>
         <el-button @click="closeDialog">取消</el-button>
         <el-button type="primary" @click="searchuser">搜索</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 导出选项 -->
+    <el-dialog title="批量导出" :visible.sync="ispostexcel">
+      <el-select v-model="postExcel" placeholder="请选择导出内容" default-first-option>
+            <el-option value="1" label="导出当前选中的内容">导出当前选中的内容</el-option>
+            <el-option value="2" label="全部导出">全部导出</el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="ispostexcel=false">取消</el-button>
+        <el-button type="primary" @click="batchDel">导出</el-button>
       </span>
     </el-dialog>
   </div>
@@ -162,12 +190,14 @@
 <script>
 import Pagination from "@/components/Pagination";
 import { userList,enterpriseGet } from "@/api/getData";
+import { baseUrl ,baseFileUrl} from '@/config/env'
 import {
   courseGet,
   courseDel,
   subjectsGet,
   courseputOn,
-  courseSetTop
+  courseSetTop,
+  toSubscribe,getMessList
 } from "@/api/getData";
 export default {
   data() {
@@ -202,7 +232,9 @@ export default {
         page: 1,
         pageSize: 10,
       },//搜索列表
-      excelData:""
+      excelData:"",
+      ispostexcel:false,//导出弹窗的显现
+      postExcel:"1",//导出类型
     };
   },
   // 注册组件
@@ -221,7 +253,7 @@ export default {
     }
   },
   mounted() {
-    this.getuserList();
+    // this.getuserList();
     this.getenterprise()
     if(this.searchList.startStuAge>104||this.searchList.startStuAge<1){
       this.searchList.startStuAge=1
@@ -235,7 +267,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.excelData = this.hwsList //你要导出的数据list。
+                    this.excelData = this.batchList //你要导出的数据list。
                     this.export2Excel()
                 }).catch(() => {
                 
@@ -323,21 +355,14 @@ export default {
         return '未邀请'
       }
   },
-  //是否订阅模板消息
-  subFormat(row, column) {
-      if (row.isAcceptReturn === 1) {
-        return '接受'
-      } else  if(row.isAcceptReturn === -1){
-        return '拒绝'
-      } else{
-        return ''
-      }
-  },
   judgeage(e){
     console.log(e)
   },
   //获取企业列表
   async getenterprise(e) {
+    // const resss = await getMessList(this.searchList);
+    // console.log("xiaoxi",resss)
+    
       try {
         const res = await enterpriseGet();
         if (res.status == 200) {
@@ -360,7 +385,7 @@ export default {
         });
         console.log(err);
       }
-},
+  },
     // 多选/全选
 selectionChange(e) {
       if (e.length != 0) {
@@ -373,14 +398,92 @@ selectionChange(e) {
 },
  //批量导出
     async batchDel() {
-      var usersId = "";
-      this.batchList.forEach(element => {
-        usersId = usersId+",";
-        usersId= usersId + element.studentId;
+      if(this.postExcel==1){//导出当前选中的内容
+          var datas = this.batchList
+      }else if(this.postExcel==2){//全部导出
+          try {
+            this.listLoading = true;
+            var postdata = this.searchList
+            delete postdata.page
+            delete postdata.pageSize
+            console.log('搜索列表',postdata)
+            const res = await userList(postdata);
+            console.log("获取用户时返回",res);
+            if(res.status==200){
+              var datas =res.data.list
+              this.listLoading = false;
+              
+            }
+          } catch (err) {
+            this.$message({
+              type: "error",
+              message: "请重试"
+            });
+            console.log(err);
+          }
+      }
+       var usersId = "";
+          let num = datas.length
+          datas.forEach(element => {
+            if(element.studentName==null){
+              // alert("您选择的用户中含有姓名为空的用户，无法导出！")
+              return
+            }
+            usersId = usersId+",";
+            usersId= usersId + element.studentId;
+            
+          });
+          let count = usersId.length - usersId.replace(",", "").length + 1;//去除逗号后剩下的数量
+          console.log(num,count)
+          console.log(usersId)
+          if(num>=count){
+            if(usersId==null||usersId==''){
+              alert("用户名全部为空，无法导出！")
+                return
+              }
+            alert("姓名为空的用户，无法导出！")
+          }
         
+        window.location.href = baseUrl + "/wechat/ExportStudent?ids="+usersId
+        this.ispostexcel=false
+      
+    },
+    async tosub(){//邀请订阅
+      var opensId = "";
+      let num = this.batchList.length
+      this.batchList.forEach(element => {
+        if(element.studentName==null){
+          // alert("您选择的用户中含有姓名为空的用户，无法导出！")
+          return
+        }
+        opensId = opensId+",";
+        opensId= opensId + element.openId;
       });
-     console.log(usersId)
-     window.location.href = "https://zhjy.917tou.com/learn/wechat/ExportStudent?ids="+usersId
+      let count = opensId.length - opensId.replace(",", "").length + 1;//去除逗号后剩下的数量
+      console.log(num,count)
+      console.log(opensId)
+      if(num>=count){
+        if(opensId==null||opensId==''){
+          alert("用户名全部为空，无法邀请！")
+            return
+          }
+        alert("姓名为空的用户，无法邀请！")
+      }
+      var rrr ={
+            openIDs: opensId,
+            type: 2
+            }
+      const tryres = await toSubscribe(rrr);
+      console.log("邀请订阅返回",tryres)
+      if(tryres.status==200){
+        if(tryres.data=="成功"){
+          alert("邀请成功")
+          this.getuserList()
+        }
+      }else{
+
+      }
+
     },
     // 分页插件事件
 callFather(parm) {
@@ -393,8 +496,10 @@ callFather(parm) {
 },
     // 重置
 reset() {
-      this.searchList.page = 1;
-      this.searchList.pageSize = 10;
+      this.searchList={
+         page: 1,
+        pageSize: 10,
+       }
       this.form.page = 1;
       this.form.pageSize = 10;
       this.pageparm.currentPage = 1;
@@ -402,14 +507,14 @@ reset() {
 },
     // 搜索页面
     submitSearch() {
-      this.searchVisible = true;
-    },
-    // 关闭弹出框
-    closeDialog() {
       this.searchList={
          page: 1,
         pageSize: 10,
        }
+      this.searchVisible = true;
+    },
+    // 关闭弹出框
+    closeDialog() {
       this.searchVisible = false; //搜索
     },
 

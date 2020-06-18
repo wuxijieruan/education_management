@@ -37,7 +37,8 @@ export default new Router({
           name: '课程列表',
           component: resolve => require(['@/views/course/course'], resolve),
           meta: {
-            requireAuth: true
+            requireAuth: true,
+            keepAlive: true
           }
         },
         {
@@ -219,6 +220,30 @@ export default new Router({
           path: '/userStatic',
           name: '用户维度统计详情',
           component: resolve =>require(['@/views/statics/userStatic'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/newStatics',
+          name: '新增人数统计',
+          component: resolve =>require(['@/views/statics/newStatics'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/message',
+          name: '消息列表',
+          component: resolve =>require(['@/views/message/message'], resolve),
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/messageDetails',
+          name: '消息详情',
+          component: resolve =>require(['@/views/message/messageDetails'], resolve),
           meta: {
             requireAuth: true
           }

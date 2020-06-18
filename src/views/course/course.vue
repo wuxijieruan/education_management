@@ -9,18 +9,13 @@
     <!-- 搜索筛选 -->
     <div style="margin-bottom:10px;">
       <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button>
-      <el-button
-        size="small"
-        type="primary"
-        icon="el-icon-refresh"
-        @click="reset"
-        style="margin-right:10px"
-      >重置</el-button>
+      
       <router-link to="/courseAdd">
-        <el-button size="small" type="primary" icon="el-icon-plus">添加</el-button>
+        <el-button size="small" type="primary" icon="el-icon-plus" style="margin-left:10px">添加</el-button>
       </router-link>
       <el-button
         size="small"
+        style="margin-right:10px"
         type="danger"
         icon="el-icon-delete"
         v-if="batchDeletionStatus"
@@ -32,6 +27,8 @@
     <el-form ref="form" :model="form">
       <el-table
         size="small"
+        min-height="200"
+        max-height="700"
         :data="list"
         stripe
         highlight-current-row
@@ -50,7 +47,7 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="courseName" label="课程名称" min-width="200"></el-table-column>
-        <!-- <el-table-column align="center" prop="teacherName" label="课程老师" min-width="100"></el-table-column> -->
+         
         <el-table-column align="center" prop="remarks" label="发布人" width="100"></el-table-column>
         <el-table-column align="center" prop="isVail" label="上下架状态" width="100">
           <template slot-scope="scope">
@@ -60,8 +57,23 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="isHot" label="是否推荐" width="80"></el-table-column>
-        <el-table-column align="center" prop="isTop" label="是否热门" width="80"></el-table-column>
+        <el-table-column align="center" prop="courseIndex" label="排列序号" min-width="100">
+             <template slot-scope="scope">
+        <el-input-number 
+          size="small"
+           
+          style="width:100px"
+          v-model="scope.row.courseIndex"
+          auto-complete="off"
+           @change="changecourseIndex(scope.row)"
+
+            :min="0"
+        >
+        </el-input-number>
+          </template>
+          </el-table-column> 
+        <el-table-column align="center" prop="isHot" label="是否热门" width="80"></el-table-column>
+        <el-table-column align="center" prop="isTop" label="是否推荐" width="80"></el-table-column>
         <el-table-column align="center" label="操作" width="260" fixed="right">
           <template slot-scope="scope">
             <el-button type="small">
@@ -159,6 +171,13 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+          <el-button
+          size="small"
+          type="danger"
+          icon="el-icon-refresh"
+          @click="reset"
+          style="margin-right:10px"
+        >重置</el-button>
         <el-button @click="closeDialog">取消</el-button>
         <el-button type="primary" @click="getCourse">搜索</el-button>
       </span>
@@ -172,7 +191,8 @@ import {
   courseDel,
   subjectsGet,
   courseputOn,
-  courseSetTop
+  courseSetTop,
+  updateCourseIndexByID
 } from "@/api/getData";
 export default {
   data() {
@@ -218,7 +238,7 @@ export default {
     }
   },
   mounted() {
-    this.getCourse();
+    // this.getCourse();
     this.getSubject();
   },
   methods: {
@@ -417,6 +437,45 @@ export default {
         .catch(() => {
           this.listLoading = false;
         });
+    },
+     // 修改课程的排列序号
+    async changecourseIndex(row) {
+      console.log(row.courseIndex);
+      if (row.courseIndex != "") {
+        var data = {
+          courseIndex: row.courseIndex,
+          courseId: row.courseId
+        };
+        console.log(data);
+        try {
+          const res = await updateCourseIndexByID(data);
+          console.log(res);
+          if (res.status == 200) {
+            this.$message({
+              type: "success",
+              message: "成功"
+            });
+            this.getCourse();
+          } else {
+            this.$message({
+              type: "error",
+              message: res.error
+            });
+            console.log(res);
+          }
+        } catch (err) {
+          this.$message({
+            type: "error",
+            message: "请重试"
+          });
+          console.log(err);
+        }
+      } else {
+        this.$message({
+          type: "error",
+          message: "请输入排列序号"
+        });
+      }
     }
   }
 };

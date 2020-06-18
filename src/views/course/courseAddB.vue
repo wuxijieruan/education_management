@@ -145,8 +145,9 @@
           :action="imgUrl"
           list-type="picture-card"
           :on-success="handleImageSuccess"
-          :on-remove="handleRemoveimg"
+          :before-remove="handleRemoveimg"
           :before-upload="beforeAvatarUpload"
+          :on-preview="handlePictureCardPreview"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -186,6 +187,7 @@
           :show-file-list="false"
           :on-success="handleworkImgUrlSuccess"
           :before-upload="beforeAvatarUpload"
+          :on-preview="handlePictureCardPreview"
         >
           <img v-if="workImgUrl" :src="workImgUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -356,6 +358,7 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
+            :on-preview="handlePictureCardPreview"
           >
             <img v-if="pictureBookform.fileImgUrl" :src="pictureBookform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -367,6 +370,9 @@
         <el-button @click="closepictureBookDialog">取消</el-button>
         <el-button type="primary" @click="submitpictureBookUrl">确定</el-button>
       </span>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
   </div>
 </template>
@@ -384,6 +390,9 @@ import {
 export default {
   data() {
     return {
+      dialogVisible:false,
+      dialogImageUrl:'',
+      
       newVideoUrl: newVideoUrl,
       VideoUrl: VideoUrl,
       imgUrl: imgUrl,
@@ -780,13 +789,21 @@ export default {
     },
     handleRemoveimg(file) {
       // 删除图片
-      console.log(file);
-      this.imgList.forEach((element, index) => {
-        console.log("element", element);
-        if (element.fileUrl == file.response.url) {
-          this.imgList.splice(index, 1);
-        }
-      });
+      return this.$confirm("确认要删除吗?", "提示", {
+        type: "warning"
+      })
+      .then(async () => {
+          console.log(file);
+          this.imgList.forEach((element, index) => {
+            console.log("element", element);
+            if (element.fileUrl == file.response.url) {
+              this.imgList.splice(index, 1);
+            }
+          });
+      })
+      //   .catch(() => {
+      //     this.listLoading = false;
+      // });
     },
     pictureBookAdd() {
       this.pictureBookVisible = true;

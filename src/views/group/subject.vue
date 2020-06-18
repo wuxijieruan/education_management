@@ -28,7 +28,7 @@
         v-loading="listLoading"
         border
         element-loading-text="拼命加载中"
-        style="width: 661px;"
+        style="width: 861px;"
         @selection-change="selectionChange"
       >
         <el-table-column align="center" type="selection" width="60"></el-table-column>
@@ -58,6 +58,21 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="showCourseNo" label="上架课程数" width="100"></el-table-column>
+
+        <el-table-column align="center" prop="weight" label="排序序号" width="200">
+          <template slot-scope="scope">
+            <el-input-number 
+              size="small"
+              style="width:100px"
+              v-model="scope.row.weight"
+              auto-complete="off"
+              @change="changeexercisestweight(scope.row)"
+                :min="0"
+            >
+            </el-input-number>
+          </template>
+        </el-table-column>
+
         <el-table-column align="center" label="操作" width="80">
           <template slot-scope="scope">
             <el-button
@@ -69,6 +84,9 @@
             ></el-button>
           </template>
         </el-table-column>
+
+ 
+
       </el-table>
     </el-form>
 
@@ -85,7 +103,23 @@
             auto-complete="off"
             placeholder="请输入话题名称"
           ></el-input>
+
+         
         </el-form-item>
+
+     <el-form-item label="排序序号" prop="weight">
+        <el-input-number 
+          size="small"
+         
+          style="width:100px"
+          v-model="addForm.weight"
+          auto-complete="off"
+            :min = "0"
+        >
+        </el-input-number>
+         
+        </el-form-item>
+
         <el-form-item label="是否设为推荐" prop="isShow">
           <el-radio-group v-model="addForm.isShow">
             <el-radio label="1">是</el-radio>
@@ -112,7 +146,8 @@ import {
   subjectsAdd,
   subjectsDel,
   subjectsPut,
-  subjectsGet
+  subjectsGet,
+  updateSubjectsWeightByID
 } from "@/api/getData";
 
 export default {
@@ -141,7 +176,8 @@ export default {
       addForm: {
         subjectName: "",
         isShow: "0",
-        isTop: "0"
+        isTop: "0",
+        weight:2
       },
       addrules: {
         subjectName: [
@@ -156,8 +192,9 @@ export default {
       },
       batchDeletionStatus: false,
       batchList: [],
-      user: ""
+      user: "" 
     };
+   
   },
   // 注册组件
   components: {
@@ -245,7 +282,8 @@ export default {
       this.addForm = {
         subjectName: "",
         isShow: "0",
-        isTop: "0"
+        isTop: "0",
+        weight:2
       };
     },
     // 新增
@@ -323,6 +361,46 @@ export default {
         });
       }
     },
+      // 修改权重
+    async changeexercisestweight(row) {
+      console.log(row.weight);
+      if (row.weight != "") {
+        var data = {
+          weight: row.weight,
+          subjectId: row.subjectId
+        };
+        console.log(data);
+        try {
+          const res = await updateSubjectsWeightByID(data);
+          console.log(res);
+          if (res.status == 200) {
+            this.$message({
+              type: "success",
+              message: "成功"
+            });
+            this.getSubject();
+          } else {
+            this.$message({
+              type: "error",
+              message: res.error
+            });
+            console.log(res);
+          }
+        } catch (err) {
+          this.$message({
+            type: "error",
+            message: "请重试"
+          });
+          console.log(err);
+        }
+      } else {
+        this.$message({
+          type: "error",
+          message: "请输入权重"
+        });
+      }
+    }
+    ,
     // 课程推荐（显示）
     async changeisShow(row) {
       console.log(row);
@@ -396,7 +474,7 @@ export default {
     },
     // 删除
     handleDel: function(row) {
-      this.$confirm("此操作会删除相关课程，请谨慎操作！确认要删除吗?", "提示", {
+      this.$confirm("确认要删除吗?", "提示", {
         type: "warning"
       })
         .then(async () => {

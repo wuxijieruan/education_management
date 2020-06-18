@@ -197,8 +197,32 @@ export default {
                 hasThird: "N",
                 url: "userStatic",
                 menus: null
+              },
+              {
+                menuid: 83,
+                icon: "icon-cat-skuQuery",
+                menuname: "新增人数统计",
+                hasThird: "N",
+                url: "newStatics",
+                menus: null
+              },
+            ]
+          },
+          {
+            menuid: 9,
+            icon: "li-icon-xiangmuguanli",
+            menuname: "消息管理",
+            hasThird: null,
+            url: null,
+            menus: [
+              {
+                menuid: 91,
+                icon: "icon-cat-skuQuery",
+                menuname: "消息列表",
+                hasThird: "N",
+                url: "message",
+                menus: null
               }
-              
             ]
           },
         ],

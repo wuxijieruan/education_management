@@ -7,19 +7,27 @@
     </el-breadcrumb>
 
     <div style="margin:20px 0">
-      <el-select v-model="form.reviewStatus" @change="changePage()">
+      <el-button size="small" type="primary" icon="el-icon-search" @click="ispostexcel=true">搜索</el-button>
+      <el-button size="small" type="danger" @click="batchToExamine">批量审核</el-button>
+    </div>
+  <el-dialog title="批量导出" :visible.sync="ispostexcel">
+    审核状态：
+      <el-select v-model="form.reviewStatus" >
         <el-option label="全部" value=""></el-option>
         <el-option label="未审核" value="0"></el-option>
         <el-option label="通过" value="1"></el-option>
         <el-option label="未通过" value="-1"></el-option>
       </el-select>
-      <el-button size="small" @click="batchToExamine">批量审核</el-button>
-    </div>
-
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="ispostexcel=false">取消</el-button>
+        <el-button type="primary" @click="changePage">搜索</el-button>
+      </span>
+    </el-dialog>
     <!--列表-->
     <el-form ref="form" :model="form">
       <el-table
         size="small"
+        height="600"
         :data="list"
         v-loading="listLoading"
         border
@@ -82,7 +90,8 @@ export default {
         pageSize: 10,
         total: 0
       },
-      taskList: []
+      taskList: [],
+      ispostexcel:false,
     };
   },
   // 注册组件
@@ -142,6 +151,7 @@ export default {
     },
     changePage() {
       console.log(this.form)
+      this.ispostexcel=false
       this.getConStudentExercisesList();
     },
     // 多选/全选

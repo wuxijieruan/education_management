@@ -685,13 +685,21 @@ export default {
     },
     handleRemoveimg(file) {
       // 删除图片
-      console.log(file);
-      this.allfileList.forEach((element, index) => {
-        console.log("element", element);
-        var url = element.fileUrl;
-        if (url == file.response.url) {
-          this.allfileList.splice(index, 1);
-        }
+      this.$confirm("确认要删除吗?", "提示", {
+        type: "warning"
+      })
+      .then(async () => {
+          console.log(file);
+          this.allfileList.forEach((element, index) => {
+            console.log("element", element);
+            var url = element.fileUrl;
+            if (url == file.response.url) {
+              this.allfileList.splice(index, 1);
+            }
+          });
+      })
+        .catch(() => {
+          this.listLoading = false;
       });
     },
     // 上传图片结束
