@@ -386,6 +386,7 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             :on-preview="handlePictureCardPreview"
+            
           >
             <img v-if="pictureBookform.fileImgUrl" :src="pictureBookform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -398,8 +399,8 @@
         <el-button type="primary" @click="submitpictureBookUrl">确定</el-button>
       </span>
     </el-dialog>
-    <el-dialog :visible.sync="dialogVisible">
-      <img width="50%" style="margin-left: 25%;" :src="dialogImageUrl" alt="">
+    <el-dialog :visible.sync="dialogVisible" id="imgpop">
+      <img width="100%" style="" :src="dialogImageUrl" alt="">
     </el-dialog>
   </div>
 </template>
@@ -1031,6 +1032,15 @@ export default {
     handlePictureCardPreview(file) {
       console.log(file)
         this.dialogImageUrl = file.response.url;
+        var img = new Image()
+        img.src = this.dialogImageUrl
+        console.log(img.width ,img.height )
+        var width = img.width +"px"
+        var divShow = $('#imgpop .el-dialog')
+        console.log(divShow)
+        $(divShow).css("width",width)
+
+
         this.dialogVisible = true;
     },
     pictureBookAdd() {
@@ -1287,5 +1297,16 @@ export default {
 .fileImgUrl {
   width: 132px;
   height: 132px;
+}
+</style>
+<style >
+#imgpop .el-dialog{
+  width: 70%;
+}
+#imgpop .el-dialog__header{
+  padding: 0;
+}
+#imgpop .el-dialog__body{
+  padding: 0;
 }
 </style>
