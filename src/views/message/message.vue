@@ -7,15 +7,52 @@
     </el-breadcrumb>
 
     <!-- 搜索筛选 -->
-    <div style="margin-bottom:10px;">
-      <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button>
-      <el-button
-        size="small"
-        type="primary"
-        icon="el-icon-refresh"
-        @click="reset"
-        style="margin-right:10px"
-      >重置</el-button>
+    <div style="margin-bottom:10px;margin-top:20px;">
+      <el-form  :model="searchList" ref="searchList" :inline="true" >
+        <!-- <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button> -->
+        
+        <el-form-item label="统计时间区间：">
+          <el-date-picker
+            v-model="searchList.startTime"
+            type="date"
+            placeholder="选择开始时间"
+            style=" margin-right: 10px;width:150px;"
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
+          ></el-date-picker>-
+          <el-date-picker
+            v-model="searchList.endTime"
+            type="date"
+            placeholder="选择结束时间"
+            style="margin-left: 10px; margin-right: 20px;width:150px"
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="宝贝昵称：" prop="studentName">
+          <el-input  v-model="searchList.studentName" style="width:10rem;margin-right: 20px;"></el-input>
+        </el-form-item>
+        <el-form-item label="内容：" prop="content">
+          <el-input  v-model="searchList.content" style="width:15rem;"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            size="small"
+            type="primary"
+            icon="el-icon-refresh"
+            @click="getmessageList"
+            style="margin-left:30px"
+          >搜索</el-button>
+          <el-button
+          size="small"
+          type="danger"
+          icon="el-icon-refresh"
+          @click="reset"
+          style="margin-right:10px"
+        >重置</el-button>
+        </el-form-item>
+        </el-form>
+
       
     </div>
     
@@ -40,16 +77,16 @@
         <el-table-column align="center" prop="templateId" label="模板ID" width="120"></el-table-column>
         <el-table-column align="center" prop="createTime" label="发送时间" width="130"></el-table-column>
         <el-table-column align="center" prop="content"  label="内容" min-width="130"></el-table-column>
-        <el-table-column align="center" label="操作" width="100" fixed="right">
-          <!-- <template slot-scope="scope">
+        <!-- <el-table-column align="center" label="操作" width="100" fixed="right">
+          <template slot-scope="scope">
             <router-link
               :to="{ path: '/userDetail',query: {users:scope.row,usersList:usersList}}"
             >
               <el-button size="small" style="margin-left:10px">详情</el-button>
             </router-link>
             
-          </template> -->
-        </el-table-column>
+          </template>
+        </el-table-column> -->
       </el-table>
     <!-- 分页组件 -->
     <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>

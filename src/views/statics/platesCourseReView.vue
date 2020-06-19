@@ -33,17 +33,23 @@
             style="margin-left:30px"
           >搜索</el-button>
 
-          <el-button
-            size="small"
-            type="danger"
-            @click="ispostexcel=true"
-          >导出</el-button>
+          <el-button size="small" type="danger" @click="ispostexcel=true">导出</el-button>
           <!-- <el-button
             size="small"
             type="danger"
             icon="el-icon-delete"
             @click="outExeall"
-          >全部导出</el-button> -->
+          >全部导出</el-button>-->
+
+          <el-select
+            v-model="postExcel"
+            placeholder="请选择导出内容"
+            v-if="ispostexcel"
+            @change="outExe()"
+          >
+            <el-option value="1" label="导出当前页">导出当前页</el-option>
+            <el-option value="2" label="全部导出">全部导出</el-option>
+          </el-select>
         </el-form-item>
       </el-form>
     </div>
@@ -54,7 +60,7 @@
         <el-table
           size="small"
           height="475"
-          :data="sourselist"
+          :data="soursetablelist"
           highlight-current-row
           v-loading="listLoading"
           border
@@ -78,8 +84,8 @@
       <el-tab-pane label="板块复刷统计" name="first">
         <el-table
           size="small"
-           height="475"
-          :data="platelist"
+          height="475"
+          :data="platetablelist"
           highlight-current-row
           v-loading="listLoading"
           border
@@ -101,8 +107,8 @@
       <el-tab-pane label="标签热门统计" name="second">
         <el-table
           size="small"
-           height="475"
-          :data="taglist"
+          height="475"
+          :data="tagtablelist"
           highlight-current-row
           v-loading="listLoading"
           border
@@ -122,8 +128,8 @@
       <el-tab-pane label="课程热门统计" name="third">
         <el-table
           size="small"
-           height="475"
-          :data="hotcourselist"
+          height="475"
+          :data="hotcoursetablelist"
           highlight-current-row
           v-loading="listLoading"
           border
@@ -143,8 +149,8 @@
       <el-tab-pane label="课程复刷统计" name="fourth">
         <el-table
           size="small"
-           height="475"
-          :data="recourselist"
+          height="475"
+          :data="recoursetablelist"
           :cell-class-name="tableRowClassName"
           highlight-current-row
           v-loading="listLoading"
@@ -163,7 +169,7 @@
       </el-tab-pane>
     </el-tabs>
     <!-- 导出选项 -->
-    <el-dialog title="批量导出" :visible.sync="ispostexcel">
+    <!-- <el-dialog title="批量导出" :visible.sync="ispostexcel">
       <el-select v-model="postExcel" placeholder="请选择导出内容" default-first-option>
             <el-option value="1" label="导出当前选中的内容">导出当前选中的内容</el-option>
             <el-option value="2" label="全部导出">全部导出</el-option>
@@ -172,7 +178,7 @@
         <el-button @click="ispostexcel=false">取消</el-button>
         <el-button type="primary" @click="outExe">导出</el-button>
       </span>
-    </el-dialog>
+    </el-dialog>-->
   </div>
 </template>
 <script>
@@ -195,15 +201,15 @@ export default {
         resourceType: ""
       },
 
-      sourselist: [], //资源统计统计
-      platelist: [], //复刷板块
-      taglist: [], //标签热门统计
-      hotcourselist: [], //课程热门统计
-      recourselist: [], // 课程复刷统计
+      soursetablelist: [], //资源统计统计
+      platetablelist: [], //复刷板块
+      tagtablelist: [], //标签热门统计
+      hotcoursetablelist: [], //课程热门统计
+      recoursetablelist: [], // 课程复刷统计
 
       batchList: [],
       isreturnBack: false,
-       excelData:"",
+      excelData: "",
       formpage: {
         page: 1,
         pageSize: 10,
@@ -217,8 +223,8 @@ export default {
         total: 0
       },
 
-      ispostexcel:false,//导出弹窗的显现
-      postExcel:"1",//导出类型
+      ispostexcel: false, //导出弹窗的显现
+      postExcel: "" //导出类型
     };
   },
   components: {
@@ -228,11 +234,29 @@ export default {
     this.getsourselist();
   },
   methods: {
-    async isPostSatatus(){
-      if(this.postExcel==1){//导出当前选中的内容
-          this.excelData = this.batchList //你要导出的数据list。
-          this.ispostexcel=false
-      }else if(this.postExcel==2){//全部导出
+    async isPostSatatus() {
+      if (this.postExcel == 1) {
+        //导出当前选中的内容
+        if (this.batchList != "" || this.batchList.length > 0) {
+          this.excelData = this.batchList; //你要导出的数据list。
+        } else {
+          if (this.form.resourceType == 0) {
+           this.excelData = this.soursetablelist; //你要导出的数据list。
+          } else if (this.form.resourceType == 1) {
+            this.excelData = this.platetablelist; //你要导出的数据list。
+          } else if (this.form.resourceType == 2) {
+            this.excelData = this.tagtablelist; //你要导出的数据list。
+          } else if (this.form.resourceType == 3) {
+            this.excelData = this.hotcoursetablelist; //你要导出的数据list。
+          } else if (this.form.resourceType == 4) {
+            this.excelData = this.recoursetablelist; //你要导出的数据list。
+          }
+        }
+        console.log(this.excelData);
+        this.ispostexcel = false;
+        this.postExcel = "";
+      } else if (this.postExcel == 2) {
+        //全部导出
         if (
           this.formpage.startTime != undefined &&
           this.formpage.endTime != undefined &&
@@ -256,10 +280,10 @@ export default {
         if (this.formpage.endTime == null) {
           data.endTime = "";
         }
-        delete data.page
-        delete data.pageSize
+        delete data.page;
+        delete data.pageSize;
         try {
-          this.ispostexcel=false
+          this.ispostexcel = false;
           this.listLoading = true;
           console.log(data);
           if (this.form.resourceType == 0) {
@@ -272,12 +296,13 @@ export default {
             var res = await hotCourseList(data);
           } else if (this.form.resourceType == 4) {
             var res = await reCourseList(data);
-          }   
+          }
 
           if (res.status == 200) {
             console.log(res.data.list);
             this.excelData = res.data.list;
             this.listLoading = false;
+              this.postExcel = "";
           } else {
             this.$message({
               type: "error",
@@ -291,16 +316,14 @@ export default {
           });
           console.log(err);
         }
-
-                 
       }
-      this.formpage={
+      this.formpage = {
         page: 1,
         pageSize: 10,
         startTime: "",
         endTime: ""
-      }
-      this.export2Excel()
+      };
+      this.export2Excel();
     },
     // 导出
     outExe() {
@@ -310,7 +333,7 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.isPostSatatus()
+          this.isPostSatatus();
         })
         .catch(() => {});
     },
@@ -326,7 +349,8 @@ export default {
             "resourcesCountSourceType",
             "resourcesCountSourceFileType",
             "resourcesCountCountTotal",
-            "resourcesCountStuTotal"
+            "resourcesCountStuTotal",
+            "is_end"
           ]; // 导出的表头名
           const tHeader = [
             "课程名称",
@@ -334,7 +358,8 @@ export default {
             "资源包类型",
             "资源类型",
             "总点击次数",
-            "点击人数"
+            "点击人数",
+            "完播次数"
           ]; // 导出的表头字段名
           const list = that.excelData;
           const data = that.formatJson(filterVal, list);
@@ -373,7 +398,7 @@ export default {
             "资源包类型",
             "资源类型",
             "复刷次数",
-            "复刷人数",
+            "复刷人数"
           ]; // 导出的表头字段名
           const list = that.excelData;
           const data = that.formatJson(filterVal, list);
@@ -396,7 +421,7 @@ export default {
             `${currentdate}板块复刷统计excel`
           ); // 导出的表格名称，根据需要自己命名
         });
-      }else if (that.form.resourceType == 2) {
+      } else if (that.form.resourceType == 2) {
         //每日
         require.ensure([], () => {
           const { export_json_to_excel } = require("../../excel/Export2Excel"); //这里必须使用绝对路径
@@ -435,7 +460,7 @@ export default {
             `${currentdate}标签热门统计excel`
           ); // 导出的表格名称，根据需要自己命名
         });
-      }else if (that.form.resourceType == 3) {
+      } else if (that.form.resourceType == 3) {
         //每日
         require.ensure([], () => {
           const { export_json_to_excel } = require("../../excel/Export2Excel"); //这里必须使用绝对路径
@@ -474,7 +499,7 @@ export default {
             `${currentdate}课程热门统计excel`
           ); // 导出的表格名称，根据需要自己命名
         });
-      }else if (that.form.resourceType == 4) {
+      } else if (that.form.resourceType == 4) {
         //每日
         require.ensure([], () => {
           const { export_json_to_excel } = require("../../excel/Export2Excel"); //这里必须使用绝对路径
@@ -485,11 +510,7 @@ export default {
             "courseReViewCountStuTotal"
           ]; // 导出的表头名
 
-          const tHeader = [
-            "课程名称",
-            "复刷次数",
-            "复刷人数"
-          ]; // 导出的表头字段名
+          const tHeader = ["课程名称", "复刷次数", "复刷人数"]; // 导出的表头字段名
           const list = that.excelData;
           const data = that.formatJson(filterVal, list);
           let datetime = new Date();
@@ -520,7 +541,7 @@ export default {
     // 多选/全选
     selectionChange(e) {
       if (e.length != 0) {
-         this.batchList = e;
+        this.batchList = e;
         this.isreturnBack = true;
       } else {
         this.batchList = [];
@@ -559,7 +580,7 @@ export default {
     },
     tableRowClassName({ row, column, rowIndex, columnIndex }) {
       //判断表格颜色
-      var list = this.platelist;
+      var list = this.platetablelist;
       if (list) {
         if (
           row.platesCourseReViewCountSource ==
@@ -636,7 +657,7 @@ export default {
         const res = await plateList(data);
         console.log(res);
         if (res.status == 200) {
-          this.platelist = res.data.list;
+          this.platetablelist = res.data.list;
 
           this.pageparm.total = res.data.total;
           this.listLoading = false;
@@ -686,7 +707,7 @@ export default {
 
         if (res.status == 200) {
           console.log(res.data.list);
-          this.sourselist = res.data.list;
+          this.soursetablelist = res.data.list;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
         } else {
@@ -733,7 +754,7 @@ export default {
         const res = await hotCourseList(data);
         console.log(res);
         if (res.status == 200) {
-          this.hotcourselist = res.data.list;
+          this.hotcoursetablelist = res.data.list;
 
           this.pageparm.total = res.data.total;
           this.listLoading = false;
@@ -781,7 +802,7 @@ export default {
         const res = await hotTagList(data);
         console.log(res);
         if (res.status == 200) {
-          this.taglist = res.data.list;
+          this.tagtablelist = res.data.list;
 
           this.pageparm.total = res.data.total;
           this.listLoading = false;
@@ -829,7 +850,7 @@ export default {
         const res = await reCourseList(data);
         console.log(res);
         if (res.status == 200) {
-          this.recourselist = res.data.list;
+          this.recoursetablelist = res.data.list;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
         } else {

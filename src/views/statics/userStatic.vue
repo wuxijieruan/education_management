@@ -44,6 +44,15 @@
             type="danger"
             @click="ispostexcel=true"
           >批量导出</el-button>
+           <el-select
+            v-model="postExcel"
+            placeholder="请选择导出内容"
+            v-if="ispostexcel"
+            @change="outExe()"
+          >
+            <el-option value="1" label="导出当前页">导出当前页</el-option>
+            <el-option value="2" label="全部导出">全部导出</el-option>
+          </el-select>
         </el-form-item>
           
         
@@ -60,7 +69,7 @@
         <el-table
           size="small"
            height="475"
-          :data="deeplist"
+          :data="deeptablelist"
           highlight-current-row
           v-loading="listLoading"
           border
@@ -84,7 +93,7 @@
         <el-table
           size="small"
            height="475"
-          :data="timelist"
+          :data="timetablelist"
           highlight-current-row
           v-loading="listLoading"
           border
@@ -109,7 +118,7 @@
       
     </el-tabs>
     <!-- 导出选项 -->
-    <el-dialog title="批量导出" :visible.sync="ispostexcel">
+    <!-- <el-dialog title="批量导出" :visible.sync="ispostexcel">
       <el-select v-model="postExcel" placeholder="请选择导出内容" default-first-option>
             <el-option value="1" label="导出当前选中的内容">导出当前选中的内容</el-option>
             <el-option value="2" label="全部导出">全部导出</el-option>
@@ -118,7 +127,7 @@
         <el-button @click="ispostexcel=false">取消</el-button>
         <el-button type="primary" @click="outExe">导出</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 <script>
@@ -135,8 +144,8 @@ export default {
         resourceType: ""
       },
 
-      timelist:[],//时长统计
-      deeplist:[],//深度统计
+      timetablelist:[],//时长统计
+      deeptablelist:[],//深度统计
       formpage:{
         page: 1,
         pageSize: 10,
@@ -158,7 +167,7 @@ export default {
       opinionData: ["3", "2", "4", "4", "5"],
       
       ispostexcel:false,//导出弹窗的显现
-      postExcel:"1",//导出类型
+      postExcel:"",//导出类型
     };
   },
   components: {
@@ -176,8 +185,19 @@ export default {
   methods: {
     async isPostSatatus(){
       if(this.postExcel==1){//导出当前选中的内容
-          this.excelData = this.batchList //你要导出的数据list。
-          this.ispostexcel=false
+        if (this.batchList != "" || this.batchList.length > 0) {
+          this.excelData = this.batchList; //你要导出的数据list。
+        } else {        
+          if (this.form.resourceType == 0) {
+           console.log(this.deeptablelist)
+            this.excelData = this.deeptablelist; //你要导出的数据list。
+          } else {
+              this.excelData = this.timetablelist
+          }
+        }
+ console.log(this.excelData)
+        this.ispostexcel = false;
+        this.postExcel = "";
       }else if(this.postExcel==2){//全部导出
         if(this.formpage.startTime!=undefined&&this.formpage.endTime!=undefined){
           let st = new Date(this.formpage.startTime)
@@ -213,6 +233,8 @@ export default {
             console.log(res.data.list);
             this.excelData = res.data.list;
             this.listLoading = false;
+             this.postExcel = "";
+             
           } else {
             this.$message({
               type: "error",
@@ -401,7 +423,7 @@ export default {
         const res = await timeList(data);
          console.log(res);
         if (res.status == 200) {
-          this.timelist = res.data.list;
+          this.timetablelist = res.data.list;
           
           this.pageparm.total =res.data.total
           this.listLoading = false
@@ -448,7 +470,7 @@ export default {
         
         if (res.status == 200) {
           console.log(res.data.list);
-          this.deeplist = res.data.list;
+          this.deeptablelist = res.data.list;
           this.pageparm.total =res.data.total
           this.listLoading = false
          

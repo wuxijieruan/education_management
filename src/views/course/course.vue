@@ -2,25 +2,87 @@
   <div>
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
-      <el-breadcrumb-item>课程管理</el-breadcrumb-item>
-      <el-breadcrumb-item>课程列表</el-breadcrumb-item>
-    </el-breadcrumb>
-
-    <!-- 搜索筛选 -->
-    <div style="margin-bottom:10px;">
-      <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button>
-      
+      <el-breadcrumb-item>
+        <strong style="font-size:18px;">课程管理</strong>
+      </el-breadcrumb-item>
+      <el-breadcrumb-item>
+        <strong style="font-size:18px;">课程列表</strong>
+      </el-breadcrumb-item>
       <router-link to="/courseAdd">
-        <el-button size="small" type="primary" icon="el-icon-plus" style="margin-left:10px">添加</el-button>
+        <el-button size="mini" type="primary" icon="el-icon-plus">添加</el-button>
       </router-link>
       <el-button
-        size="small"
-        style="margin-right:10px"
+        size="mini"
         type="danger"
         icon="el-icon-delete"
         v-if="batchDeletionStatus"
         @click="batchDel"
       >批量下架</el-button>
+    </el-breadcrumb>
+
+    <!-- 搜索筛选 -->
+    <div style="margin-bottom:10px;">
+      <!-- <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button> -->
+      <el-form label-width="100px" :model="form" ref="form" v-loading="listLoading" :inline="true">
+        <el-form-item label="课程名称" prop="courseName">
+          <el-select
+            v-model="value"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入关键词"
+            :remote-method="remoteMethod"
+            :loading="loading"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <!-- <el-input
+            size="small"
+            v-model="form.courseName"
+            auto-complete="off"
+            placeholder="请输入课程名称"
+            style="width:220px"
+            @blur="getCourse"
+          ></el-input>-->
+        </el-form-item>
+        <el-form-item label="课程话题" prop="subjectId">
+          <el-select v-model="form.subjectId" filterable placeholder="请选择话题" @change="getCourse">
+            <el-option value>请选择话题</el-option>
+            <el-option
+              v-for="item in subjectsGetList"
+              :key="item.subjectId"
+              :label="item.subjectName"
+              :value="item.subjectId"
+            ></el-option>  
+          </el-select>
+        </el-form-item>
+        <el-form-item label="课程类型" prop="courseType">
+          <el-select v-model="form.courseType" placeholder="请选择课程类型" @change="getCourse">
+            <el-option value="1" label="主课程">主课程</el-option>
+            <el-option value="2" label="拓展课程">拓展课程</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="课程状态" prop="isVail">
+          <el-select v-model="form.isVail" placeholder="请选择课程状态" @change="getCourse">
+            <el-option value="-1" label="下架">下架</el-option>
+            <el-option value="1" label="上架">上架</el-option>
+          </el-select>
+        </el-form-item>
+        <!-- <el-button type="primary" icon="el-icon-search" size="small" @click="getCourse">搜索</el-button> -->
+        <el-button
+          size="small"
+          type="danger"
+          icon="el-icon-refresh"
+          @click="reset"
+          style="margin-right:10px"
+        >重置</el-button>
+      </el-form>
     </div>
 
     <!--列表-->
@@ -47,7 +109,7 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="courseName" label="课程名称" min-width="200"></el-table-column>
-         
+
         <el-table-column align="center" prop="remarks" label="发布人" width="100"></el-table-column>
         <el-table-column align="center" prop="isVail" label="上下架状态" width="100">
           <template slot-scope="scope">
@@ -58,20 +120,17 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="courseIndex" label="排列序号" min-width="100">
-             <template slot-scope="scope">
-        <el-input-number 
-          size="small"
-           
-          style="width:100px"
-          v-model="scope.row.courseIndex"
-          auto-complete="off"
-           @change="changecourseIndex(scope.row)"
-
-            :min="0"
-        >
-        </el-input-number>
+          <template slot-scope="scope">
+            <el-input-number
+              size="small"
+              style="width:100px"
+              v-model="scope.row.courseIndex"
+              auto-complete="off"
+              @change="changecourseIndex(scope.row)"
+              :min="0"
+            ></el-input-number>
           </template>
-          </el-table-column> 
+        </el-table-column>
         <el-table-column align="center" prop="isHot" label="是否热门" width="80"></el-table-column>
         <el-table-column align="center" prop="isTop" label="是否推荐" width="80"></el-table-column>
         <el-table-column align="center" label="操作" width="260" fixed="right">
@@ -126,64 +185,16 @@
       </el-table>
     </el-form>
     <!-- 分页组件 -->
+
     <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
 
     <!-- 搜索界面 -->
-    <el-dialog title="搜索" width="900px" :visible.sync="searchVisible" @click="closeDialog">
-      <el-form
-        label-width="100px"
-        :model="form"
-        ref="form"
-        style="width:850px"
-        v-loading="listLoading"
-      >
-        <el-form-item label="课程名称" prop="courseName">
-          <el-input
-            size="small"
-            v-model="form.courseName"
-            auto-complete="off"
-            placeholder="请输入课程名称"
-            style="width:220px"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="课程话题" prop="subjectId">
-          <el-select v-model="form.subjectId" filterable placeholder="请选择话题">
-            <el-option value>请选择话题</el-option>
-            <el-option
-              v-for="item in subjectsGetList"
-              :key="item.subjectId"
-              :label="item.subjectName"
-              :value="item.subjectId"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="课程类型" prop="courseType">
-          <el-select v-model="form.courseType" placeholder="请选择课程类型">
-            <el-option value="1" label="主课程">主课程</el-option>
-            <el-option value="2" label="拓展课程">拓展课程</el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="课程状态" prop="isVail">
-          <el-select v-model="form.isVail" placeholder="请选择课程状态">
-            <el-option value="-1" label="下架">下架</el-option>
-            <el-option value="1" label="上架">上架</el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-          <el-button
-          size="small"
-          type="danger"
-          icon="el-icon-refresh"
-          @click="reset"
-          style="margin-right:10px"
-        >重置</el-button>
-        <el-button @click="closeDialog">取消</el-button>
-        <el-button type="primary" @click="getCourse">搜索</el-button>
-      </span>
-    </el-dialog>
+    <!-- <el-dialog title="搜索" width="900px" :visible.sync="searchVisible" @click="closeDialog"> -->
+
+    <!-- </el-dialog> -->
   </div>
 </template>
+
 <script>
 import Pagination from "@/components/Pagination";
 import {
@@ -192,7 +203,8 @@ import {
   subjectsGet,
   courseputOn,
   courseSetTop,
-  updateCourseIndexByID
+  updateCourseIndexByID,
+  courseNameGet
 } from "@/api/getData";
 export default {
   data() {
@@ -201,6 +213,7 @@ export default {
       list: [],
       gradeGetList: [],
       subjectsGetList: [],
+      courseNameList: [],
       form: {
         createUserId: "",
         subjectId: "", //话题id
@@ -240,6 +253,7 @@ export default {
   mounted() {
     // this.getCourse();
     this.getSubject();
+    this.getcourseName();
   },
   methods: {
     // 多选/全选
@@ -357,6 +371,32 @@ export default {
         console.log(err);
       }
     },
+
+    async getcourseName() {
+      try {
+        this.listLoading = true;
+        const res = await courseNameGet();
+        if (res.status == 200) {
+          console.log("话题列表", res.data);
+          this.courseNameList = res.data.list;
+          console.log("课程名称列表", this.courseNameList);
+          this.listLoading = false;
+        } else {
+          this.$message({
+            type: "error",
+            message: res.error
+          });
+          console.log(res);
+        }
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: "请重试"
+        });
+        console.log(err);
+      }
+    },
+
     // 搜索页面
     submitSearch() {
       this.searchVisible = true;
@@ -415,8 +455,8 @@ export default {
     // 课程置顶
     async courseSetTop(courseId) {
       // console.log(courseId);
-      var hotCourseName=this.hotCourseName
-      var content="确认置顶该课程?  当前主课程为："+hotCourseName
+      var hotCourseName = this.hotCourseName;
+      var content = "确认置顶该课程?  当前主课程为：" + hotCourseName;
       this.$confirm(content, "提示", { type: "warning" })
         .then(async () => {
           const res = await courseSetTop(courseId);
@@ -438,7 +478,7 @@ export default {
           this.listLoading = false;
         });
     },
-     // 修改课程的排列序号
+    // 修改课程的排列序号
     async changecourseIndex(row) {
       console.log(row.courseIndex);
       if (row.courseIndex != "") {

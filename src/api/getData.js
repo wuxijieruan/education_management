@@ -59,7 +59,7 @@ export const updateCourseIndexByID = data => fetch('/course/updateCourseIndexByI
 
 export const updateCourseResourceBundleIndex = data => fetch('/courseResourceBundle/updateCourseResourceBundleIndex' , data, 'POST') // 修改资源的排列序号
 
-
+export const courseNameGet = data => fetch('/course/getCourseName', data, 'GET') // 查看课程列表
 
 
 //管理员管理
@@ -141,7 +141,12 @@ export const getNewList = data => fetch('/wechat/selectNewUserQtyTotalDay' , dat
 
 export const getPerNewList = data => fetch('/wechat/selectNewUserQtyPerDay' , data, 'GET') // 每日新增人数统计
 
-export const getMessList = data => fetch('/MessageTemplate/selectStudentTemplateFilter' , data, 'POST') // 获取消息列表
+export const getMessList = data => fetch('/MessageTemplate/selectStudentTemplateFilter' , data, 'GET') // 获取消息列表
 
+
+
+export const getTemID = data => fetch('/MessageTemplate/selectTemplateMessageAll' , data, 'GET') // 获取消息模板
+
+export const postTemID = data => fetch('/MessageTemplate/sendMessageTemplate' , data, 'POST') // 发送消息模板
 
 
