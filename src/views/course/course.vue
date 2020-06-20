@@ -2,44 +2,55 @@
   <div>
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
-      <el-breadcrumb-item>
-        <strong style="font-size:18px;">课程管理</strong>
+      <el-breadcrumb-item>课程管理
+        <!-- <strong style="font-size:18px;">课程管理</strong> -->
       </el-breadcrumb-item>
       <el-breadcrumb-item>
-        <strong style="font-size:18px;">课程列表</strong>
+        课程列表
       </el-breadcrumb-item>
-      <router-link to="/courseAdd">
-        <el-button size="mini" type="primary" icon="el-icon-plus">添加</el-button>
-      </router-link>
-      <el-button
-        size="mini"
-        type="danger"
-        icon="el-icon-delete"
-        v-if="batchDeletionStatus"
-        @click="batchDel"
-      >批量下架</el-button>
+      
     </el-breadcrumb>
 
     <!-- 搜索筛选 -->
-    <div style="margin-bottom:10px;">
+    <div style="margin-top:5px;margin-bottom:5px;">
       <!-- <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button> -->
-      <el-form label-width="100px" :model="form" ref="form" v-loading="listLoading" :inline="true">
+      <el-form label-width="80px" :model="form" ref="form" v-loading="listLoading" :inline="true">
+        <el-form-item >
+          <router-link to="/courseAdd">
+            <el-button size="small" type="primary" icon="el-icon-plus">添加</el-button>
+          </router-link>
+          <el-button
+          size="small"
+          type="danger"
+          icon="el-icon-refresh"
+          @click="reset"
+          style="margin-right:10px"
+        >重置</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            icon="el-icon-delete"
+            v-if="batchDeletionStatus"
+            @click="batchDel"
+          >批量下架</el-button>
+        </el-form-item>
         <el-form-item label="课程名称" prop="courseName">
           <el-select
-            v-model="value"
-            multiple
+            v-model="form.courseName"
+            autocomplete
             filterable
             remote
             reserve-keyword
             placeholder="请输入关键词"
-            :remote-method="remoteMethod"
-            :loading="loading"
+            loading-text="加载中..."
+            :loading="listLoading"
+            @change="getCourse"
           >
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in courseNameList"
+              :key="item"
+              :label="item"
+              :value="item"
             ></el-option>
           </el-select>
           <!-- <el-input
@@ -75,13 +86,7 @@
           </el-select>
         </el-form-item>
         <!-- <el-button type="primary" icon="el-icon-search" size="small" @click="getCourse">搜索</el-button> -->
-        <el-button
-          size="small"
-          type="danger"
-          icon="el-icon-refresh"
-          @click="reset"
-          style="margin-right:10px"
-        >重置</el-button>
+        
       </el-form>
     </div>
 

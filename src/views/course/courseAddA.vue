@@ -398,7 +398,7 @@
           <el-button type="primary" @click="submitpictureBookUrl">确定</el-button>
         </span>
     </el-dialog>
-    <el-dialog :visible.sync="dialogVisible">
+    <el-dialog :visible.sync="dialogVisible" id="imgpop">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
   </div>
@@ -960,6 +960,15 @@ export default {
     handlePictureCardPreview(file) {
       console.log(file)
         this.dialogImageUrl = file.response.url;
+
+        var img = new Image()
+        img.src = this.dialogImageUrl
+        console.log(img.width ,img.height )
+        var width = img.width +"px"
+        var divShow = $('#imgpop .el-dialog')
+        console.log(divShow)
+        $(divShow).css("width",width)
+
         this.dialogVisible = true;
     },
     pictureBookAdd() {
@@ -1191,5 +1200,16 @@ export default {
 .fileImgUrl {
   width: 132px;
   height: 132px;
+}
+</style>
+<style >
+#imgpop .el-dialog{
+  width: 70%;
+}
+#imgpop .el-dialog__header{
+  padding: 0;
+}
+#imgpop .el-dialog__body{
+  padding: 0;
 }
 </style>

@@ -1032,6 +1032,7 @@ export default {
     handlePictureCardPreview(file) {
       console.log(file)
         this.dialogImageUrl = file.response.url;
+        
         var img = new Image()
         img.src = this.dialogImageUrl
         console.log(img.width ,img.height )
