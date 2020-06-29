@@ -39,11 +39,11 @@
           @click="returnBack"
           >邀请回访</el-button>
 
-           <el-button
+           <!-- <el-button
             size="small"
             type="danger"
             @click="ispostexcel=true"
-          >批量导出</el-button>
+          >批量导出</el-button> -->
            <el-select
             v-model="postExcel"
             placeholder="请选择导出内容"
@@ -427,7 +427,7 @@ export default {
           
           this.pageparm.total =res.data.total
           this.listLoading = false
-         
+           this.ispostexcel = true;
         } else {
           this.$message({
             type: "error",
@@ -473,7 +473,7 @@ export default {
           this.deeptablelist = res.data.list;
           this.pageparm.total =res.data.total
           this.listLoading = false
-         
+           this.ispostexcel = true;
         } else {
           this.$message({
             type: "error",

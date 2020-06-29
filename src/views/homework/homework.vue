@@ -9,53 +9,51 @@
     <!-- 搜索筛选 -->
     <div style="margin-bottom:10px;">
       <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button>
-      
+
       <!-- <router-link to="/courseAdd">
         <el-button size="small" type="primary" icon="el-icon-plus">添加</el-button>
-      </router-link> -->
-      <el-button
-        size="small"
-        type="danger"
-        icon="el-icon-delete"
-        
-        @click="batchDel"
-      >批量导出</el-button>
+      </router-link>-->
+      <!-- <el-button size="small" type="danger" icon="el-icon-delete" @click="batchDel">批量导出</el-button> -->
+      <el-select v-model="postExcel" placeholder="请选择导出内容" v-if="ispostexcel"
+            @change="outExe()">
+        <el-option value="1" label="导出当前页">导出当前页</el-option>
+        <el-option value="2" label="全部导出">全部导出</el-option>
+      </el-select>
     </div>
 
     <!--列表-->
     <!-- <el-form ref="hwsList" :model="hwsList"> -->
-      <el-table
-        size="small"
-        min-height="200"
-         max-height="680"
-        :data="hwsList"
-        stripe
-        highlight-current-row
-        v-loading="listLoading"
-        border
-        element-loading-text="拼命加载中"
-        style="width: 100%;"
-        @selection-change="selectionChange"
-        >
-        <!-- <el-table-column align="center" type="selection" width="60"></el-table-column> -->
-        <el-table-column align="center" prop="activityName" label="活动名称" width="280"></el-table-column>
-        <!-- <el-table-column align="center" type="index" label="序号" width="100"></el-table-column> -->
-        <el-table-column align="center" prop="studentName" label="宝贝昵称" width="180"></el-table-column>
-        <el-table-column align="center" prop="studentAge" label="年龄" min-width="80"></el-table-column>
-        <el-table-column align="center" prop="hwtype" label="作业类型" width="140"></el-table-column>
-        <el-table-column align="center" prop="courseName" label="课程" width="200"></el-table-column>
-        <el-table-column align="center" prop="createTime" label="作业日期" width="200"></el-table-column>
-        <el-table-column align="center" label="操作" width="260" fixed="right">
-          <template slot-scope="scope">
-            <router-link
-              :to="{ path: '/homeworkDetail',query: {homework:scope.row,homeworkData:hwsList}}"
-            >
-              <el-button size="small" style="margin-left:10px">详情</el-button>
-            </router-link>
-        
-          </template>
-        </el-table-column>
-      </el-table>
+    <el-table
+      size="small"
+      min-height="200"
+      max-height="680"
+      :data="hwsList"
+      stripe
+      highlight-current-row
+      v-loading="listLoading"
+      border
+      element-loading-text="拼命加载中"
+      style="width: 100%;"
+      @selection-change="selectionChange"
+    >
+    
+      <el-table-column align="center" prop="activityName" label="活动名称" width="280"></el-table-column>
+      <!-- <el-table-column align="center" type="index" label="序号" width="100"></el-table-column> -->
+      <el-table-column align="center" prop="studentName" label="宝贝昵称" width="180"></el-table-column>
+      <el-table-column align="center" prop="studentAge" label="年龄" min-width="80"></el-table-column>
+      <el-table-column align="center" prop="hwtype" label="作业类型" width="140"></el-table-column>
+      <el-table-column align="center" prop="courseName" label="课程" width="200"></el-table-column>
+      <el-table-column align="center" prop="createTime" label="作业日期" width="200"></el-table-column>
+      <el-table-column align="center" label="操作" width="260" fixed="right">
+        <template slot-scope="scope">
+          <router-link
+            :to="{ path: '/homeworkDetail',query: {homework:scope.row,homeworkData:hwsList}}"
+          >
+            <el-button size="small" style="margin-left:10px">详情</el-button>
+          </router-link>
+        </template>
+      </el-table-column>
+    </el-table>
     <!-- </el-form> -->
     <!-- 分页组件 -->
     <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
@@ -116,30 +114,30 @@
           </el-select>
         </el-form-item>
         <el-form-item label="开始日期" prop="startTime">
-            <el-date-picker
-              value-format="yyyy-MM-dd"
-              v-model="searchList.startTime"
-              type="date"
-              placeholder="选择日期">
-            </el-date-picker>
+          <el-date-picker
+            value-format="yyyy-MM-dd"
+            v-model="searchList.startTime"
+            type="date"
+            placeholder="选择日期"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="结束日期" prop="endTime">
-            <el-date-picker
-              value-format="yyyy-MM-dd"
-              v-model="searchList.endTime"
-              type="date"
-              placeholder="选择日期">
-            </el-date-picker>
+          <el-date-picker
+            value-format="yyyy-MM-dd"
+            v-model="searchList.endTime"
+            type="date"
+            placeholder="选择日期"
+          ></el-date-picker>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button
-        size="small"
-        type="danger"
-        icon="el-icon-refresh"
-        @click="reset"
-        style="margin-right:10px"
-      >重置</el-button>
+          size="small"
+          type="danger"
+          icon="el-icon-refresh"
+          @click="reset"
+          style="margin-right:10px"
+        >重置</el-button>
         <el-button @click="closeDialog">取消</el-button>
         <el-button type="primary" @click="gethomework">搜索</el-button>
       </span>
@@ -148,8 +146,8 @@
 </template>
 <script>
 import Pagination from "@/components/Pagination";
-import { allactList,homeworkList,enterpriseGet } from "@/api/getData";
-import { baseUrl ,baseFileUrl} from '@/config/env'
+import { allactList, homeworkList, enterpriseGet } from "@/api/getData";
+import { baseUrl, baseFileUrl } from "@/config/env";
 import {
   courseGet,
   courseDel,
@@ -183,15 +181,17 @@ export default {
         page: 1,
         pageSize: 10
       },
-      actsList:[],//活动列表
-      enterpriseList:[],//企业列表
-      hwsList:[],//作业列表
-      coursesList:[],//课程列表
-      searchList:{
+      actsList: [], //活动列表
+      enterpriseList: [], //企业列表
+      hwsList: [], //作业列表
+      coursesList: [], //课程列表
+      searchList: {
         page: 1,
-        pageSize: 10,
-      },//搜索列表
-      excelData:""
+        pageSize: 10
+      }, //搜索列表
+      excelData: "",
+          ispostexcel: false, //导出弹窗的显现
+           postExcel: "" //导出类型
     };
   },
   // 注册组件
@@ -212,51 +212,76 @@ export default {
   mounted() {
     this.actList();
     // this.gethomework();
-    this.getenterprise()
+    this.getenterprise();
   },
   methods: {
+    async isPostSatatus() {
+      if (this.postExcel == 1) {
+        //导出当前选中的内容
+ console.log("搜索列表"+ this.hwsList);
+        this.hwsList.forEach(element => {
+          this.excelData =  this.excelData + ",";
+           this.excelData =  this.excelData + element.studentExercisesId;
+        });
+        console.log("列表"+ this.excelData);
+      } else if (this.postExcel == 2) {
+        //全部导出
+
+       var data1 = this.searchList;
+        delete data1.page;
+        delete data1.pageSize;
+        try {
+          var res = await homeworkList(data1);
+          if (res.status == 200) {
+            console.log(res.data.list.length);
+            res.data.list.forEach(element => {
+             this.excelData =  this.excelData + ",";
+           this.excelData =  this.excelData + element.studentExercisesId;
+            });
+          } else {
+            this.$message({
+              type: "error",
+              message: res.error
+            });
+          }
+        } catch (err) {
+          this.$message({
+            type: "error",
+            message: "请重试"
+          });
+          console.log(err);
+        }
+      }
+      this.formpage = {
+        page: 1,
+        pageSize: 10,
+        startTime: "",
+        endTime: ""
+      };
+      this.export2Excel();
+    },
+
     // 导出
-            outExe() {
-                this.$confirm('此操作将导出excel文件, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.excelData = this.hwsList //你要导出的数据list。
-                    this.export2Excel()
-                }).catch(() => {
-                
-                });
-            },
-            export2Excel() {
-                var that = this;
-                require.ensure([], () => {
-                    const { export_json_to_excel } = require('../../excel/Export2Excel'); //这里必须使用绝对路径
-                    const filterVal = ['activityName','studentName', 'studentAge', 'hwtype','courseName','createTime',"answerImg","answerTest"]; // 导出的表头名
-                    const tHeader = ['活动名称','宝贝昵称','年龄', '作业类型','课程','作业日期','图片','文字']; // 导出的表头字段名
-                    const list = that.excelData;
-                    const data = that.formatJson(filterVal, list);
-                    let datetime=new Date()
-                    var seperator1 = "-";
-                    var year = datetime.getFullYear();
-                    var month = datetime.getMonth() + 1;
-                    var strDate = datetime.getDate();
-                    if (month >= 1 && month <= 9) {
-                      month = "0" + month;
-                    }
-                    if (strDate >= 0 && strDate <= 9) {
-                      strDate = "0" + strDate;
-                    }
-                    var currentdate = year + seperator1 + month + seperator1 + strDate;
-                    export_json_to_excel(tHeader, data, `${currentdate}作业列表excel`);// 导出的表格名称，根据需要自己命名
-                })
-            },
-            formatJson(filterVal, jsonData) {
-                return jsonData.map(v => filterVal.map(j => v[j]))
-            },
-
-
-
+    outExe() {
+      this.$confirm("此操作将导出excel文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.isPostSatatus();
+        })
+        .catch(() => {});
+    },
+    export2Excel() {
+      var that = this;
+      require.ensure([], () => {
+      console.log(this.excelData+"最终的数据");  
+      var ids=this.excelData;
+           window.location.href = baseUrl+"/activity/getManyStudentExercisesByIds?ids="+ids;
+           this.postExcel="";
+      });
+    },
 
     // 多选/全选
     selectionChange(e) {
@@ -269,36 +294,40 @@ export default {
       }
     },
     //批量导出
-    async batchDel() {
-      var studentExercisesId = "";
-      this.hwsList.forEach(element => {
-        studentExercisesId = studentExercisesId+",";
-        studentExercisesId=studentExercisesId+element.studentExercisesId;
-        
-      });
-      // studentExercisesId = studentExercisesId.substr(1);
-      
-     console.log(studentExercisesId)
-     console.log(baseFileUrl+ "/learn/activity/getManyStudentExercisesByIds?ids="+studentExercisesId)
-     window.location.href = baseFileUrl+ "/learn/activity/getManyStudentExercisesByIds?ids="+studentExercisesId
-      // try {
-      //   // this.listLoading = true;
-      //   const res = await homeworkdownload(studentExercisesId);
-      //    console.log("作业导出", res);
-      //     // if (res!= "") {
-      //       // this.listLoading = false;
-      //     // }
-      // }catch (err) {
-      //   this.$message({
-      //     type: "error",
-      //     message: "请重试"
-      //   });
-      //   console.log(err);
-      // }
-    },
+    // async batchDel() {
+    //   var studentExercisesId = "";
+    //   this.hwsList.forEach(element => {
+    //     studentExercisesId = studentExercisesId + ",";
+    //     studentExercisesId = studentExercisesId + element.studentExercisesId;
+    //   });
+    //   // studentExercisesId = studentExercisesId.substr(1);
+
+    //   console.log(studentExercisesId);
+    //   console.log(
+    //     baseFileUrl +
+    //       "/learn/activity/getManyStudentExercisesByIds?ids=" +
+    //       studentExercisesId
+    //   );
+    //   window.location.href = "http://localhost:8080/restfulapi_war_exploded/activity/getManyStudentExercisesByIds?ids=" +
+    //     studentExercisesId;
+    //   // try {
+    //   //   // this.listLoading = true;
+    //   //   const res = await homeworkdownload(studentExercisesId);
+    //   //    console.log("作业导出", res);
+    //   //     // if (res!= "") {
+    //   //       // this.listLoading = false;
+    //   //     // }
+    //   // }catch (err) {
+    //   //   this.$message({
+    //   //     type: "error",
+    //   //     message: "请重试"
+    //   //   });
+    //   //   console.log(err);
+    //   // }
+    // },
     // 分页插件事件
     callFather(parm) {
-      console.log(parm)
+      console.log(parm);
       this.searchList.page = parm.currentPage;
       this.searchList.pageSize = parm.pageSize;
       this.form.page = parm.currentPage;
@@ -315,21 +344,20 @@ export default {
       this.gethomework();
     },
     //获取企业列表
-  async getenterprise(e) {
+    async getenterprise(e) {
       try {
         const res = await enterpriseGet();
         if (res.status == 200) {
           console.log("企业列表", res.data);
-           res.data.list.forEach(element => {
-            this.enterpriseList.push(element)
-          })
-         
+          res.data.list.forEach(element => {
+            this.enterpriseList.push(element);
+          });
         } else {
           this.$message({
             type: "error",
             message: res.error
           });
-          console.log("企业列表",res);
+          console.log("企业列表", res);
         }
       } catch (err) {
         this.$message({
@@ -338,7 +366,7 @@ export default {
         });
         console.log(err);
       }
-  },
+    },
     // 获取课程列表
     async getCourse() {
       try {
@@ -397,28 +425,26 @@ export default {
     },
     // 关闭弹出框
     closeDialog() {
-      this.searchList={
-                            page: this.form.page,
-                            pageSize: 10,
-                          }
+      this.searchList = {
+        page: this.form.page,
+        pageSize: 10
+      };
       this.searchVisible = false; //搜索
     },
 
-
-
-  //获取活动列表
+    //获取活动列表
     async actList() {
       try {
         this.listLoading = true;
         const res = await allactList();
-        console.log("获取活动时返回",res);
-        if(res.status==200){
+        console.log("获取活动时返回", res);
+        if (res.status == 200) {
           this.listLoading = false;
           this.actsList = res.data;
-        
+
           console.log(this.actsList);
         }
-        
+
         // this.searchVisible = false; //搜索
       } catch (err) {
         this.$message({
@@ -430,29 +456,31 @@ export default {
     },
     // 获取作业列表
     async gethomework() {
-      console.log("searchList",this.searchList)
+      console.log("searchList", this.searchList);
       try {
         this.listLoading = true;
         const res = await homeworkList(this.searchList);
         if (res.status == 200) {
           console.log("作业列表", res.data);
+          this.hwsList=[];
           this.hwsList = res.data.list;
-          this.searchList={
-                            page: this.form.page,
-                            pageSize: 10,
-                          }
+          this.searchList = {
+            page: this.form.page,
+            pageSize: 10
+          };
           this.hwsList.forEach(item => {
-            if(item.answerImg){
-                item.hwtype="图片"
-            }else if(item.answerVideo){
-                  item.hwtype="视频"
-            }else if(item.answerVoice){
-                  item.hwtype="音频"
-            }else{
-              item.hwtype="文字"
+            if (item.answerImg) {
+              item.hwtype = "图片";
+            } else if (item.answerVideo) {
+              item.hwtype = "视频";
+            } else if (item.answerVoice) {
+              item.hwtype = "音频";
+            } else {
+              item.hwtype = "文字";
             }
           });
           this.pageparm.total = res.data.total;
+          this.ispostexcel=true;
           this.listLoading = false;
           this.searchVisible = false; //搜索
         } else {
@@ -469,7 +497,7 @@ export default {
         });
         console.log(err);
       }
-    },
+    }
   }
 };
 </script>

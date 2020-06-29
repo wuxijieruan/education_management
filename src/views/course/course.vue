@@ -138,9 +138,9 @@
         </el-table-column>
         <el-table-column align="center" prop="isHot" label="是否热门" width="80"></el-table-column>
         <el-table-column align="center" prop="isTop" label="是否推荐" width="80"></el-table-column>
-        <el-table-column align="center" label="操作" width="260" fixed="right">
+        <el-table-column align="center" label="操作" width="350" fixed="right">
           <template slot-scope="scope">
-            <el-button type="small">
+            <el-button type="mini">
               <el-dropdown>
                 <span class="el-dropdown-link">
                   新增
@@ -178,13 +178,21 @@
             <router-link
               :to="{ path: '/courseDetail',query: {courseId:scope.row.courseId,courseData:form}}"
             >
-              <el-button size="small" style="margin-left:10px">编辑</el-button>
+              <el-button size="mini" style="margin-left:10px">编辑</el-button>
             </router-link>
             <el-button
-              size="small"
+              size="mini"
+              type="danger"
               style="margin-left:10px"
               @click="courseSetTop(scope.row.courseId)"
             >置顶</el-button>
+            <el-button
+              v-if="scope.row.courseType=='主课程'"
+              type="warning"
+              size="mini"
+              style="margin-left:10px"
+              @click="courseSetline(scope.row.courseId)"
+            >排序置顶</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -209,7 +217,8 @@ import {
   courseputOn,
   courseSetTop,
   updateCourseIndexByID,
-  courseNameGet
+  courseNameGet,
+  setFirst
 } from "@/api/getData";
 export default {
   data() {
@@ -521,6 +530,25 @@ export default {
           message: "请输入排列序号"
         });
       }
+    },
+    //修改主课程位置置1
+    async courseSetline(courseId){
+      const res = await setFirst(courseId);
+          console.log(res);
+          if (res.status == 200) {
+            this.$message({
+              message: "成功",
+              type: "success"
+            });
+            this.getCourse()
+          } else {
+            this.$message({
+              type: "error",
+              message: res.msg
+            });
+            console.log(res.msg);
+          }
+        
     }
   }
 };

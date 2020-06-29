@@ -61,6 +61,8 @@ export const updateCourseResourceBundleIndex = data => fetch('/courseResourceBun
 
 export const courseNameGet = data => fetch('/course/getCourseName', data, 'GET') // 查看课程列表
 
+export const setFirst = data => fetch('/course/sortCourse?courseId='+ data,{}, 'POST') // 修改课程的序号
+
 
 //管理员管理
 export const adminAdd = data => fetch('/addUser', data, 'POST') // 添加

@@ -14,15 +14,15 @@
             type="date"
             placeholder="选择开始时间"
             style="margin-left: 20px; margin-right: 20px;width:150px;"
-            value-format="yyyy-MM-dd"
-            format="yyyy-MM-dd"
+            value-format="yyyy/MM/dd"
+            format="yyyy/MM/dd"
           ></el-date-picker>-
           <el-date-picker
             v-model="formpage.endTime"
             type="date"
             placeholder="选择结束时间"
             style=" margin-left: 20px;width:150px"
-            value-format="yyyy-MM-dd"
+            value-format="yyyy/MM/dd"
             format="yyyy-MM-dd"
           ></el-date-picker>
           <el-button
@@ -33,7 +33,7 @@
             style="margin-left:30px"
           >搜索</el-button>
 
-          <el-button size="small" type="danger" @click="ispostexcel=true">导出</el-button>
+          <!-- <el-button size="small" type="danger" @click="ispostexcel=true">导出</el-button> -->
           <el-select
             v-model="postExcel"
             placeholder="请选择导出内容"
@@ -198,8 +198,8 @@ export default {
           }
         }
         var data = this.formpage;
-        data.startTime = this.formpage.startTime.replace("-", "/");
-        data.endTime = this.formpage.startTime.replace("-", "/");
+        // data.startTime = this.formpage.startTime.replace("-", "/");
+        // data.endTime = this.formpage.endTime.replace("-", "/");
         if (this.formpage.startTime == null) {
           data.startTime = "";
         }
@@ -433,8 +433,8 @@ export default {
       }
       var data = this.formpage;
 
-      data.startTime = this.formpage.startTime.replace("-", "/");
-      data.endTime = this.formpage.startTime.replace("-", "/");
+      // data.startTime = this.formpage.startTime.replace("-", "/");
+      // data.endTime = this.formpage.endTime.replace("-", "/");
 
       if (this.formpage.startTime == null) {
         data.startTime = "";
@@ -452,6 +452,7 @@ export default {
           this.newlist = res.data.list;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
+          this.ispostexcel=true;
         } else {
           this.$message({
             type: "error",
@@ -485,8 +486,8 @@ export default {
       }
       var data = this.formpage;
 
-      data.startTime = this.formpage.startTime.replace("-", "/");
-      data.endTime = this.formpage.startTime.replace("-", "/");
+      // data.startTime = this.formpage.startTime.replace("-", "/");
+      // data.endTime = this.formpage.endTime.replace("-", "/");
 
       if (this.formpage.startTime == null) {
         data.startTime = "";
@@ -504,6 +505,7 @@ export default {
           this.perNewlist = res.data.list;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
+          this.ispostexcel=true;
         } else {
           this.$message({
             type: "error",

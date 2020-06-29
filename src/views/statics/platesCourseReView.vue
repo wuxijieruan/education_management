@@ -33,7 +33,7 @@
             style="margin-left:30px"
           >搜索</el-button>
 
-          <el-button size="small" type="danger" @click="ispostexcel=true">导出</el-button>
+          <!-- <el-button size="small" type="danger" @click="ispostexcel=true">导出</el-button> -->
           <!-- <el-button
             size="small"
             type="danger"
@@ -661,6 +661,7 @@ export default {
 
           this.pageparm.total = res.data.total;
           this.listLoading = false;
+          this.ispostexcel = true;
         } else {
           this.$message({
             type: "error",
@@ -710,6 +711,7 @@ export default {
           this.soursetablelist = res.data.list;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
+            this.ispostexcel = true;
         } else {
           this.$message({
             type: "error",
@@ -758,6 +760,7 @@ export default {
 
           this.pageparm.total = res.data.total;
           this.listLoading = false;
+            this.ispostexcel = true;
         } else {
           this.$message({
             type: "error",
@@ -806,6 +809,7 @@ export default {
 
           this.pageparm.total = res.data.total;
           this.listLoading = false;
+            this.ispostexcel = true;
         } else {
           this.$message({
             type: "error",
@@ -853,6 +857,7 @@ export default {
           this.recoursetablelist = res.data.list;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
+            this.ispostexcel = true;
         } else {
           this.$message({
             type: "error",

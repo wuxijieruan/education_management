@@ -30,7 +30,8 @@
         </el-dropdown-menu>
       </el-dropdown>
       
-      <el-button size="small" type="danger" v-if="isshow" @click="ispostexcel=true" style="margin-left:10px;">导出</el-button>
+      <!-- <el-button size="small" type="danger" v-if="isshow" @click="ispostexcel=true" style="margin-left:10px;">导出</el-button> -->
+      
       <el-select v-model="postExcel" placeholder="请选择导出内容" v-if="ispostexcel" @change="outExe()">
         <el-option value="1" label="导出当前页">导出当前页</el-option>
         <el-option value="2" label="全部导出">全部导出</el-option>
@@ -388,26 +389,49 @@ export default {
             this.searchList.startStuAge != "") ||
           (this.searchList.endStuAge != undefined &&
             this.searchList.endStuAge != "")
-        ) {
-          //起始和截止不都为空
-          //控制年龄大小
-          if (
-            (this.searchList.startStuAge < 0 &&
-              this.searchList.startStuAge > 105) ||
-            (this.searchList.endStuAge < 0 && this.searchList.endStuAge > 105)
-          ) {
-            if (this.searchList.startStuAge <= this.searchList.endStuAge) {
-              //控制起始年龄比终止小
-            } else {
-              alert("请正确填写年龄区间");
-              return;
+        ) {//起始和截止但凡有一项有值
+          var issttrue = 0
+          if(this.searchList.startStuAge != undefined && this.searchList.startStuAge != ""){
+            if(this.searchList.startStuAge > 0 && this.searchList.startStuAge < 105){
+              issttrue = 1
+              console.log("比大小正确1")
+            }else{
+              console.log("起始年龄区间不对")
+              issttrue = 0
             }
-          } else {
-            console.log(this.searchList);
+          }else{
+            console.log("起始年龄为空")
+            issttrue = 2
+          }
+          var isentrue = 0
+          if(this.searchList.endStuAge != undefined && this.searchList.endStuAge != ""){
+            if(this.searchList.endStuAge > 0 && this.searchList.endStuAge < 105){
+              isentrue = 1
+               console.log("比大小正确2")
+            }else{
+              console.log("截止年龄区间不对")
+              isentrue = 0
+            }
+          }else{
+            console.log("截止年龄为空")
+            isentrue = 2
+          }
+          if (issttrue == 0 || isentrue == 0) {
             alert("请正确填写年龄区间");
             return;
           }
+          //控制年龄大小
+          if (issttrue == 1 && isentrue == 1) {
+               //控制起始年龄比终止小
+                if (this.searchList.startStuAge <= this.searchList.endStuAge) {
+                 console.log("比大小正确12")
+                } else {
+                  alert("请正确填写年龄区间");
+                  return;
+                }
+          }
         }
+        
 
         if (
           this.searchList.startStuCreateTime != undefined &&
@@ -650,6 +674,7 @@ export default {
           this.userstableList = res.data.list;
           console.log("用户列表", this.userstableList);
           this.pageparm.total = res.data.total;
+            this.ispostexcel = true;
           this.closeDialog();
         }
       } catch (err) {
@@ -668,4 +693,5 @@ export default {
   width: 200px;
   height: 80px;
 }
+
 </style>
