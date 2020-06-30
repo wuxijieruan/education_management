@@ -605,12 +605,14 @@ export default {
     },
     VideoAdd() {
       this.VideoVisible = true;
+      this.vediouuid = ""
     },
     Videoedit(row) {
       console.log(row);
       this.Videoform = row;
       this.VideoVisible = true;
       this.VideoEdit = true;
+      this.vediouuid = ""
     },
     closeVideoDialog() {
       this.Videoform = {
@@ -621,6 +623,7 @@ export default {
         fileContentTag: ""
       };
       this.VideoVisible = false;
+      this.vediouuid = ""
     },
     S4() {
       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
@@ -655,10 +658,17 @@ export default {
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
-          this.vediouuid = this.guid()
-          var data = {
-            file:file,
-            fileId :this.vediouuid
+          if(this.Videoform.fileUrl){
+            var data={
+              file:file,
+              fileId : this.Videoform.courseResourceBundleFileId
+            }
+          }else{
+            this.vediouuid = this.guid()
+            var data={
+              file:file,
+              fileId : this.vediouuid
+            }
           }
           
           $.ajax({
@@ -701,16 +711,16 @@ export default {
           console.log(this.Videoform.fileUrl);
           var fileUrl = this.Videoform.fileUrl;
           var list = this.Videoform;
-          if(this.vediouuid){
-            list.courseResourceBundleFileId = this.vediouuid
-            this.vediouuid = ""
-          }
-          
-          
           if (this.VideoEdit) {
             console.log("编辑");
           } else {
             console.log("新增");
+            if(this.vediouuid){
+              list.courseResourceBundleFileId = this.vediouuid
+              this.vediouuid = ""
+            }else{
+              list.courseResourceBundleFileId = this.guid()
+            }
             this.VideoList.push(list);
             console.log("this.VideoList",this.VideoList)
             if (fileUrl.indexOf("https") != -1) {
@@ -772,12 +782,14 @@ export default {
     },
     audioAdd() {
       this.audioVisible = true;
+      this.vediouuid = ""
     },
     audioedit(row) {
       console.log(row);
       this.audioform = row;
       this.audioVisible = true;
       this.audioEdit = true;
+      this.vediouuid = ""
     },
     closeaudioDialog() {
       this.audioform = {
@@ -788,7 +800,9 @@ export default {
         fileContentTag: ""
       };
       this.audioVisible = false;
+      this.vediouuid = ""
     },
+    //上传音频
     uploadaudio() {
       //上传音频
       var _this = this;
@@ -823,10 +837,17 @@ export default {
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
-          this.vediouuid = this.guid()
-          var data = {
-            file:file,
-            fileId :this.vediouuid
+          if(this.audioform.fileUrl){
+            var data={
+              file:file,
+              fileId : this.audioform.courseResourceBundleFileId
+            }
+          }else{
+            this.vediouuid = this.guid()
+            var data={
+              file:file,
+              fileId : this.vediouuid
+            }
           }
           $.ajax({
             url: this.VideoUrl,
@@ -867,11 +888,13 @@ export default {
         if (this.audioform.fileUrl != "") {
           var list = this.audioform;
           if (this.audioEdit) {
-            console.log("编辑");
+            console.log("编辑",this.audioEdit);
           } else {
             if(this.vediouuid){
               list.courseResourceBundleFileId = this.vediouuid
               this.vediouuid = ""
+            }else{
+              list.courseResourceBundleFileId = this.guid()
             }
             this.audioList.push(list);
             console.log("新增",this.audioList);
@@ -954,8 +977,10 @@ export default {
     },
     handleImageSuccess(file) {
       console.log("添加图片", file);
+      
       var list = {
-        fileUrl: file.url
+        fileUrl: file.url,
+        fileId :this.guid()
       };
       this.imgList.push(list);
       console.log(this.imgList);
@@ -1003,6 +1028,7 @@ export default {
     },
     pictureBookAdd() {
       this.pictureBookVisible = true;
+      this.vediouuid = ""
     },
     closepictureBookDialog() {
       this.pictureBookform = {
@@ -1011,12 +1037,14 @@ export default {
         fileImgUrl: ""
       };
       this.pictureBookVisible = false;
+      this.vediouuid = ""
     },
     handleAvatarSuccess(file) {
       console.log(file);
       this.pictureBookform.fileImgUrl = file.url;
       console.log(this.pictureBookform);
     },
+    //上传电子书
     uploadpictureBook() {
       //上传电子书
       var _this = this;
@@ -1040,10 +1068,15 @@ export default {
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
+          this.vediouuid = this.guid()
+          var data = {
+            file:file,
+            fileId :this.vediouuid
+          }
           $.ajax({
             url: this.zipFileUrl,
             type: "post",
-            data: file,
+            data: data,
             headers: {
               Authorization: localStorage.learn_token
             },
@@ -1079,6 +1112,10 @@ export default {
         if (this.pictureBookform.fileUrl != "") {
           if (this.pictureBookform.fileImgUrl != "") {
             var list = this.pictureBookform;
+            if(this.vediouuid){
+              list.courseResourceBundleFileId = this.vediouuid
+              this.vediouuid = ""
+            }
             this.pictureBookList.push(list);
             this.pictureBookUrl = this.pictureBookform.fileUrl;
             // console.log(this.pictureBookList);
