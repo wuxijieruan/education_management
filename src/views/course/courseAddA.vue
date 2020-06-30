@@ -493,6 +493,7 @@ export default {
           fullscreenToggle: true //全屏按钮
         }
       },
+      vediouuid:"",
       audioUrl: "",
       VideoVisible: false,
       audioVisible: false,
@@ -621,6 +622,12 @@ export default {
       };
       this.VideoVisible = false;
     },
+    S4() {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+    },
+    guid() {//生成uuid
+      return (this.S4()+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+this.S4()+this.S4());
+    },
     uploadVideo() {
       //上传视频
       var _this = this;
@@ -648,10 +655,16 @@ export default {
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
+          this.vediouuid = this.guid()
+          var data = {
+            file:file,
+            fileId :this.vediouuid
+          }
+          
           $.ajax({
             url: this.newVideoUrl,
             type: "post",
-            data: file,
+            data: data,
             headers: {
               Authorization: localStorage.learn_token
             },
@@ -688,11 +701,18 @@ export default {
           console.log(this.Videoform.fileUrl);
           var fileUrl = this.Videoform.fileUrl;
           var list = this.Videoform;
+          if(this.vediouuid){
+            list.courseResourceBundleFileId = this.vediouuid
+            this.vediouuid = ""
+          }
+          
+          
           if (this.VideoEdit) {
             console.log("编辑");
           } else {
             console.log("新增");
             this.VideoList.push(list);
+            console.log("this.VideoList",this.VideoList)
             if (fileUrl.indexOf("https") != -1) {
               this.playerOptions.sources = this.Videoform.fileUrl;
             }
@@ -803,10 +823,15 @@ export default {
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
+          this.vediouuid = this.guid()
+          var data = {
+            file:file,
+            fileId :this.vediouuid
+          }
           $.ajax({
             url: this.VideoUrl,
             type: "post",
-            data: file,
+            data: data,
             headers: {
               Authorization: localStorage.learn_token
             },
@@ -844,9 +869,14 @@ export default {
           if (this.audioEdit) {
             console.log("编辑");
           } else {
-            console.log("新增",this.audioList);
+            if(this.vediouuid){
+              list.courseResourceBundleFileId = this.vediouuid
+              this.vediouuid = ""
+            }
             this.audioList.push(list);
+            console.log("新增",this.audioList);
             this.audioUrl = this.audioform.fileUrl;
+            
           }
           this.audioform = {
             fileName: "",
