@@ -247,6 +247,14 @@ const routes= [
           requireAuth: true
         }
       },
+      {
+        path: '/banner',
+        name: '轮播图',
+        component: resolve =>require(['@/views/banner/banner'], resolve),
+        meta: {
+          requireAuth: true
+        }
+      },
     ]
   }
 ]

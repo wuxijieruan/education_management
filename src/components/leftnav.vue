@@ -225,6 +225,23 @@ export default {
               }
             ]
           },
+          {
+            menuid: 10,
+            icon: "li-icon-xiangmuguanli",
+            menuname: "轮播图管理",
+            hasThird: null,
+            url: null,
+            menus: [
+              {
+                menuid: 101,
+                icon: "icon-cat-skuQuery",
+                menuname: "轮播图列表",
+                hasThird: "N",
+                url: "banner",
+                menus: null
+              }
+            ]
+          },
         ],
         msg: "success"
       };

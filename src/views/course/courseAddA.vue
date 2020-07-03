@@ -663,18 +663,20 @@ export default {
               file:file,
               fileId : this.Videoform.courseResourceBundleFileId
             }
+            var fileId = this.Videoform.courseResourceBundleFileId
           }else{
             this.vediouuid = this.guid()
             var data={
               file:file,
               fileId : this.vediouuid
             }
+            var fileId =  this.vediouuid
           }
           
           $.ajax({
-            url: this.newVideoUrl,
+            url: this.newVideoUrl+"?fileId=" + fileId,
             type: "post",
-            data: data,
+            data: file,
             headers: {
               Authorization: localStorage.learn_token
             },
