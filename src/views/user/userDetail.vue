@@ -31,8 +31,8 @@
             <el-form-item label="注册时间：" prop="createTime" >
                 {{usersdetail.createTime}}
             </el-form-item>
-            <el-form-item label="回访邀请：" prop="isAcceptReturn" :class="usersdetail.isAcceptReturn==null?'mywill':''">
-                {{usersdetail.isAcceptReturn==null?'未邀请':(usersdetail.isAcceptReturn==1?'接受':'拒绝')}}
+            <el-form-item label="回访邀请：" prop="isAcceptReturn">
+                {{usersdetail.isAcceptReturn}}
             </el-form-item>
             <el-form-item label="是否订阅模板消息：" prop="is_subscribe" >
                 {{usersdetail.isSubscribe}}
