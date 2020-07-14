@@ -8,6 +8,9 @@
 
     <div style="margin-top:30px;">
       <el-form>
+         <el-form-item label="宝贝昵称" prop="stuName">
+          <el-input v-model="formpage.stuName" style="width:300px"></el-input>
+        </el-form-item>
         <el-form-item label="统计时间区间：">
           <el-date-picker
             v-model="formpage.startTime"
@@ -255,7 +258,8 @@ export default {
           page: 1,
           pageSize: 10,
           startTime: "",
-          endTime: ""
+          endTime: "",
+          stuName:""
         }
         this.export2Excel()
     },
@@ -417,6 +421,7 @@ export default {
         data.endTime=''
       }
       console.log(this.formpage)
+         delete data.stuName
       try {
         
         this.listLoading = true
