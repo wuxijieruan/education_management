@@ -1071,14 +1071,11 @@ export default {
           file.append("file", copyFile);
           file.append("submit", false);
           this.vediouuid = this.guid()
-          var data = {
-            file:file,
-            fileId :this.vediouuid
-          }
+         
           $.ajax({
             url: this.zipFileUrl,
             type: "post",
-            data: data,
+            data: file,
             headers: {
               Authorization: localStorage.learn_token
             },

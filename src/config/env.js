@@ -12,7 +12,7 @@ let baseFileUrl = 'https://www.bolekids.com' //线上服务器
 
 let imgUrl = baseFileUrl+'/file-local-1.0.0/img/upload'//上传图片接口
 
-let newVideoUrl = baseUrl+'/file/transcoding'//上传视频接口
+let newVideoUrl = baseUrl+'/file/uploadAndChangeFomart'//上传视频接口
 
 let VideoUrl  = baseFileUrl+'/file-local-1.0.0/upload/upload'//上传文件，音频接口
 

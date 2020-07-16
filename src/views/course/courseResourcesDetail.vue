@@ -1149,24 +1149,11 @@ export default {
           // console.log(copyFile);
           var file = new FormData();
           file.append("file", copyFile);
-          file.append("submit", false);
-          if(this.pictureBookform.fileUrl){
-            var data={
-              file:file,
-              fileId : this.pictureBookform.courseResourceBundleFileId
-            }
-          }else{
-            this.vediouuid = this.guid()
-            var data={
-              file:file,
-              fileId : this.vediouuid
-            }
-          }
-
+          file.append("submit", false);   
           $.ajax({
             url: this.zipFileUrl,
             type: "post",
-            data: data,
+            data: file,
             headers: {
               Authorization: localStorage.learn_token
             },
