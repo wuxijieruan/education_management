@@ -453,7 +453,6 @@ export default {
           fullscreenToggle: true //全屏按钮
         }
       },
-      vediouuid:"",
       audioUrl: "",
       VideoVisible: false,
       audioVisible: false,
@@ -563,7 +562,7 @@ export default {
     S4() {
       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
     },
-    guid() {//生成uuid
+    guid() {
       return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
     },
     uploadVideo() {
@@ -593,10 +592,10 @@ export default {
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
-          this.vediouuid = this.guid()
+         
           var data = {
-            file:file,
-            fileId :this.vediouuid
+            file:file
+           
           }
           $.ajax({
             url: this.newVideoUrl,
