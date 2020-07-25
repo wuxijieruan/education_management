@@ -52,6 +52,68 @@
               ></el-option>
             </el-select>
           </el-form-item>
+
+ <el-form-item label="用户身份" prop="studentIdentity">
+            <el-select v-model="ruleForm.activityUserType" placeholder="请选择注册活动用户身份">
+              <el-option value="初级VIP" label="初级VIP">初级VIP</el-option>
+              <el-option value="企业VIP" label="企业VIP">企业VIP</el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="活动注册赠送积分" prop="points">
+            <el-input
+              size="small"
+              style="width:350px"
+              v-model="ruleForm.points"
+              auto-complete="off"
+              type="number"
+              placeholder="请输入赠送积分"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="活动注册赠送vip月份" prop="overMouth">
+            <el-input
+              size="small"
+              style="width:350px"
+              v-model="ruleForm.overMouth"
+              auto-complete="off"
+              type="number"
+              placeholder="请输入月份"
+            ></el-input>
+          </el-form-item>
+  <el-form-item label="封面图片" prop="picUrl" style="display:block">
+        <el-upload
+          class="avatar-uploader"
+          :action="imgUrl"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+          :on-preview="handlePictureCardPreview"
+        >
+          <img v-if="ruleForm.picUrl" :src="ruleForm.picUrl" class="avatar" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为630*800</div>
+        </el-upload>
+      </el-form-item>
+
+
+ <el-form-item label="关联课程" prop="relationCourseId">
+            <el-select
+              v-model="ruleForm.relationCourseIds"
+              placeholder="请选择课程"
+              multiple
+              style="width:350px"
+              size="mini"
+              @change="$forceUpdate()" 
+            >
+              <el-option
+                v-for="item in subjectsGetList"
+                :key="item.courseId"
+                :label="item.courseName"
+                :value="item.courseId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+
           <el-form-item label="指定企业" prop="courseId">
             <el-select v-model="ruleForm.enterpriseId" filterable placeholder="请选择指定企业" style="width:350px">
              <el-option
@@ -92,32 +154,47 @@
         </el-form>
         </div>
     </div>
+    <el-dialog :visible.sync="dialogVisible" id="imgpop">
+      <img width="100%" style="" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
 <script>
 import { videoPlayer } from "vue-video-player";
 import "video.js/dist/video-js.css";
 import { actEdit,courseGet ,enterpriseGet ,courseResourcesFileDel} from "@/api/getData";
+import { imgUrl } from "@/config/env";
 import {
   newVideoUrl,
 } from "@/config/env";
 export default {
   data() {
     return {
+        dialogVisible:false,
+      dialogImageUrl:'',
+       imgList: [],
       enterpriseGetList:[
         {enterpriseId:'',enterpriseName:'无'}
       ],
       subjectsGetList: [
         {courseId:'',courseName:'无'}
       ],
-      ruleForm: {
+        imgUrl: imgUrl,
+         imgFileList: [],
+        ruleForm: {
         activityId:"",
         activityName: "",
         rule: "",
         startTime:"",
         endTime:"",
         courseId:"",
-        enterpriseId:""
+        relationCourseId:"",
+        enterpriseId:"",
+        relationCourseIds: [],
+        activityUserType: "",
+        points: "",
+        overMouth: "",
+        picUrl:""
       },
       rules: {
         activityName: [{ required: true, message: "请输入用户名", trigger: "blur" }]
@@ -162,7 +239,14 @@ export default {
   mounted() {
     var data = this.$route.query;
     console.log("路由数据", data.row);
+   
+console.log("转换后的数据",this.ruleForm.relationCourseIds);
     this.ruleForm = data.row;
+    if(data.row.relationCourseId!=""&&data.row.relationCourseId!=null){
+ this.ruleForm.relationCourseIds = data.row.relationCourseId.split(',')
+    }
+   
+    //this.ruleForm.relationCourseIds=[data.row.relationCourseId]
     this.getCourse();
     this.getenterprise();
     this.playerOptions.sources=this.ruleForm.videoUrl
@@ -186,6 +270,41 @@ export default {
         fileContentTag: ""
       };
       this.VideoVisible = false;
+    },
+
+    // 上传封面图片前
+    beforeAvatarUpload(file) {
+      const isJPG = file.type;
+      console.log("type", isJPG);
+      if (
+        isJPG === "image/jpeg" ||
+        isJPG === "image/png" ||
+        isJPG === "image/jpg"
+      ) {
+        // this.$message.error("上传图片格式错误!");
+      } else {
+        this.$message.error("上传图片格式错误!");
+      }
+      return isJPG;
+    },
+    // 上传封面图片成功
+    handleAvatarSuccess(file) {
+      // console.log(file);
+      this.ruleForm.picUrl = file.url;
+    },
+    handlePictureCardPreview(file) {
+      console.log(file)
+        this.dialogImageUrl = file.response.url;
+        
+        var img = new Image()
+        img.src = this.dialogImageUrl
+        console.log(img.width ,img.height )
+        var width = img.width +"px"
+        var divShow = $('#imgpop .el-dialog')
+        console.log(divShow)
+        $(divShow).css("width",width)
+
+        this.dialogVisible = true;
     },
     uploadVideo() {
       //上传视频
@@ -342,6 +461,7 @@ export default {
       this.$refs[formName].validate(async valid => {
         if (valid) {
           this.ruleForm.videoUrl=this.playerOptions.sources
+            this.ruleForm.relationCourseId = this.ruleForm.relationCourseIds.join();
           console.log(this.ruleForm);
           const res = await actEdit(this.ruleForm);
           console.log(res);
