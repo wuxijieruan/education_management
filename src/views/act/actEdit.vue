@@ -245,7 +245,7 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
     if(data.row.relationCourseId!=""&&data.row.relationCourseId!=null){
  this.ruleForm.relationCourseIds = data.row.relationCourseId.split(',')
     }
-   
+
     //this.ruleForm.relationCourseIds=[data.row.relationCourseId]
     this.getCourse();
     this.getenterprise();
