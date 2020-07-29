@@ -33,6 +33,19 @@
             v-if="batchDeletionStatus"
             @click="batchDel"
           >批量下架</el-button>
+
+          <el-tooltip :content="isHidden+'浏览数'" placement="top">
+            <el-switch
+              v-model="isHidden"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              active-value="隐藏"
+              inactive-value="显示"
+              @change="batchShow">
+            </el-switch>
+          </el-tooltip>
+          
+         
         </el-form-item>
         <el-form-item label="课程名称" prop="courseName">
           <el-select
@@ -124,6 +137,8 @@
             </el-select>
           </template>
         </el-table-column>
+      
+
         <el-table-column align="center" prop="courseIndex" label="排列序号" min-width="100">
           <template slot-scope="scope">
             <el-input-number
@@ -216,6 +231,8 @@ import {
   subjectsGet,
   courseputOn,
   courseSetTop,
+  courseHidden,
+  updateIsShowNumAll,
   updateCourseIndexByID,
   courseNameGet,
   setFirst
@@ -228,11 +245,13 @@ export default {
       gradeGetList: [],
       subjectsGetList: [],
       courseNameList: [],
+      isHidden:0,
       form: {
         createUserId: "",
         subjectId: "", //话题id
         courseName: "", //课程名称
         isVail: "",
+        isHidden: "",
         courseType: "",
         page: 1,
         pageSize: 10
@@ -292,6 +311,25 @@ export default {
       };
       this.handleDel(row);
     },
+    //批量显示
+    async batchShow() {
+      console.log(this.isHidden);
+      var type = this.isHidden=='隐藏'?1:2;
+      const res = await updateIsShowNumAll(type);
+      console.log(res.data);
+      if (res.status == 200) {
+        this.$message({
+          message: res.data,
+          type: "success"
+        });
+      } else {
+        this.$message({
+          type: "error",
+          message: res.msg
+        });
+        console.log(res.msg);
+      }
+    },
     // 分页插件事件
     callFather(parm) {
       // console.log(parm)
@@ -304,6 +342,7 @@ export default {
       this.form.subjectId = "";
       this.form.courseName = "";
       this.form.isVail = "";
+      this.form.isHidden = "";
       this.form.courseType = "";
       this.form.page = 1;
       this.form.pageSize = 10;
@@ -447,6 +486,62 @@ export default {
         this.$confirm("确认下架该课程?", "提示", { type: "warning" })
           .then(async () => {
             const res = await courseDel(row.courseId);
+            console.log(res);
+            if (res.status == 200) {
+              this.$message({
+                message: "下架成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: res.msg
+              });
+              console.log(res.msg);
+            }
+          })
+          .catch(() => {
+            this.listLoading = false;
+          });
+      }
+    },
+    // 隐藏显示浏览数
+    async changeisHidden(row) {
+      console.log(row);
+      if (row.isHidden == 1) {
+        this.$confirm("确认隐藏该课程浏览数?", "提示", { type: "warning" })
+          .then(async () => {
+            var data = {
+              id: row.courseId,
+              type: 1
+            };
+            console.log('89');
+            const res = await courseHidden(data);
+            console.log(res);
+            if (res.status == 200) {
+              this.$message({
+                message: "上架成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: res.msg
+              });
+              console.log(res.msg);
+            }
+          })
+          .catch(() => {
+            this.listLoading = false;
+          });
+      } else {
+        this.$confirm("确认显示该课程浏览数?", "提示", { type: "warning" })
+          .then(async () => {
+            var data = {
+              id: row.courseId,
+              type: 2
+            };
+            const res = await courseHidden(data);
             console.log(res);
             if (res.status == 200) {
               this.$message({

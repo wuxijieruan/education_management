@@ -39,6 +39,12 @@ export const courseDel = id => fetch('/course?ids=' + id, {}, 'DELETE') // 删�
 
 export const courseputOn = id => fetch('/course/putOn?id=' + id, {}, 'PUT') // 上架课程
 
+export const courseHidden = data => fetch('/course/updateIsShowNumAll', data, 'POST') // 隐藏浏览数
+
+//export const updateIsShowNumAll = data => fetch('/course/updateIsShowNumAll', data, 'POST') // 设置浏览数隐藏显示
+
+export const updateIsShowNumAll = data => fetch('/course/updateIsShowNumAll?type='+ data,{}, 'POST') // 修改课程的序号
+
 export const coursePut = data => fetch('/course', data, 'PUT') // 修改课程
 
 export const courseGet = data => fetch('/course', data, 'GET') // 查看课程
