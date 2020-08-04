@@ -1378,10 +1378,11 @@ export default {
   border-radius: 6px;
   cursor: pointer;
 }
- .avatar-uploader .avatar {
-  width: 50%;
+/* .avatar-uploader .avatar {
+  width: 132px;
+  height: 132px;
   display: block;
-} 
+} */
 /* .fileImgUrl {
   width: 132px;
   height: 132px;

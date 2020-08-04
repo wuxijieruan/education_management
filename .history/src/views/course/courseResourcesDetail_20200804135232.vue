@@ -96,7 +96,7 @@
       >
         <el-table-column align="center" prop="fileName" label="视频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="视频地址"></el-table-column>
-        <el-table-column align="center" prop="fileImgUrl" label="视频封面">
+        <el-table-column align="center" prop="fileImgUrl" label="音频封面">
           <template slot-scope="scope">
             <img
               v-if="scope.row.fileImgUrl"
@@ -1378,10 +1378,11 @@ export default {
   border-radius: 6px;
   cursor: pointer;
 }
- .avatar-uploader .avatar {
-  width: 50%;
+/* .avatar-uploader .avatar {
+  width: 132px;
+  height: 132px;
   display: block;
-} 
+} */
 /* .fileImgUrl {
   width: 132px;
   height: 132px;

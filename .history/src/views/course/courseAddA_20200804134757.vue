@@ -6,8 +6,8 @@
       <el-breadcrumb-item>课程列表</el-breadcrumb-item>
       <el-breadcrumb-item v-show="resourceTypeA">添加课程导读</el-breadcrumb-item>
       <el-breadcrumb-item v-show="resourceTypeB">添加课程绘本</el-breadcrumb-item>
-      <el-breadcrumb-item v-show="resourceTypeC">添加课程知识点</el-breadcrumb-item>
-      <el-breadcrumb-item v-show="resourceTypeD">添加课程互动游戏</el-breadcrumb-item>
+      <el-breadcrumb-item v-show="resourceTypeC">添加课程互动游戏</el-breadcrumb-item>
+      <el-breadcrumb-item v-show="resourceTypeD">添加课程解读</el-breadcrumb-item>
       <el-breadcrumb-item v-show="resourceTypeE">添加课程互动作业</el-breadcrumb-item>
     </el-breadcrumb>
     <el-button size="small" type="danger" style="margin: 20px 0;" @click="back">返回列表</el-button>
@@ -46,12 +46,12 @@
           placeholder="请输入知识点互动游戏名称"
         ></el-input>
       </el-form-item>
-      <el-form-item label="* 作业名称" prop="resourceTitle" v-show="resourceTypeE">
+      <el-form-item label="互动作业名称" prop="resourceTitle" v-show="resourceTypeE">
         <el-input
           size="small"
           v-model="form.resourceTitle"
           style="width:350px"
-          placeholder="请输入作业名称"
+          placeholder="请输入互动作业名称"
         ></el-input>
       </el-form-item>
       <el-form-item label="适合年龄段" prop="gradeId" v-show="resourceTypeH">
@@ -71,7 +71,7 @@
         <el-button size="small" @click="pictureBookType" v-show="resourceTypeG">+ 电子书</el-button>
       </div>
 
-      <el-form-item label="课程视频" v-show="videoShow">
+      <el-form-item label="视频" v-show="videoShow">
         <el-button size="small" type="primary" @click="VideoAdd">上传视频</el-button>
       </el-form-item>
       <video-player
@@ -96,7 +96,7 @@
       >
         <el-table-column align="center" prop="fileName" label="视频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="视频地址"></el-table-column>
-        <el-table-column align="center" prop="fileImgUrl" label="视频封面">
+        <el-table-column align="center" prop="fileImgUrl" label="音频封面">
           <template slot-scope="scope">
             <img
               v-if="scope.row.fileImgUrl"
@@ -111,17 +111,16 @@
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileContentTag" label="内容标签" width="100"></el-table-column>
-        <el-table-column align="center" prop="fileIndex" label="内容标签" width="100"></el-table-column>
         <el-table-column align="center" label="操作" width="240">
           <template slot-scope="scope">
             <el-button size="small" type="primary" @click="Videoedit(scope.row)">编辑</el-button>
             <el-button size="small" type="primary" @click="VideoPlay(scope.row.fileUrl)">播放</el-button>
-            <el-button size="small" type="danger" @click="VideoDel(scope.row)">删除</el-button>
+            <el-button size="small" type="danger" @click="VideoDel(scope.row.fileName)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <el-form-item label="课程音频" v-show="audioShow">
+      <el-form-item label="音频" v-show="audioShow">
         <el-button size="small" type="primary" @click="audioAdd">上传音频</el-button>
       </el-form-item>
       <audio
@@ -164,26 +163,27 @@
           <template slot-scope="scope">
             <el-button size="small" type="primary" @click="audioedit(scope.row)">编辑</el-button>
             <el-button size="small" type="primary" @click="audioPlay(scope.row.fileUrl)">播放</el-button>
-            <el-button size="small" type="danger" @click="audioDel(scope.row)">删除</el-button>
+            <el-button size="small" type="danger" @click="audioDel(scope.row.fileName)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <el-form-item label="课程图片" v-show="imgShow">
+      <el-form-item v-show="imgShow">
         <el-upload
-          :action="imgUrl"
+          class="upload-demo"
           list-type="picture-card"
+          :action="imgUrl"
           :on-success="handleImageSuccess"
           :before-remove="handleRemoveimg"
-          :file-list="imgList"
-          :before-upload="beforeAvatarUpload"
           :on-preview="handlePictureCardPreview"
+          :before-upload="beforeAvatarUpload"
         >
+          <!-- <el-button size="small" type="primary">上传图片</el-button> -->
           <i class="el-icon-plus"></i>
         </el-upload>
       </el-form-item>
 
-      <el-form-item label="课程电子书" v-show="pictureBookShow">
+      <el-form-item label="电子书" v-show="pictureBookShow">
         <el-button size="small" type="primary" @click="pictureBookAdd">上传电子书</el-button>
       </el-form-item>
       <!-- 电子书列表 -->
@@ -207,7 +207,7 @@
         </el-table-column>
         <el-table-column align="center" label="操作" width="100">
           <template slot-scope="scope">
-            <el-button size="small" type="danger" @click="pictureBookDel(scope.row)">删除</el-button>
+            <el-button size="small" type="danger" @click="pictureBookDel(scope.row.fileName)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -291,13 +291,7 @@
     </el-dialog>
 
     <!-- 上传音频 -->
-    <el-dialog
-      title="音频内容"
-      width="900px"
-      :visible.sync="audioVisible"
-      @click="closeaudioDialog"
-      close="closeaudioDialog"
-    >
+    <el-dialog title="音频内容" width="900px" :visible.sync="audioVisible" @click="closeaudioDialog">
       <el-form label-width="120px" :model="audioform" ref="audioform" style="width:850px">
         <el-form-item label="* 音频名称" prop="fileName">
           <el-input
@@ -328,9 +322,9 @@
             class="avatar-uploader"
             :action="imgUrl"
             :show-file-list="false"
+            :on-preview="handlePictureCardPreview"
             :on-success="vhandleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
-            :on-preview="handlePictureCardPreview"
           >
             <img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -438,16 +432,12 @@
       </span>
     </el-dialog>
     <el-dialog :visible.sync="dialogVisible" id="imgpop">
-      <img width="100%" style :src="dialogImageUrl" alt />
+      <img width="100%" :src="dialogImageUrl" alt />
     </el-dialog>
   </div>
 </template>
 <script>
-import {
-  gradeGet,
-  courseResourcesEdit,
-  courseResourcesFileDel,
-} from "@/api/getData";
+import { gradeGet, courseAddOther } from "@/api/getData";
 import { videoPlayer } from "vue-video-player";
 import "video.js/dist/video-js.css";
 import {
@@ -490,10 +480,11 @@ export default {
       Videoform: {
         fileName: "",
         fileUrl: "",
+        fileImgUrl: "",
+        teacherName: "",
         fileLanguageTag: "",
         fileSceneTypeTag: "",
         fileContentTag: "",
-        fileImgUrl: "",
       },
       videoEdit: false,
       audioform: {
@@ -514,7 +505,6 @@ export default {
       VideoList: [],
       audioList: [],
       imgList: [],
-      imgFileList: [],
       pictureBookList: [],
       fullscreenLoading: false,
       playerOptions: {
@@ -541,75 +531,14 @@ export default {
       VideoVisible: false,
       audioVisible: false,
       pictureBookVisible: false,
-      // workImgUrl: ""
+      // workImgUrl: "",
+      router: "",
+      courseData: "",
     };
   },
   // 注册组件
   components: {
     videoPlayer,
-  },
-  mounted() {
-    var data = this.$route.query;
-    console.log("路由数据", data);
-    var resourceType = data.data.courseResourceBundle.resourceType;
-    this.form = data.data.courseResourceBundle;
-    if (resourceType == 1) {
-      this.resourceTypeA = true;
-    } else if (resourceType == 2) {
-      this.resourceTypeB = true;
-      this.resourceTypeG = true;
-    } else if (resourceType == 3) {
-      this.resourceTypeC = true;
-      this.resourceTypeH = true;
-      this.getGrade();
-    } else if (resourceType == 4) {
-      this.resourceTypeD = true;
-      this.resourceTypeH = true;
-      this.getGrade();
-    } else if (resourceType == 5) {
-      this.resourceTypeE = true;
-      this.resourceTypeF = false;
-      this.imgShow = true;
-    }
-    if (data.data.videoFileList != "" && data.data.videoFileList != null) {
-      this.videoShow = true;
-      this.VideoList = data.data.videoFileList;
-      var fileUrl = data.data.videoFileList[0].fileUrl;
-      console.log(fileUrl);
-      if (fileUrl.indexOf("https") != -1) {
-        console.log(11);
-        this.playerOptions.sources = fileUrl;
-      }
-    }
-    if (data.data.audioFileList != "" && data.data.audioFileList != null) {
-      this.audioShow = true;
-      this.audioList = data.data.audioFileList;
-      this.audioUrl = data.data.audioFileList[0].fileUrl;
-    }
-    if (data.data.imgFileList != "" && data.data.imgFileList != null) {
-      this.imgShow = true;
-      var imgList = [];
-      this.imgFileList = data.data.imgFileList;
-      data.data.imgFileList.forEach((element, index) => {
-        // console.log("element", element);
-        var url = element.fileUrl;
-        var name = element.fileName;
-        var response = {
-          url: element.fileUrl,
-        };
-        var courseResourceBundleFileId = element.courseResourceBundleFileId;
-        imgList.push({ url, name, response, courseResourceBundleFileId });
-      });
-      this.imgList = imgList;
-      // console.log(this.imgList);
-    }
-    if (
-      data.data.pictureBookFileList != "" &&
-      data.data.pictureBookFileList != null
-    ) {
-      this.pictureBookShow = true;
-      this.pictureBookList = data.data.pictureBookFileList;
-    }
   },
   watch: {
     audioVisible: function (newVal) {
@@ -625,6 +554,32 @@ export default {
         };
       }
     },
+  },
+  mounted() {
+    var data = this.$route.query;
+    console.log("路由数据", data);
+    this.form.courseId = data.courseId;
+    this.form.resourceType = data.resourceType;
+    this.form.router = data.router;
+    this.courseData = data.courseData;
+    if (data.resourceType == 1) {
+      this.resourceTypeA = true;
+    } else if (data.resourceType == 2) {
+      this.resourceTypeB = true;
+      this.resourceTypeG = true;
+    } else if (data.resourceType == 3) {
+      this.resourceTypeC = true;
+      this.resourceTypeH = true;
+      this.getGrade();
+    } else if (data.resourceType == 4) {
+      this.resourceTypeD = true;
+      this.resourceTypeH = true;
+      this.getGrade();
+    } else if (data.resourceType == 5) {
+      this.resourceTypeE = true;
+      this.resourceTypeF = false;
+      this.imgShow = true;
+    }
   },
   methods: {
     videoType() {
@@ -646,6 +601,7 @@ export default {
         if (res.status == 200) {
           // console.log("年龄段列表", res.data);
           this.gradeGetList = res.data.list;
+          this.form.gradeId = this.gradeGetList[0].gradeId;
           this.listLoading = false;
         } else {
           this.$message({
@@ -663,32 +619,22 @@ export default {
       }
     },
     back() {
-      this.$router.push({
-        path: "/courseDetail",
-        query: {
-          courseId: this.form.courseId,
-          resourceType: this.form.resourceType,
-        },
-      });
-    },
-    S4() {
-      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-    },
-    guid() {
-      return (
-        this.S4() +
-        this.S4() +
-        "" +
-        this.S4() +
-        "" +
-        this.S4() +
-        "" +
-        this.S4() +
-        "" +
-        this.S4() +
-        this.S4() +
-        this.S4()
-      );
+      if (this.form.router == 1) {
+        this.$router.push({
+          path: "/course",
+          query: {
+            courseData: this.courseData,
+          },
+        });
+      } else {
+        this.$router.push({
+          path: "/courseDetail",
+          query: {
+            courseId: this.form.courseId,
+            resourceType: this.form.resourceType,
+          },
+        });
+      }
     },
     VideoAdd() {
       this.VideoVisible = true;
@@ -709,11 +655,30 @@ export default {
       };
       this.VideoVisible = false;
     },
+    S4() {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    },
+    guid() {
+      return (
+        this.S4() +
+        this.S4() +
+        "" +
+        this.S4() +
+        "" +
+        this.S4() +
+        "" +
+        this.S4() +
+        "" +
+        this.S4() +
+        this.S4() +
+        this.S4()
+      );
+    },
     uploadVideo() {
       //上传视频
       var _this = this;
       var Videofile = event.target.files;
-      console.log("hhhhhladsnladlad;ladsand;ad;adn;a;d;ad", this.Videoform);
+      // console.log(Videofile);
       var myfile = Videofile[0];
       if (myfile != undefined) {
         // console.log(myfile);
@@ -782,40 +747,40 @@ export default {
       }
     },
     submitVideoUrl() {
-      console.log(this.Videoform);
+      // console.log(this.Videoform);
       if (this.Videoform.fileName != "") {
         if (this.Videoform.fileUrl != "") {
-          if (
-            this.Videoform.fileUrl.indexOf("https") <= 0 &&
-            this.Videoform.fileImgUrl == ""
-          ) {
+          if (this.Videoform.fileUrl.indexOf("https") >= 0) {
+            console.log(this.Videoform.fileUrl);
+            var fileUrl = this.Videoform.fileUrl;
+            var list = this.Videoform;
+            if (this.VideoEdit) {
+              console.log("编辑");
+            } else {
+              console.log("新增");
+
+              this.VideoList.push(list);
+              console.log("this.VideoList", this.VideoList);
+              if (fileUrl.indexOf("https") != -1) {
+                this.playerOptions.sources = this.Videoform.fileUrl;
+              }
+            }
+            console.log(this.VideoList);
+            this.Videoform = {
+              fileName: "",
+              fileUrl: "",
+              fileLanguageTag: "",
+              fileSceneTypeTag: "",
+              fileContentTag: "",
+            };
+            this.VideoEdit = false;
+            this.VideoVisible = false;
+          } else {
             this.$message({
               type: "error",
               message: "当前是外部链接视频，无法获取其封面，请手动上传封面",
             });
-            return;
           }
-
-          var fileUrl = this.Videoform.fileUrl;
-          var list = this.Videoform;
-          if (this.VideoEdit) {
-            console.log("编辑");
-          } else {
-            console.log("新增");
-            this.VideoList.push(list);
-            if (fileUrl.indexOf("https") != -1) {
-              this.playerOptions.sources = this.Videoform.fileUrl;
-            }
-          }
-          this.Videoform = {
-            fileName: "",
-            fileUrl: "",
-            fileLanguageTag: "",
-            fileSceneTypeTag: "",
-            fileContentTag: "",
-          };
-          this.VideoEdit = false;
-          this.VideoVisible = false;
         } else {
           this.$message({
             type: "error",
@@ -843,43 +808,28 @@ export default {
       }
     },
     // 删除视频
-    async VideoDel(e) {
-      console.log(e);
-      var courseResourceBundleFileId, num;
+    VideoDel(e) {
+      // console.log(e);
       this.VideoList.forEach((element, index) => {
         // console.log("element", element);
-        if (e.fileName == element.fileName) {
-          courseResourceBundleFileId = element.courseResourceBundleFileId;
-          num = index;
+        var name = element.fileName;
+        if (e == name) {
+          this.VideoList.splice(index, 1);
         }
       });
-      console.log(courseResourceBundleFileId);
-      if (courseResourceBundleFileId != undefined) {
-        const res = await courseResourcesFileDel(courseResourceBundleFileId);
-        if (res.status == 200) {
-        } else {
-          this.$message({
-            type: "error",
-            message: res.msg,
-          });
-          console.log(res.msg);
-        }
-      }
-      this.VideoList.splice(num, 1);
       if (this.VideoList != "") {
         this.playerOptions.sources = this.VideoList[0].fileUrl;
       } else {
         this.playerOptions.sources = "";
       }
-      console.log(this.VideoList);
+      // console.log(this.VideoList);
     },
     audioAdd() {
       this.audioVisible = true;
     },
     audioedit(row) {
       console.log(row);
-      var list = row;
-      this.audioform = list;
+      this.audioform = row;
       this.audioVisible = true;
       this.audioEdit = true;
     },
@@ -887,14 +837,13 @@ export default {
       this.audioform = {
         fileName: "",
         fileUrl: "",
-        fileImgUrl: "",
-        teacherName: "",
         fileLanguageTag: "",
         fileSceneTypeTag: "",
         fileContentTag: "",
       };
       this.audioVisible = false;
     },
+    //上传音频
     uploadaudio() {
       //上传音频
       var _this = this;
@@ -929,11 +878,20 @@ export default {
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
-
+          if (this.audioform.fileUrl) {
+            var data = {
+              file: file,
+              fileId: this.audioform.courseResourceBundleFileId,
+            };
+          } else {
+            var data = {
+              file: file,
+            };
+          }
           $.ajax({
             url: this.VideoUrl,
             type: "post",
-            data: file,
+            data: data,
             headers: {
               Authorization: localStorage.learn_token,
             },
@@ -970,25 +928,20 @@ export default {
           var list = this.audioform;
           if (this.audioEdit) {
             console.log("编辑");
-            // this.$set(table,index,this.audioform)
           } else {
             console.log("新增");
             this.audioList.push(list);
             this.audioUrl = this.audioform.fileUrl;
           }
-          console.log(this.audioList);
           this.audioform = {
             fileName: "",
             fileUrl: "",
-            fileImgUrl: "",
-            teacherName: "",
             fileLanguageTag: "",
             fileSceneTypeTag: "",
             fileContentTag: "",
           };
           this.audioEdit = false;
           this.audioVisible = false;
-          this.$forceUpdate();
         } else {
           this.$message({
             type: "error",
@@ -1008,35 +961,21 @@ export default {
       this.audioUrl = e;
     },
     // 删除音频
-    async audioDel(e) {
-      console.log(e);
-      var courseResourceBundleFileId, num;
+    audioDel(e) {
+      // console.log(e);
       this.audioList.forEach((element, index) => {
         // console.log("element", element);
-        if (e.fileName == element.fileName) {
-          courseResourceBundleFileId = element.courseResourceBundleFileId;
-          num = index;
+        var name = element.fileName;
+        if (e == name) {
+          this.audioList.splice(index, 1);
         }
       });
-      console.log(courseResourceBundleFileId);
-      if (courseResourceBundleFileId != undefined) {
-        const res = await courseResourcesFileDel(courseResourceBundleFileId);
-        if (res.status == 200) {
-        } else {
-          this.$message({
-            type: "error",
-            message: res.msg,
-          });
-          console.log(res.msg);
-        }
-      }
-      this.audioList.splice(num, 1);
       if (this.audioList != "") {
         this.audioUrl = this.audioList[0].fileUrl;
       } else {
         this.audioUrl = "";
       }
-      console.log(this.audioList);
+      // console.log(this.audioList);
     },
     // 上传图片开始
     beforeAvatarUpload(file) {
@@ -1066,47 +1005,46 @@ export default {
       }
     },
     handleImageSuccess(file) {
-      // console.log("添加图片", file);
+      console.log("添加图片", file);
+
       var list = {
         fileUrl: file.url,
+        fileId: this.guid(),
       };
-      this.imgFileList.push(list);
-      console.log(this.imgFileList);
+      this.imgList.push(list);
+      console.log(this.imgList);
     },
-    async handleRemoveimg(file) {
+    // 上传封面图片成功
+    vhandleAvatarSuccess(file) {
+      console.log(file);
+      this.audioform.fileImgUrl = file.url;
+      console.log(this.audioform);
+      this.$forceUpdate();
+    },
+    vdhandleAvatarSuccess(file) {
+      console.log(file);
+      this.Videoform.fileImgUrl = file.url;
+      console.log(this.audioform);
+      // var aa=this.audioform.teacherName
+      // this.audioform.teacherName="abc"
+      // this.audioform.teacherName=aa
+      this.$forceUpdate();
+    },
+    handleRemoveimg(file) {
+      // 删除图片
       return this.$confirm("确认要删除吗?", "提示", {
         type: "warning",
       }).then(async () => {
-        // 删除图片
         console.log(file);
-        var courseResourceBundleFileId, num;
-        this.imgFileList.forEach((element, index) => {
-          console.log("imgFileListelement", element);
-          if (
-            element.fileUrl == file.url ||
-            element.fileUrl == file.response.url
-          ) {
-            courseResourceBundleFileId = element.courseResourceBundleFileId;
-            num = index;
+        this.imgList.forEach((element, index) => {
+          console.log("element", element);
+          if (element.fileUrl == file.response.url) {
+            this.imgList.splice(index, 1);
           }
         });
-        console.log(courseResourceBundleFileId);
-        if (courseResourceBundleFileId != undefined) {
-          const res = await courseResourcesFileDel(courseResourceBundleFileId);
-          if (res.status == 200) {
-          } else {
-            this.$message({
-              type: "error",
-              message: res.msg,
-            });
-            console.log(res.msg);
-          }
-        }
-        this.imgFileList.splice(num, 1);
-        console.log(this.imgFileList);
       });
-      //   .catch(() => {
-      //     this.listLoading = false;
+      // .catch(() => {
+      //   this.listLoading = false;
       // });
     },
     handlePictureCardPreview(file) {
@@ -1139,24 +1077,7 @@ export default {
       this.pictureBookform.fileImgUrl = file.url;
       console.log(this.pictureBookform);
     },
-    vhandleAvatarSuccess(file) {
-      console.log(file);
-      this.audioform.fileImgUrl = file.url;
-      console.log(this.audioform);
-      // var aa=this.audioform.teacherName
-      // this.audioform.teacherName="abc"
-      // this.audioform.teacherName=aa
-      this.$forceUpdate();
-    },
-    vdhandleAvatarSuccess(file) {
-      console.log(file);
-      this.Videoform.fileImgUrl = file.url;
-      console.log(this.audioform);
-      // var aa=this.audioform.teacherName
-      // this.audioform.teacherName="abc"
-      // this.audioform.teacherName=aa
-      this.$forceUpdate();
-    },
+    //上传电子书
     uploadpictureBook() {
       //上传电子书
       var _this = this;
@@ -1180,6 +1101,7 @@ export default {
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
+
           $.ajax({
             url: this.zipFileUrl,
             type: "post",
@@ -1238,60 +1160,41 @@ export default {
         } else {
           this.$message({
             type: "error",
-            message: "请填写电子书地址",
+            message: "请填写音频地址",
           });
         }
       } else {
         this.$message({
           type: "error",
-          message: "请填写电子书名称",
+          message: "请填写音频名称",
         });
       }
     },
-    // 删除电子书
-    async pictureBookDel(e) {
-      console.log(e);
-      var courseResourceBundleFileId, num;
+    // 删除音频
+    pictureBookDel(e) {
+      // console.log(e);
       this.pictureBookList.forEach((element, index) => {
         // console.log("element", element);
-        if (e.fileName == element.fileName) {
-          courseResourceBundleFileId = element.courseResourceBundleFileId;
-          num = index;
+        var name = element.fileName;
+        if (e == name) {
+          this.pictureBookList.splice(index, 1);
         }
       });
-      console.log(courseResourceBundleFileId);
-      if (courseResourceBundleFileId != undefined) {
-        const res = await courseResourcesFileDel(courseResourceBundleFileId);
-        if (res.status == 200) {
-        } else {
-          this.$message({
-            type: "error",
-            message: res.msg,
-          });
-          console.log(res.msg);
-        }
-      }
-      this.pictureBookList.splice(num, 1);
-      console.log(this.pictureBookList);
+      // console.log(this.pictureBookList);
     },
-
     async submit() {
       var isdata = true;
-      console.log("form", this.form);
-      console.log("VideoList", this.VideoList);
-      console.log("audioList", this.audioList);
-      console.log("imgFileList", this.imgFileList);
       if (this.form.resourceType == 3 || this.form.resourceType == 4) {
         // if (this.form.resourceTitle != "" && this.form.resourceTitle != null) {
-        if (this.form.gradeId != "" && this.form.gradeId != null) {
-          isdata = true;
-        } else {
-          this.$message({
-            type: "error",
-            message: "请选择关联年龄段组",
-          });
-          isdata = false;
-        }
+        //   if (this.form.gradeId != "" && this.form.gradeId != null) {
+        //     isdata = true;
+        //   } else {
+        //     this.$message({
+        //       type: "error",
+        //       message: "请选择关联年龄段组"
+        //     });
+        //     isdata = false;
+        //   }
         // } else {
         //   this.$message({
         //     type: "error",
@@ -1319,10 +1222,13 @@ export default {
         var courseResourceBundle = this.form;
         var videoFileList = this.VideoList;
         var audioFileList = this.audioList;
-        var imgFileList = this.imgFileList;
+        // for(let item of audioFileList) {
+        //   item.fileImgUrl = item.coursePicUrl
+        // }
+        var imgFileList = this.imgList;
         var pictureBookFileList = this.pictureBookList;
-        console.log("VideoList", videoFileList);
-        console.log("audioList", audioFileList);
+        console.log("videoFileList", videoFileList);
+        console.log("audioFileList", audioFileList);
         console.log("imgFileList", imgFileList);
         console.log("pictureBookFileList", pictureBookFileList);
         console.log("courseResourceBundle", courseResourceBundle);
@@ -1333,8 +1239,9 @@ export default {
           imgFileList,
           pictureBookFileList,
         });
-        console.log(data);
-        const res = await courseResourcesEdit(data);
+        console.log("submitData", data);
+
+        const res = await courseAddOther(data);
         console.log(res);
         if (res.status == 200) {
           this.$message({
@@ -1379,10 +1286,10 @@ export default {
   cursor: pointer;
 }
  .avatar-uploader .avatar {
-  width: 50%;
+  width: 132px;
   display: block;
-} 
-/* .fileImgUrl {
+}
+.fileImgUrl {
   width: 132px;
   height: 132px;
 } */

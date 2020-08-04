@@ -96,18 +96,7 @@
       >
         <el-table-column align="center" prop="fileName" label="视频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="视频地址"></el-table-column>
-        <el-table-column align="center" prop="fileImgUrl" label="视频封面">
-          <template slot-scope="scope">
-            <img
-              v-if="scope.row.fileImgUrl"
-              :src="scope.row.fileImgUrl"
-              width="80"
-              height="40"
-              class="head_pic"
-            />
-            <span v-else>无</span>
-          </template>
-        </el-table-column>
+           <el-table-column align="center" prop="fileImgUrl" label="视频封面"></el-table-column>
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileContentTag" label="内容标签" width="100"></el-table-column>
@@ -785,37 +774,37 @@ export default {
       console.log(this.Videoform);
       if (this.Videoform.fileName != "") {
         if (this.Videoform.fileUrl != "") {
-          if (
-            this.Videoform.fileUrl.indexOf("https") <= 0 &&
-            this.Videoform.fileImgUrl == ""
-          ) {
-            this.$message({
-              type: "error",
-              message: "当前是外部链接视频，无法获取其封面，请手动上传封面",
-            });
-            return;
+            
+          if(){
+            
           }
-
-          var fileUrl = this.Videoform.fileUrl;
-          var list = this.Videoform;
-          if (this.VideoEdit) {
-            console.log("编辑");
-          } else {
-            console.log("新增");
-            this.VideoList.push(list);
-            if (fileUrl.indexOf("https") != -1) {
-              this.playerOptions.sources = this.Videoform.fileUrl;
+          if (this.Videoform.fileUrl.indexOf("https") >= 0) {
+            var fileUrl = this.Videoform.fileUrl;
+            var list = this.Videoform;
+            if (this.VideoEdit) {
+              console.log("编辑");
+            } else {
+              console.log("新增");
+              this.VideoList.push(list);
+              if (fileUrl.indexOf("https") != -1) {
+                this.playerOptions.sources = this.Videoform.fileUrl;
+              }
             }
+            this.Videoform = {
+              fileName: "",
+              fileUrl: "",
+              fileLanguageTag: "",
+              fileSceneTypeTag: "",
+              fileContentTag: "",
+            };
+            this.VideoEdit = false;
+            this.VideoVisible = false;
+          }else{
+            this.$message({
+            type: "error",
+            message: "当前是外部链接视频，无法获取其封面，请手动上传封面",
+          });
           }
-          this.Videoform = {
-            fileName: "",
-            fileUrl: "",
-            fileLanguageTag: "",
-            fileSceneTypeTag: "",
-            fileContentTag: "",
-          };
-          this.VideoEdit = false;
-          this.VideoVisible = false;
         } else {
           this.$message({
             type: "error",
@@ -1378,10 +1367,11 @@ export default {
   border-radius: 6px;
   cursor: pointer;
 }
- .avatar-uploader .avatar {
-  width: 50%;
+/* .avatar-uploader .avatar {
+  width: 132px;
+  height: 132px;
   display: block;
-} 
+} */
 /* .fileImgUrl {
   width: 132px;
   height: 132px;

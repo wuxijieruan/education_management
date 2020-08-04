@@ -96,18 +96,7 @@
       >
         <el-table-column align="center" prop="fileName" label="视频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="视频地址"></el-table-column>
-        <el-table-column align="center" prop="fileImgUrl" label="视频封面">
-          <template slot-scope="scope">
-            <img
-              v-if="scope.row.fileImgUrl"
-              :src="scope.row.fileImgUrl"
-              width="80"
-              height="40"
-              class="head_pic"
-            />
-            <span v-else>无</span>
-          </template>
-        </el-table-column>
+        <el-table-column align="center" prop="fileImgUrl" label="视频封面"></el-table-column>
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileContentTag" label="内容标签" width="100"></el-table-column>
@@ -1378,10 +1367,11 @@ export default {
   border-radius: 6px;
   cursor: pointer;
 }
- .avatar-uploader .avatar {
-  width: 50%;
+/* .avatar-uploader .avatar {
+  width: 132px;
+  height: 132px;
   display: block;
-} 
+} */
 /* .fileImgUrl {
   width: 132px;
   height: 132px;

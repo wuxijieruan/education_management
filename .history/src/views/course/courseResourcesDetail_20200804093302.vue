@@ -93,21 +93,9 @@
         element-loading-text="拼命加载中"
         style="width: 80%;margin-left:130px;margin-bottom: 20px;"
         v-if="VideoList!=''"
-      >
+        >
         <el-table-column align="center" prop="fileName" label="视频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="视频地址"></el-table-column>
-        <el-table-column align="center" prop="fileImgUrl" label="视频封面">
-          <template slot-scope="scope">
-            <img
-              v-if="scope.row.fileImgUrl"
-              :src="scope.row.fileImgUrl"
-              width="80"
-              height="40"
-              class="head_pic"
-            />
-            <span v-else>无</span>
-          </template>
-        </el-table-column>
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
         <el-table-column align="center" prop="fileContentTag" label="内容标签" width="100"></el-table-column>
@@ -144,17 +132,11 @@
       >
         <el-table-column align="center" prop="fileName" label="音频名称" width="200"></el-table-column>
         <el-table-column align="center" prop="fileUrl" label="音频地址"></el-table-column>
-        <el-table-column align="center" prop="fileImgUrl" label="音频封面">
+        <el-table-column align="center" prop="fileImgUrl" label="音频封面" >
           <template slot-scope="scope">
-            <img
-              v-if="scope.row.fileImgUrl"
-              :src="scope.row.fileImgUrl"
-              width="80"
-              height="40"
-              class="head_pic"
-            />
-            <span v-else>无</span>
-          </template>
+      　　　　<img v-if="scope.row.fileImgUrl" :src="scope.row.fileImgUrl" width="80" height="40" class="head_pic"/>
+              <span v-else>无</span>
+      　　</template>
         </el-table-column>
         <el-table-column align="center" prop="teacherName" label="主讲老师" width="150"></el-table-column>
         <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
@@ -178,6 +160,7 @@
           :file-list="imgList"
           :before-upload="beforeAvatarUpload"
           :on-preview="handlePictureCardPreview"
+          
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -240,8 +223,7 @@
             style="width:80%"
           ></el-input>
         </el-form-item>
-
-        <el-form-item label="视频图片" prop="fileImgUrl" style="display:block">
+      <el-form-item label="视频图片" prop="fileImgUrl" style="display:block">
           <el-upload
             class="avatar-uploader"
             :action="imgUrl"
@@ -252,7 +234,7 @@
           >
             <img v-if="Videoform.fileImgUrl" :src="Videoform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <div slot="tip" class="el-upload__tip">图片最佳上传为长方形</div>
+            <div slot="tip" class="el-upload__tip">图片最佳上传为正方形</div>
           </el-upload>
         </el-form-item>
 
@@ -291,13 +273,7 @@
     </el-dialog>
 
     <!-- 上传音频 -->
-    <el-dialog
-      title="音频内容"
-      width="900px"
-      :visible.sync="audioVisible"
-      @click="closeaudioDialog"
-      close="closeaudioDialog"
-    >
+    <el-dialog title="音频内容" width="900px" :visible.sync="audioVisible" @click="closeaudioDialog" close="closeaudioDialog">
       <el-form label-width="120px" :model="audioform" ref="audioform" style="width:850px">
         <el-form-item label="* 音频名称" prop="fileName">
           <el-input
@@ -425,6 +401,7 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             :on-preview="handlePictureCardPreview"
+            
           >
             <img v-if="pictureBookform.fileImgUrl" :src="pictureBookform.fileImgUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -438,7 +415,7 @@
       </span>
     </el-dialog>
     <el-dialog :visible.sync="dialogVisible" id="imgpop">
-      <img width="100%" style :src="dialogImageUrl" alt />
+      <img width="100%" style="" :src="dialogImageUrl" alt="">
     </el-dialog>
   </div>
 </template>
@@ -446,7 +423,7 @@
 import {
   gradeGet,
   courseResourcesEdit,
-  courseResourcesFileDel,
+  courseResourcesFileDel
 } from "@/api/getData";
 import { videoPlayer } from "vue-video-player";
 import "video.js/dist/video-js.css";
@@ -455,13 +432,13 @@ import {
   imgUrl,
   imagesUrl,
   newVideoUrl,
-  zipFileUrl,
+  zipFileUrl
 } from "@/config/env";
 export default {
   data() {
     return {
-      dialogVisible: false,
-      dialogImageUrl: "",
+      dialogVisible:false,
+      dialogImageUrl:'',
 
       newVideoUrl: newVideoUrl,
       VideoUrl: VideoUrl,
@@ -485,7 +462,7 @@ export default {
         courseId: "",
         resourceType: "",
         resourceTitle: "",
-        gradeId: "",
+        gradeId: ""
       },
       Videoform: {
         fileName: "",
@@ -493,23 +470,23 @@ export default {
         fileLanguageTag: "",
         fileSceneTypeTag: "",
         fileContentTag: "",
-        fileImgUrl: "",
+        fileImgUrl:""
       },
       videoEdit: false,
       audioform: {
         fileName: "",
         fileUrl: "",
-        fileImgUrl: "",
-        teacherName: "",
+        fileImgUrl:'',
+        teacherName:'',
         fileLanguageTag: "",
         fileSceneTypeTag: "",
-        fileContentTag: "",
+        fileContentTag: ""
       },
       audioEdit: false,
       pictureBookform: {
         fileName: "",
         fileUrl: "",
-        fileImgUrl: "",
+        fileImgUrl: ""
       },
       VideoList: [],
       audioList: [],
@@ -533,20 +510,20 @@ export default {
           timeDivider: true,
           durationDisplay: true,
           remainingTimeDisplay: false,
-          fullscreenToggle: true, //全屏按钮
-        },
+          fullscreenToggle: true //全屏按钮
+        }
       },
-
+     
       audioUrl: "",
       VideoVisible: false,
       audioVisible: false,
-      pictureBookVisible: false,
+      pictureBookVisible: false
       // workImgUrl: ""
     };
   },
   // 注册组件
   components: {
-    videoPlayer,
+    videoPlayer
   },
   mounted() {
     var data = this.$route.query;
@@ -595,7 +572,7 @@ export default {
         var url = element.fileUrl;
         var name = element.fileName;
         var response = {
-          url: element.fileUrl,
+          url: element.fileUrl
         };
         var courseResourceBundleFileId = element.courseResourceBundleFileId;
         imgList.push({ url, name, response, courseResourceBundleFileId });
@@ -610,21 +587,23 @@ export default {
       this.pictureBookShow = true;
       this.pictureBookList = data.data.pictureBookFileList;
     }
+
+  
   },
   watch: {
-    audioVisible: function (newVal) {
-      if (!newVal) {
-        this.audioform = {
-          fileName: "",
-          fileUrl: "",
-          fileImgUrl: "",
-          teacherName: "",
-          fileLanguageTag: "",
-          fileSceneTypeTag: "",
-          fileContentTag: "",
-        };
-      }
-    },
+          'audioVisible': function(newVal){
+              if(!newVal){
+                this.audioform={
+                  fileName: "",
+                  fileUrl: "",
+                  fileImgUrl:'',
+                  teacherName:'',
+                  fileLanguageTag: "",
+                  fileSceneTypeTag: "",
+                  fileContentTag: ""
+                }
+              }
+          },
   },
   methods: {
     videoType() {
@@ -650,14 +629,14 @@ export default {
         } else {
           this.$message({
             type: "error",
-            message: res.error,
+            message: res.error
           });
           console.log(res);
         }
       } catch (err) {
         this.$message({
           type: "error",
-          message: "请重试",
+          message: "请重试"
         });
         console.log(err);
       }
@@ -667,37 +646,26 @@ export default {
         path: "/courseDetail",
         query: {
           courseId: this.form.courseId,
-          resourceType: this.form.resourceType,
-        },
+          resourceType: this.form.resourceType
+        }
       });
     },
     S4() {
-      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
     },
     guid() {
-      return (
-        this.S4() +
-        this.S4() +
-        "" +
-        this.S4() +
-        "" +
-        this.S4() +
-        "" +
-        this.S4() +
-        "" +
-        this.S4() +
-        this.S4() +
-        this.S4()
-      );
+      return (this.S4()+this.S4()+""+this.S4()+""+this.S4()+""+this.S4()+""+this.S4()+this.S4()+this.S4());
     },
     VideoAdd() {
       this.VideoVisible = true;
+     
     },
     Videoedit(row) {
       console.log(row);
       this.Videoform = row;
       this.VideoVisible = true;
       this.VideoEdit = true;
+     
     },
     closeVideoDialog() {
       this.Videoform = {
@@ -705,15 +673,16 @@ export default {
         fileUrl: "",
         fileLanguageTag: "",
         fileSceneTypeTag: "",
-        fileContentTag: "",
+        fileContentTag: ""
       };
       this.VideoVisible = false;
+     
     },
     uploadVideo() {
       //上传视频
       var _this = this;
       var Videofile = event.target.files;
-      console.log("hhhhhladsnladlad;ladsand;ad;adn;a;d;ad", this.Videoform);
+      console.log("hhhhhladsnladlad;ladsand;ad;adn;a;d;ad",this.Videoform);
       var myfile = Videofile[0];
       if (myfile != undefined) {
         // console.log(myfile);
@@ -736,46 +705,47 @@ export default {
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
-          if (this.Videoform.fileUrl) {
-            var data = {
-              file: file,
-              fileId: this.Videoform.courseResourceBundleFileId,
-            };
-            var fileId = this.Videoform.courseResourceBundleFileId;
-          } else {
-            var data = {
-              file: file,
-            };
+          if(this.Videoform.fileUrl){
+            var data={
+              file:file,
+              fileId : this.Videoform.courseResourceBundleFileId
+            }
+            var fileId = this.Videoform.courseResourceBundleFileId
+          }else{          
+            var data={
+              file:file           
+            }
           }
+          
 
           $.ajax({
-            url: this.newVideoUrl + "?fileId=" + fileId,
+            url: this.newVideoUrl + "?fileId=" +fileId,
             type: "post",
             data: file,
             headers: {
-              Authorization: localStorage.learn_token,
+              Authorization: localStorage.learn_token
             },
             processData: false,
             contentType: false,
-            success: function (res) {
+            success: function(res) {
               // console.log(res);
               _this.fullscreenLoading = false;
               _this.Videoform.fileUrl = res.data;
             },
-            error: function (res) {
+            error: function(res) {
               console.log(res);
               _this.fullscreenLoading = false;
               this.$message({
                 type: "error",
-                message: res.error,
+                message: res.error
               });
-            },
+            }
           });
           event.target.value = "";
         } else {
           this.$message({
             type: "error",
-            message: "上传的视频文件格式错误，请选择正确的文件格式",
+            message: "上传的视频文件格式错误，请选择正确的文件格式"
           });
           event.target.value = "";
         }
@@ -785,18 +755,8 @@ export default {
       console.log(this.Videoform);
       if (this.Videoform.fileName != "") {
         if (this.Videoform.fileUrl != "") {
-          if (
-            this.Videoform.fileUrl.indexOf("https") <= 0 &&
-            this.Videoform.fileImgUrl == ""
-          ) {
-            this.$message({
-              type: "error",
-              message: "当前是外部链接视频，无法获取其封面，请手动上传封面",
-            });
-            return;
-          }
-
-          var fileUrl = this.Videoform.fileUrl;
+            if(this.Videoform.fileUrl.indexOf("https") >= 0){
+ var fileUrl = this.Videoform.fileUrl;
           var list = this.Videoform;
           if (this.VideoEdit) {
             console.log("编辑");
@@ -812,20 +772,22 @@ export default {
             fileUrl: "",
             fileLanguageTag: "",
             fileSceneTypeTag: "",
-            fileContentTag: "",
+            fileContentTag: ""
           };
           this.VideoEdit = false;
           this.VideoVisible = false;
+            }
+         
         } else {
           this.$message({
             type: "error",
-            message: "请填写视频地址",
+            message: "请填写视频地址"
           });
         }
       } else {
         this.$message({
           type: "error",
-          message: "请填写视频名称",
+          message: "请填写视频名称"
         });
       }
     },
@@ -838,7 +800,7 @@ export default {
       } else {
         this.$message({
           type: "error",
-          message: "当前视频不支持在pc端播放",
+          message: "当前视频不支持在pc端播放"
         });
       }
     },
@@ -860,7 +822,7 @@ export default {
         } else {
           this.$message({
             type: "error",
-            message: res.msg,
+            message: res.msg
           });
           console.log(res.msg);
         }
@@ -875,25 +837,28 @@ export default {
     },
     audioAdd() {
       this.audioVisible = true;
+     
     },
     audioedit(row) {
       console.log(row);
-      var list = row;
+      var list =row
       this.audioform = list;
       this.audioVisible = true;
       this.audioEdit = true;
+    
     },
     closeaudioDialog() {
       this.audioform = {
         fileName: "",
         fileUrl: "",
-        fileImgUrl: "",
-        teacherName: "",
+        fileImgUrl:'',
+        teacherName:'',
         fileLanguageTag: "",
         fileSceneTypeTag: "",
-        fileContentTag: "",
+        fileContentTag: ""
       };
       this.audioVisible = false;
+     
     },
     uploadaudio() {
       //上传音频
@@ -929,35 +894,35 @@ export default {
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
-
+       
           $.ajax({
             url: this.VideoUrl,
             type: "post",
             data: file,
             headers: {
-              Authorization: localStorage.learn_token,
+              Authorization: localStorage.learn_token
             },
             processData: false,
             contentType: false,
-            success: function (res) {
+            success: function(res) {
               // console.log(res);
               _this.fullscreenLoading = false;
               _this.audioform.fileUrl = res.url;
             },
-            error: function (res) {
+            error: function(res) {
               console.log(res);
               _this.fullscreenLoading = false;
               this.$message({
                 type: "error",
-                message: res.msg,
+                message: res.msg
               });
-            },
+            }
           });
           event.target.value = "";
         } else {
           this.$message({
             type: "error",
-            message: "上传的音频文件格式错误，请选择正确的文件格式",
+            message: "上传的音频文件格式错误，请选择正确的文件格式"
           });
           event.target.value = "";
         }
@@ -980,25 +945,25 @@ export default {
           this.audioform = {
             fileName: "",
             fileUrl: "",
-            fileImgUrl: "",
-            teacherName: "",
+            fileImgUrl:'',
+            teacherName:'',
             fileLanguageTag: "",
             fileSceneTypeTag: "",
-            fileContentTag: "",
+            fileContentTag: ""
           };
           this.audioEdit = false;
           this.audioVisible = false;
-          this.$forceUpdate();
+          this.$forceUpdate()
         } else {
           this.$message({
             type: "error",
-            message: "请填写音频地址",
+            message: "请填写音频地址"
           });
         }
       } else {
         this.$message({
           type: "error",
-          message: "请填写音频名称",
+          message: "请填写音频名称"
         });
       }
     },
@@ -1025,7 +990,7 @@ export default {
         } else {
           this.$message({
             type: "error",
-            message: res.msg,
+            message: res.msg
           });
           console.log(res.msg);
         }
@@ -1060,7 +1025,7 @@ export default {
       } else {
         this.$message({
           type: "error",
-          message: "上传的图片文件格式错误，请选择正确的文件格式",
+          message: "上传的图片文件格式错误，请选择正确的文件格式"
         });
         return false;
       }
@@ -1068,15 +1033,16 @@ export default {
     handleImageSuccess(file) {
       // console.log("添加图片", file);
       var list = {
-        fileUrl: file.url,
+        fileUrl: file.url
       };
       this.imgFileList.push(list);
       console.log(this.imgFileList);
     },
     async handleRemoveimg(file) {
-      return this.$confirm("确认要删除吗?", "提示", {
-        type: "warning",
-      }).then(async () => {
+       return this.$confirm("确认要删除吗?", "提示", {
+        type: "warning"
+      })
+      .then(async () => {
         // 删除图片
         console.log(file);
         var courseResourceBundleFileId, num;
@@ -1097,56 +1063,60 @@ export default {
           } else {
             this.$message({
               type: "error",
-              message: res.msg,
+              message: res.msg
             });
             console.log(res.msg);
           }
         }
         this.imgFileList.splice(num, 1);
         console.log(this.imgFileList);
-      });
+      })
       //   .catch(() => {
       //     this.listLoading = false;
       // });
     },
     handlePictureCardPreview(file) {
-      console.log(file);
-      this.dialogImageUrl = file.response.url;
+      console.log(file)
+        this.dialogImageUrl = file.response.url;
+        
+        var img = new Image()
+        img.src = this.dialogImageUrl
+        console.log(img.width ,img.height )
+        var width = img.width +"px"
+        var divShow = $('#imgpop .el-dialog')
+        console.log(divShow)
+        $(divShow).css("width",width)
 
-      var img = new Image();
-      img.src = this.dialogImageUrl;
-      console.log(img.width, img.height);
-      var width = img.width + "px";
-      var divShow = $("#imgpop .el-dialog");
-      console.log(divShow);
-      $(divShow).css("width", width);
 
-      this.dialogVisible = true;
+        this.dialogVisible = true;
     },
     pictureBookAdd() {
       this.pictureBookVisible = true;
+     
     },
     closepictureBookDialog() {
       this.pictureBookform = {
         fileName: "",
         fileUrl: "",
-        fileImgUrl: "",
+        fileImgUrl: ""
       };
       this.pictureBookVisible = false;
+     
     },
     handleAvatarSuccess(file) {
       console.log(file);
       this.pictureBookform.fileImgUrl = file.url;
       console.log(this.pictureBookform);
     },
-    vhandleAvatarSuccess(file) {
+     vhandleAvatarSuccess(file) {
       console.log(file);
       this.audioform.fileImgUrl = file.url;
       console.log(this.audioform);
       // var aa=this.audioform.teacherName
       // this.audioform.teacherName="abc"
       // this.audioform.teacherName=aa
-      this.$forceUpdate();
+      this.$forceUpdate()
+      
     },
     vdhandleAvatarSuccess(file) {
       console.log(file);
@@ -1155,7 +1125,8 @@ export default {
       // var aa=this.audioform.teacherName
       // this.audioform.teacherName="abc"
       // this.audioform.teacherName=aa
-      this.$forceUpdate();
+      this.$forceUpdate()
+      
     },
     uploadpictureBook() {
       //上传电子书
@@ -1179,35 +1150,35 @@ export default {
           // console.log(copyFile);
           var file = new FormData();
           file.append("file", copyFile);
-          file.append("submit", false);
+          file.append("submit", false);   
           $.ajax({
             url: this.zipFileUrl,
             type: "post",
             data: file,
             headers: {
-              Authorization: localStorage.learn_token,
+              Authorization: localStorage.learn_token
             },
             processData: false,
             contentType: false,
-            success: function (res) {
+            success: function(res) {
               console.log(res);
               _this.fullscreenLoading = false;
               _this.pictureBookform.fileUrl = res.data;
             },
-            error: function (res) {
+            error: function(res) {
               console.log(res);
               _this.fullscreenLoading = false;
               this.$message({
                 type: "error",
-                message: res.msg,
+                message: res.msg
               });
-            },
+            }
           });
           event.target.value = "";
         } else {
           this.$message({
             type: "error",
-            message: "上传的电子书文件格式错误，请选择正确的文件格式",
+            message: "上传的电子书文件格式错误，请选择正确的文件格式"
           });
           event.target.value = "";
         }
@@ -1219,32 +1190,32 @@ export default {
         if (this.pictureBookform.fileUrl != "") {
           if (this.pictureBookform.fileImgUrl != "") {
             var list = this.pictureBookform;
-
+          
             this.pictureBookList.push(list);
             this.pictureBookUrl = this.pictureBookform.fileUrl;
             // console.log(this.pictureBookList);
             this.pictureBookform = {
               fileName: "",
               fileUrl: "",
-              fileImgUrl: "",
+              fileImgUrl: ""
             };
             this.pictureBookVisible = false;
           } else {
             this.$message({
               type: "error",
-              message: "请上传电子书封面图片",
+              message: "请上传电子书封面图片"
             });
           }
         } else {
           this.$message({
             type: "error",
-            message: "请填写电子书地址",
+            message: "请填写电子书地址"
           });
         }
       } else {
         this.$message({
           type: "error",
-          message: "请填写电子书名称",
+          message: "请填写电子书名称"
         });
       }
     },
@@ -1266,7 +1237,7 @@ export default {
         } else {
           this.$message({
             type: "error",
-            message: res.msg,
+            message: res.msg
           });
           console.log(res.msg);
         }
@@ -1283,15 +1254,15 @@ export default {
       console.log("imgFileList", this.imgFileList);
       if (this.form.resourceType == 3 || this.form.resourceType == 4) {
         // if (this.form.resourceTitle != "" && this.form.resourceTitle != null) {
-        if (this.form.gradeId != "" && this.form.gradeId != null) {
-          isdata = true;
-        } else {
-          this.$message({
-            type: "error",
-            message: "请选择关联年龄段组",
-          });
-          isdata = false;
-        }
+          if (this.form.gradeId != "" && this.form.gradeId != null) {
+            isdata = true;
+          } else {
+            this.$message({
+              type: "error",
+              message: "请选择关联年龄段组"
+            });
+            isdata = false;
+          }
         // } else {
         //   this.$message({
         //     type: "error",
@@ -1307,7 +1278,7 @@ export default {
         } else {
           this.$message({
             type: "error",
-            message: "请输入互动作业名称",
+            message: "请输入互动作业名称"
           });
           isdata = false;
         }
@@ -1331,7 +1302,7 @@ export default {
           videoFileList,
           audioFileList,
           imgFileList,
-          pictureBookFileList,
+          pictureBookFileList
         });
         console.log(data);
         const res = await courseResourcesEdit(data);
@@ -1339,21 +1310,21 @@ export default {
         if (res.status == 200) {
           this.$message({
             message: "提交成功",
-            type: "success",
+            type: "success"
           });
           this.listLoading = false;
           this.back();
         } else {
           this.$message({
             type: "error",
-            message: res.error,
+            message: res.error
           });
           console.log(res);
           this.listLoading = false;
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>
@@ -1378,23 +1349,24 @@ export default {
   border-radius: 6px;
   cursor: pointer;
 }
- .avatar-uploader .avatar {
-  width: 50%;
+/* .avatar-uploader .avatar {
+  width: 132px;
+  height: 132px;
   display: block;
-} 
+} */
 /* .fileImgUrl {
   width: 132px;
   height: 132px;
 } */
 </style>
 <style >
-#imgpop .el-dialog {
+#imgpop .el-dialog{
   width: 70%;
 }
-#imgpop .el-dialog__header {
+#imgpop .el-dialog__header{
   padding: 0;
 }
-#imgpop .el-dialog__body {
+#imgpop .el-dialog__body{
   padding: 0;
 }
 </style>

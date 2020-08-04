@@ -1379,7 +1379,8 @@ export default {
   cursor: pointer;
 }
  .avatar-uploader .avatar {
-  width: 50%;
+  width: 20%;
+  height: 132px;
   display: block;
 } 
 /* .fileImgUrl {
