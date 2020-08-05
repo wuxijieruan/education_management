@@ -471,7 +471,7 @@ export default {
   cursor: pointer;
 }
  .avatar-uploader .avatar {
-  width: 70%;
+  width: 50%;
   display: block;
 } 
 </style>

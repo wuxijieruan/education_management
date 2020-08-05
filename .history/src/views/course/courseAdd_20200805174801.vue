@@ -1,12 +1,14 @@
 <template>
-  <div style="height:42rem;overflow-x: hidden;overflow-y: scroll;">
+  <div>
     <!-- 面包屑导航 -->
-    <!-- <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
       <el-breadcrumb-item>课程管理</el-breadcrumb-item>
       <el-breadcrumb-item>课程列表</el-breadcrumb-item>
-      <el-breadcrumb-item>课程编辑</el-breadcrumb-item>
+      <el-breadcrumb-item>课程添加</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-button size="small" type="danger" style="margin: 20px 0;" @click="back">返回列表</el-button>-->
+
+    <el-button size="small" type="danger" style="margin: 20px 0;" @click="back">返回列表</el-button>
+
     <el-form
       label-width="200px"
       :model="form"
@@ -24,7 +26,7 @@
         <el-select v-model="form.linkId" filterable placeholder="请选择关联主课程" style="width:350px">
           <el-option
             v-for="item in courseList"
-            :key="item.index"
+            :key="item.courseId"
             :label="item.courseName"
             :value="item.courseId"
           ></el-option>
@@ -79,15 +81,13 @@
         ></el-input>
       </el-form-item>
 
-  <el-form-item label="请选择默认显示页面" prop="defaultCategory">
-            <el-select v-model="form.defaultCategory" filterable placeholder="请选择默认显示页面">
-              <el-option :value="1" label="父母导读">父母导读</el-option>
-              <el-option :value="2" label="心选绘本">心选绘本</el-option>
-               <el-option :value="3" label="精彩解读">精彩解读</el-option>
-                <el-option :value="4" label="脑洞时间">脑洞时间</el-option>
+          <el-form-item label="默认显示类别" prop="defaultCategory">
+            <el-select v-model="ruleForm.userRegMode" placeholder="请选择活动注册方式">
+              <el-option value="simple" label="快捷注册">快捷注册</el-option>
+              <el-option value="entire" label="完整注册">完整注册</el-option>
             </el-select>
           </el-form-item>
-
+      
       <el-form-item label="课程有效时间" prop="unlockValidDay">
         <el-input
           size="small"
@@ -138,10 +138,9 @@
   </div>
 </template>
 <script>
-import { coursePut, subjectsGet, courseGet, courseDetail } from "@/api/getData";
+import { courseAdd, subjectsGet, courseGet } from "@/api/getData";
 import { imgUrl } from "@/config/env";
 export default {
-  name: "First",
   data() {
     return {
       dialogVisible:false,
@@ -153,24 +152,23 @@ export default {
       courseList: [],
       linkShow: false,
       form: {
-        courseId: "",
         courseName: "", //课程名称
         characterTag: "", //标签
         subjectId: "", // 话题ID
         coursePicUrl: "", //封面图片
         teacherName: "", //老师名称
         listenerCount: 0, //浏览数
-        isVail: "", //是否上下架
+        isVail: "-1", //是否上下架
         isHot: "0", //是否有效
         isTop: "0", //是否有效
         createUserId: "", //创建者
-        courseType: "", //是否是主课程
+        courseType: "1", //是否是主课程
         linkId: "", //关联主课程ID
         playTag: "", //作业游戏标签
         playType: "录播", //播放类型
         unlockPoints:0,//所需积分
         unlockValidDay:0,//有效期
-        defaultCategory:""
+        defaultCategory:1
       },
       rules: {
         subjectId: [
@@ -190,61 +188,23 @@ export default {
         ],
         unlockValidDay: [
           { required: true, message: "请输入课程有效时间", trigger: "blur" }
-        ],
-        defaultCategory: [
-          { required: true, message: "请输入课程默认显示页面", trigger: "blur" }
+        ]
+        ,
+        unlockValidDay: [
+          { required: true, message: "请输入课程有效时间", trigger: "blur" }
         ]
       }
     };
   },
-  created() {},
+  created() {
+    this.user = JSON.parse(localStorage.getItem("userdata"));
+    this.form.createUserId = this.user.loginUser.id;
+    // console.log("用户信息", this.user);
+  },
   mounted() {
-    var data = this.$route.query;
-    // console.log("路由数据", data);
-    this.form.courseId = data.courseId;
-    this.getList();
+    this.getSubject();
   },
   methods: {
-    async getList() {
-      try {
-        this.listLoading = true;
-        var courseId = this.form.courseId;
-        const res = await courseDetail(courseId);
-        if (res.status == 200) {
-          console.log(res.data);
-          this.form = res.data;
-           console.log(this.form,"返回的数据");
-          if (res.data.courseType == "1") {
-            this.linkShow = false;
-            this.form.courseType = "1";
-          } else {
-            this.linkShow = true;
-            this.form.courseType = "2";
-            this.getCourseList();
-          }
-          if (res.data.isHot == "1") {
-            this.form.isHot = "1";
-          } else {
-            this.form.isHot = "0";
-          }
-          this.getSubject();
-          this.listLoading = false;
-        } else {
-          this.listLoading = false;
-          this.$message({
-            type: "error",
-            message: res.msg
-          });
-          console.log(res.msg);
-        }
-      } catch (err) {
-        this.listLoading = false;
-        this.$message({
-          type: "error",
-          message: "请重试"
-        });
-      }
-    },
     back() {
       this.$router.go(-1);
     },
@@ -265,7 +225,7 @@ export default {
         var data = {
           createUserId: createUserId,
           courseType: 1,
-          isVail: 1,
+          isVail: '',
           page: 1,
           pageSize: 10000
         };
@@ -273,16 +233,6 @@ export default {
         if (res.status == 200) {
           console.log("课程列表", res.data);
           this.courseList = res.data.list;
-          var courseidList = [];
-          this.courseList.forEach(item => {
-            courseidList.push(item.courseId);
-          });
-          var courseidStr=courseidList.toString()
-          var linkId=this.form.linkId;
-          console.log(courseidStr)
-          if(courseidStr.indexOf(linkId)==-1){
-            this.form.linkId=''
-          }
           this.listLoading = false;
         } else {
           this.$message({
@@ -305,7 +255,7 @@ export default {
         this.listLoading = true;
         const res = await subjectsGet();
         if (res.status == 200) {
-          // console.log("话题列表", res.data);
+          console.log("话题列表", res.data);
           this.subjectsGetList = res.data.list;
           this.listLoading = false;
         } else {
@@ -346,7 +296,7 @@ export default {
     handlePictureCardPreview(file) {
       console.log(file)
         this.dialogImageUrl = file.response.url;
-
+        
         var img = new Image()
         img.src = this.dialogImageUrl
         console.log(img.width ,img.height )
@@ -364,7 +314,7 @@ export default {
           console.log("课程新增", this.form);
           if (this.form.coursePicUrl != "") {
             if (this.form.courseType == "1") {
-              const res = await coursePut(this.form);
+              const res = await courseAdd(this.form);
               console.log("课程新增之后", res);
               if (res.status == 200) {
                 this.$message({
@@ -383,7 +333,7 @@ export default {
               }
             } else {
               if (this.form.linkId != "") {
-                const res = await coursePut(this.form);
+                const res = await courseAdd(this.form);
                 console.log("课程新增之后", res);
                 if (res.status == 200) {
                   this.$message({

@@ -91,8 +91,8 @@
 
             <el-form-item label="注册方式" prop="studentIdentity">
             <el-select v-model="ruleForm.userRegMode" placeholder="请选择活动注册方式">
-              <el-option value="simple" label="快捷注册">快捷注册</el-option>
-              <el-option value="entire" label="完整注册">完整注册</el-option>
+              <el-option value="初级VIP" label="初级VIP">初级VIP</el-option>
+              <el-option value="企业VIP" label="企业VIP">企业VIP</el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="活动注册赠送积分" prop="points">
@@ -195,8 +195,7 @@ export default {
         activityUserType: "",
         points: "",
         overMouth: "",
-        picUrl:"",
-        userRegMode:""
+        picUrl:""
       },
       rules: {
         activityName: [
@@ -424,8 +423,9 @@ export default {
       this.$refs[formName].validate(async valid => {
         if (valid) {
           this.ruleForm.videoUrl = this.playerOptions.sources;
-          this.ruleForm.relationCourseId = this.ruleForm.relationCourseIds.join();         
-          //  if (this.ruleForm.picUrl != "") {
+          this.ruleForm.relationCourseId = this.ruleForm.relationCourseIds.join();
+         
+           if (this.ruleForm.picUrl != "") {
           const res = await actAdd(this.ruleForm);
           console.log(res);
           if (res !== "error") {
@@ -441,11 +441,10 @@ export default {
             });
             console.log("提交失败", res);
           }
-        
-        }else{
+        }}else{
           this.$message({
             type: "error",
-            message: "请完整填写信息"
+            message: "请选择活动弹窗"
           });
         }
       });
@@ -471,7 +470,7 @@ export default {
   cursor: pointer;
 }
  .avatar-uploader .avatar {
-  width: 70%;
+  width: 50%;
   display: block;
 } 
 </style>

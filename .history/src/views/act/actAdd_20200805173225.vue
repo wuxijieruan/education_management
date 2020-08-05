@@ -424,8 +424,9 @@ export default {
       this.$refs[formName].validate(async valid => {
         if (valid) {
           this.ruleForm.videoUrl = this.playerOptions.sources;
-          this.ruleForm.relationCourseId = this.ruleForm.relationCourseIds.join();         
-          //  if (this.ruleForm.picUrl != "") {
+          this.ruleForm.relationCourseId = this.ruleForm.relationCourseIds.join();
+         
+           if (this.ruleForm.picUrl != "") {
           const res = await actAdd(this.ruleForm);
           console.log(res);
           if (res !== "error") {
@@ -441,11 +442,10 @@ export default {
             });
             console.log("提交失败", res);
           }
-        
-        }else{
+        }}else{
           this.$message({
             type: "error",
-            message: "请完整填写信息"
+            message: "请选择活动弹窗"
           });
         }
       });
@@ -471,7 +471,7 @@ export default {
   cursor: pointer;
 }
  .avatar-uploader .avatar {
-  width: 70%;
+  width: 50%;
   display: block;
 } 
 </style>

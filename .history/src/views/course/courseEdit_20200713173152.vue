@@ -78,16 +78,6 @@
           placeholder="请输入课程所需积分"
         ></el-input>
       </el-form-item>
-
-  <el-form-item label="请选择默认显示页面" prop="defaultCategory">
-            <el-select v-model="form.defaultCategory" filterable placeholder="请选择默认显示页面">
-              <el-option :value="1" label="父母导读">父母导读</el-option>
-              <el-option :value="2" label="心选绘本">心选绘本</el-option>
-               <el-option :value="3" label="精彩解读">精彩解读</el-option>
-                <el-option :value="4" label="脑洞时间">脑洞时间</el-option>
-            </el-select>
-          </el-form-item>
-
       <el-form-item label="课程有效时间" prop="unlockValidDay">
         <el-input
           size="small"
@@ -170,7 +160,6 @@ export default {
         playType: "录播", //播放类型
         unlockPoints:0,//所需积分
         unlockValidDay:0,//有效期
-        defaultCategory:""
       },
       rules: {
         subjectId: [
@@ -190,9 +179,6 @@ export default {
         ],
         unlockValidDay: [
           { required: true, message: "请输入课程有效时间", trigger: "blur" }
-        ],
-        defaultCategory: [
-          { required: true, message: "请输入课程默认显示页面", trigger: "blur" }
         ]
       }
     };
@@ -213,7 +199,7 @@ export default {
         if (res.status == 200) {
           console.log(res.data);
           this.form = res.data;
-           console.log(this.form,"返回的数据");
+          // console.log(this.form);
           if (res.data.courseType == "1") {
             this.linkShow = false;
             this.form.courseType = "1";
