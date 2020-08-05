@@ -34,30 +34,20 @@
             @click="batchDel"
           >批量下架</el-button>
 
- </el-form-item>
-          <el-form-item v-if="isxianshikaiguan">
           <strong style="font-size:16px;color:green">显示</strong> <strong style="font-size:20px;"> || </strong> <strong style="font-size:16px;color:red">隐藏</strong>
-       
-            <!-- <el-switch
+          <el-tooltip :content="isHidden+'浏览数'" placement="top">
+            <el-switch
               v-model="isHidden"
               active-color="#13ce66"
               inactive-color="#ff4949"
               active-value="隐藏"
               inactive-value="显示"
-              
               @change="batchShow">
-            </el-switch> -->
-
-            <el-switch
-              v-model="isHidden"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              :inactive-value="false"
-              :active-value="true"
-              @change="batchShow">
-            </el-switch>        
-         </el-form-item>
-       
+            </el-switch>
+          </el-tooltip>
+          
+         
+        </el-form-item>
         <el-form-item label="课程名称" prop="courseName">
           <el-select
             v-model="form.courseName"
@@ -256,8 +246,7 @@ export default {
       gradeGetList: [],
       subjectsGetList: [],
       courseNameList: [],
-      isHidden:false,
-      isxianshikaiguan:false,
+      isHidden:1,
       form: {
         createUserId: "",
         subjectId: "", //话题id
@@ -326,8 +315,7 @@ export default {
     //批量显示
     async batchShow() {
       console.log(this.isHidden);
-      var type = this.isHidden==true?1:2;
-       console.log(type);
+      var type = this.isHidden=='隐藏'?1:2;
       const res = await updateIsShowNumAll(type);
       console.log(res.data);
       if (res.status == 200) {
@@ -355,7 +343,7 @@ export default {
       this.form.subjectId = "";
       this.form.courseName = "";
       this.form.isVail = "";
-
+      this.form.isHidden = "";
       this.form.courseType = "";
       this.form.page = 1;
       this.form.pageSize = 10;
@@ -394,13 +382,7 @@ export default {
             } else if (element.isTop == 0) {
               element.isTop = "否";
             }
-            if(element.isshownum==2){
-                this.isHidden=false;
-            }else if(element.isshownum==1){
-                this.isHidden=true;
-            }           
           });
-          this.isxianshikaiguan=true;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
           this.searchVisible = false; //搜索

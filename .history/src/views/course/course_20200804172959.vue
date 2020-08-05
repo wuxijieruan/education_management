@@ -34,8 +34,6 @@
             @click="batchDel"
           >批量下架</el-button>
 
- </el-form-item>
-          <el-form-item v-if="isxianshikaiguan">
           <strong style="font-size:16px;color:green">显示</strong> <strong style="font-size:20px;"> || </strong> <strong style="font-size:16px;color:red">隐藏</strong>
        
             <!-- <el-switch
@@ -56,8 +54,8 @@
               :active-value="true"
               @change="batchShow">
             </el-switch>        
-         </el-form-item>
-       
+         
+        </el-form-item>
         <el-form-item label="课程名称" prop="courseName">
           <el-select
             v-model="form.courseName"
@@ -257,7 +255,6 @@ export default {
       subjectsGetList: [],
       courseNameList: [],
       isHidden:false,
-      isxianshikaiguan:false,
       form: {
         createUserId: "",
         subjectId: "", //话题id
@@ -395,12 +392,9 @@ export default {
               element.isTop = "否";
             }
             if(element.isshownum==2){
-                this.isHidden=false;
-            }else if(element.isshownum==1){
                 this.isHidden=true;
-            }           
+            }
           });
-          this.isxianshikaiguan=true;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
           this.searchVisible = false; //搜索

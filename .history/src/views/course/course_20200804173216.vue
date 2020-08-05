@@ -35,7 +35,7 @@
           >批量下架</el-button>
 
  </el-form-item>
-          <el-form-item v-if="isxianshikaiguan">
+ <el-form-item >
           <strong style="font-size:16px;color:green">显示</strong> <strong style="font-size:20px;"> || </strong> <strong style="font-size:16px;color:red">隐藏</strong>
        
             <!-- <el-switch
@@ -395,12 +395,9 @@ export default {
               element.isTop = "否";
             }
             if(element.isshownum==2){
-                this.isHidden=false;
-            }else if(element.isshownum==1){
                 this.isHidden=true;
-            }           
+            }
           });
-          this.isxianshikaiguan=true;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
           this.searchVisible = false; //搜索
