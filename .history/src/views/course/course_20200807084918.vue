@@ -2,28 +2,30 @@
   <div>
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
-      <el-breadcrumb-item>
-        课程管理
+      <el-breadcrumb-item>课程管理
         <!-- <strong style="font-size:18px;">课程管理</strong> -->
       </el-breadcrumb-item>
-      <el-breadcrumb-item>课程列表</el-breadcrumb-item>
+      <el-breadcrumb-item>
+        课程列表
+      </el-breadcrumb-item>
+      
     </el-breadcrumb>
 
     <!-- 搜索筛选 -->
     <div style="margin-top:5px;margin-bottom:5px;">
       <!-- <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button> -->
       <el-form label-width="80px" :model="form" ref="form" v-loading="listLoading" :inline="true">
-        <el-form-item>
+        <el-form-item >
           <router-link to="/courseAdd">
             <el-button size="small" type="primary" icon="el-icon-plus">添加</el-button>
           </router-link>
           <el-button
-            size="small"
-            type="danger"
-            icon="el-icon-refresh"
-            @click="reset"
-            style="margin-right:10px"
-          >重置</el-button>
+          size="small"
+          type="danger"
+          icon="el-icon-refresh"
+          @click="reset"
+          style="margin-right:10px"
+        >重置</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -31,11 +33,12 @@
             v-if="batchDeletionStatus"
             @click="batchDel"
           >批量下架</el-button>
-        </el-form-item>
-        <el-form-item v-if="isxianshikaiguan" v-model="xianshikaiguanname">
-          <strong style="font-size:16px">{{xianshikaiguanname}}</strong>
 
-          <!-- <el-switch
+ </el-form-item>
+          <el-form-item v-if="isxianshikaiguan">
+          <strong style="font-size:16px;color:green">显示</strong>
+       
+            <!-- <el-switch
               v-model="isHidden"
               active-color="#13ce66"
               inactive-color="#ff4949"
@@ -43,18 +46,18 @@
               inactive-value="显示"
               
               @change="batchShow">
-          </el-switch>-->
+            </el-switch> -->
 
-          <el-switch
-            v-model="isHidden"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            :inactive-value="false"
-            :active-value="true"
-            @change="batchShow"
-          ></el-switch>
-        </el-form-item>
-
+            <el-switch
+              v-model="isHidden"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              :inactive-value="false"
+              :active-value="true"
+              @change="batchShow">
+            </el-switch>        
+         </el-form-item>
+       
         <el-form-item label="课程名称" prop="courseName">
           <el-select
             v-model="form.courseName"
@@ -67,7 +70,12 @@
             :loading="listLoading"
             @change="getCourse"
           >
-            <el-option v-for="item in courseNameList" :key="item" :label="item" :value="item"></el-option>
+            <el-option
+              v-for="item in courseNameList"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
           </el-select>
           <!-- <el-input
             size="small"
@@ -86,7 +94,7 @@
               :key="item.subjectId"
               :label="item.subjectName"
               :value="item.subjectId"
-            ></el-option>
+            ></el-option>  
           </el-select>
         </el-form-item>
         <el-form-item label="课程类型" prop="courseType">
@@ -102,6 +110,7 @@
           </el-select>
         </el-form-item>
         <!-- <el-button type="primary" icon="el-icon-search" size="small" @click="getCourse">搜索</el-button> -->
+        
       </el-form>
     </div>
 
@@ -139,6 +148,7 @@
             </el-select>
           </template>
         </el-table-column>
+      
 
         <el-table-column align="center" prop="courseIndex" label="排列序号" min-width="100">
           <template slot-scope="scope">
@@ -236,7 +246,7 @@ import {
   updateIsShowNumAll,
   updateCourseIndexByID,
   courseNameGet,
-  setFirst,
+  setFirst
 } from "@/api/getData";
 export default {
   data() {
@@ -246,9 +256,8 @@ export default {
       gradeGetList: [],
       subjectsGetList: [],
       courseNameList: [],
-      isHidden: false,
-      isxianshikaiguan: false,
-      xianshikaiguanname: "cccccc",
+      isHidden:false,
+      isxianshikaiguan:false,
       form: {
         createUserId: "",
         subjectId: "", //话题id
@@ -257,23 +266,23 @@ export default {
         isHidden: "",
         courseType: "",
         page: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       // 分页参数
       pageparm: {
         currentPage: 1,
         pageSize: 10,
-        total: 0,
+        total: 0
       },
       batchDeletionStatus: false,
       batchList: [],
       searchVisible: false,
-      hotCourseName: "",
+      hotCourseName: ""
     };
   },
   // 注册组件
   components: {
-    Pagination,
+    Pagination
   },
   created() {
     this.user = JSON.parse(localStorage.getItem("userdata"));
@@ -305,37 +314,31 @@ export default {
     //批量删除
     batchDel() {
       var courseId = [];
-      this.batchList.forEach((element) => {
+      this.batchList.forEach(element => {
         courseId.push(element.courseId);
       });
       courseId = courseId.join(",");
       var row = {
-        courseId: courseId,
+        courseId: courseId
       };
       this.handleDel(row);
     },
     //批量显示
     async batchShow() {
       console.log(this.isHidden);
-      var type = this.isHidden == true ? 1 : 2;
-      console.log(type);
+      var type = this.isHidden==true?1:2;
+       console.log(type);
       const res = await updateIsShowNumAll(type);
-
+      console.log(res.data);
       if (res.status == 200) {
-        console.log(type);
-        if (type == 1) {
-          this.xianshikaiguanname = "已隐藏浏览数显示";
-        } else if (type == 2) {
-          this.xianshikaiguanname = "已开启浏览数显示";
-        }
         this.$message({
           message: res.data,
-          type: "success",
+          type: "success"
         });
       } else {
         this.$message({
           type: "error",
-          message: res.msg,
+          message: res.msg
         });
         console.log(res.msg);
       }
@@ -368,7 +371,7 @@ export default {
         if (res.status == 200) {
           console.log("课程列表", res.data);
           this.list = res.data.list;
-          this.list.forEach((element) => {
+          this.list.forEach(element => {
             // console.log(element);
             if (element.isVail == 1) {
               element.isVail = "上架";
@@ -391,30 +394,27 @@ export default {
             } else if (element.isTop == 0) {
               element.isTop = "否";
             }
-            if (element.isshownum == 2) {
-              this.isHidden = false;
-              this.xianshikaiguanname = "已开启浏览数显示";
-            } else if (element.isshownum == 1) {
-              this.isHidden = true;
-              this.xianshikaiguanname = "已隐藏浏览数显示";
-            }
+            if(element.isshownum==2){
+                this.isHidden=false;
+            }else if(element.isshownum==1){
+                this.isHidden=true;
+            }           
           });
-          console.log("this.xianshikaiguanname", this.xianshikaiguanname);
-          this.isxianshikaiguan = true;
+          this.isxianshikaiguan=true;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
           this.searchVisible = false; //搜索
         } else {
           this.$message({
             type: "error",
-            message: res.error,
+            message: res.error
           });
           console.log(res);
         }
       } catch (err) {
         this.$message({
           type: "error",
-          message: "请重试",
+          message: "请重试"
         });
         console.log(err);
       }
@@ -431,14 +431,14 @@ export default {
         } else {
           this.$message({
             type: "error",
-            message: res.error,
+            message: res.error
           });
           console.log(res);
         }
       } catch (err) {
         this.$message({
           type: "error",
-          message: "请重试",
+          message: "请重试"
         });
         console.log(err);
       }
@@ -456,14 +456,14 @@ export default {
         } else {
           this.$message({
             type: "error",
-            message: res.error,
+            message: res.error
           });
           console.log(res);
         }
       } catch (err) {
         this.$message({
           type: "error",
-          message: "请重试",
+          message: "请重试"
         });
         console.log(err);
       }
@@ -488,12 +488,12 @@ export default {
             if (res.status == 200) {
               this.$message({
                 message: "上架成功",
-                type: "success",
+                type: "success"
               });
             } else {
               this.$message({
                 type: "error",
-                message: res.msg,
+                message: res.msg
               });
               console.log(res.msg);
             }
@@ -509,12 +509,12 @@ export default {
             if (res.status == 200) {
               this.$message({
                 message: "下架成功",
-                type: "success",
+                type: "success"
               });
             } else {
               this.$message({
                 type: "error",
-                message: res.msg,
+                message: res.msg
               });
               console.log(res.msg);
             }
@@ -532,20 +532,20 @@ export default {
           .then(async () => {
             var data = {
               id: row.courseId,
-              type: 1,
+              type: 1
             };
-            console.log("89");
+            console.log('89');
             const res = await courseHidden(data);
             console.log(res);
             if (res.status == 200) {
               this.$message({
                 message: "上架成功",
-                type: "success",
+                type: "success"
               });
             } else {
               this.$message({
                 type: "error",
-                message: res.msg,
+                message: res.msg
               });
               console.log(res.msg);
             }
@@ -558,19 +558,19 @@ export default {
           .then(async () => {
             var data = {
               id: row.courseId,
-              type: 2,
+              type: 2
             };
             const res = await courseHidden(data);
             console.log(res);
             if (res.status == 200) {
               this.$message({
                 message: "下架成功",
-                type: "success",
+                type: "success"
               });
             } else {
               this.$message({
                 type: "error",
-                message: res.msg,
+                message: res.msg
               });
               console.log(res.msg);
             }
@@ -592,12 +592,12 @@ export default {
           if (res.status == 200) {
             this.$message({
               message: "置顶成功",
-              type: "success",
+              type: "success"
             });
           } else {
             this.$message({
               type: "error",
-              message: res.msg,
+              message: res.msg
             });
             console.log(res.msg);
           }
@@ -612,7 +612,7 @@ export default {
       if (row.courseIndex != "") {
         var data = {
           courseIndex: row.courseIndex,
-          courseId: row.courseId,
+          courseId: row.courseId
         };
         console.log(data);
         try {
@@ -621,49 +621,50 @@ export default {
           if (res.status == 200) {
             this.$message({
               type: "success",
-              message: "成功",
+              message: "成功"
             });
             this.getCourse();
           } else {
             this.$message({
               type: "error",
-              message: res.error,
+              message: res.error
             });
             console.log(res);
           }
         } catch (err) {
           this.$message({
             type: "error",
-            message: "请重试",
+            message: "请重试"
           });
           console.log(err);
         }
       } else {
         this.$message({
           type: "error",
-          message: "请输入排列序号",
+          message: "请输入排列序号"
         });
       }
     },
     //修改主课程位置置1
-    async courseSetline(courseId) {
+    async courseSetline(courseId){
       const res = await setFirst(courseId);
-      console.log(res);
-      if (res.status == 200) {
-        this.$message({
-          message: "成功",
-          type: "success",
-        });
-        this.getCourse();
-      } else {
-        this.$message({
-          type: "error",
-          message: res.msg,
-        });
-        console.log(res.msg);
-      }
-    },
-  },
+          console.log(res);
+          if (res.status == 200) {
+            this.$message({
+              message: "成功",
+              type: "success"
+            });
+            this.getCourse()
+          } else {
+            this.$message({
+              type: "error",
+              message: res.msg
+            });
+            console.log(res.msg);
+          }
+        
+    }
+  }
 };
 </script>
 <style scoped>

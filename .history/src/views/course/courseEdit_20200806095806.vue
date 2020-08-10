@@ -79,8 +79,9 @@
         ></el-input>
       </el-form-item>
 
-  <el-form-item label="默认显示页面" prop="defaultCategory">
-            <el-select v-model="form.defaultCategory" filterable placeholder="请选择默认显示页面">              
+  <el-form-item label="请选择默认显示页面" prop="defaultCategory">
+            <el-select v-model="form.defaultCategory" filterable placeholder="请选择默认显示页面">
+              
                   <el-option
             v-for="item in selectAllEnumsCourseList"
             :key="item.enumValue"
@@ -101,7 +102,7 @@
         ></el-input>天
       </el-form-item>
       <el-form-item label="课程话题" prop="subjectId">
-        <el-select v-model="form.subjectId" filterable placeholder="请选择课程话题" style="width:350px">
+        <el-select v-model="" filterable placeholder="请选择课程话题" style="width:350px">
           <el-option
             v-for="item in subjectsGetList"
             :key="item.subjectId"

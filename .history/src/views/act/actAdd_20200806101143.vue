@@ -1,17 +1,17 @@
 <template>
   <div>
-      <!-- 面包屑导航 -->
+    <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom: 20px;">
       <el-breadcrumb-item>活动管理</el-breadcrumb-item>
       <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-      <el-breadcrumb-item>编辑活动</el-breadcrumb-item>
+      <el-breadcrumb-item>新增活动</el-breadcrumb-item>
     </el-breadcrumb>
     <div style="margin-bottom: 20px;">
       <el-button size="small" type="danger" @click="goback">返回列表</el-button>
     </div>
     <div class="main_wraper">
-        <div class="fromm">
-          <el-form
+      <div class="fromm">
+        <el-form
           :model="ruleForm"
           :rules="rules"
           ref="ruleForm"
@@ -22,28 +22,41 @@
           <el-form-item label="活动名称" prop="activityName">
             <el-input v-model="ruleForm.activityName" placeholder="请输入活动名称"></el-input>
           </el-form-item>
-           <el-form-item label="活动代码" prop="activityCode">
+          <el-form-item label="活动代码" prop="activityCode">
             <el-input v-model="ruleForm.activityCode" placeholder="请输入活动代码"></el-input>
           </el-form-item>
           <el-form-item label="活动规则" prop="rule">
-            <el-input  type="textarea" :rows="5" v-model="ruleForm.rule" placeholder="请输入活动规则"></el-input>
+            <el-input type="textarea" :rows="5" v-model="ruleForm.rule" placeholder="请输入活动规则"></el-input>
           </el-form-item>
           <el-form-item label="活动开始时间（日期）" prop="startTime">
-            <el-date-picker
-              v-model="ruleForm.startTime"
-              type="date"
-              placeholder="选择日期">
-            </el-date-picker>
+            <el-date-picker v-model="ruleForm.startTime" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
           <el-form-item label="活动结束时间（日期）" prop="endTime">
-            <el-date-picker
-              v-model="ruleForm.endTime"
-              type="date"
-              placeholder="选择日期">
-            </el-date-picker>
+            <el-date-picker v-model="ruleForm.endTime" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
           <el-form-item label="绑定课程" prop="courseId">
-            <el-select v-model="ruleForm.courseId" filterable placeholder="请选择课程" style="width:350px">
+            <el-select
+              v-model="ruleForm.courseId"
+              filterable
+              placeholder="请选择课程"
+              style="width:350px"
+            >
+              <el-option
+                v-for="item in subjectsGetList"
+                :key="item.courseId"
+                :label="item.courseName"
+                :value="item.courseId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="关联课程" prop="relationCourseId">
+            <el-select
+              v-model="ruleForm.relationCourseIds"
+              placeholder="请选择课程"
+              multiple
+              style="width:350px"
+              size="mini"
+            >
               <el-option
                 v-for="item in subjectsGetList"
                 :key="item.courseId"
@@ -53,22 +66,33 @@
             </el-select>
           </el-form-item>
 
- <el-form-item label="用户身份" prop="studentIdentity">
+          <el-form-item label="指定企业" prop="courseId">
+            <el-select
+              v-model="ruleForm.enterpriseId"
+              filterable
+              placeholder="请选择指定企业"
+              style="width:350px"
+            >
+              <el-option
+                v-for="item in enterpriseGetList"
+                :key="item.enterpriseId"
+                :label="item.enterpriseName"
+                :value="item.enterpriseId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="用户身份" prop="studentIdentity">
             <el-select v-model="ruleForm.activityUserType" placeholder="请选择注册活动用户身份">
               <el-option value="初级VIP" label="初级VIP">初级VIP</el-option>
               <el-option value="企业VIP" label="企业VIP">企业VIP</el-option>
             </el-select>
           </el-form-item>
 
-
-           <el-form-item label="用户注册方式" prop="studentIdentity">
+            <el-form-item label="注册方式" prop="studentIdentity">
             <el-select v-model="ruleForm.userRegMode" placeholder="请选择活动注册方式">
-                <el-option
-                v-for="item in selectAllEnumsActivityList"
-                :key="item.enumValue"
-                :label="item.enumName"
-                :value="item.enumValue"
-              ></el-option>
+              <el-option value="simple" label="快捷注册">快捷注册</el-option>
+              <el-option value="entire" label="完整注册">完整注册</el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="活动注册赠送积分" prop="points">
@@ -91,7 +115,8 @@
               placeholder="请输入月份"
             ></el-input>
           </el-form-item>
-  <el-form-item label="封面图片" prop="picUrl" style="display:block">
+
+         <el-form-item label="封面图片" prop="picUrl" style="display:block">
         <el-upload
           class="avatar-uploader"
           :action="imgUrl"
@@ -107,49 +132,20 @@
       </el-form-item>
 
 
- <el-form-item label="关联课程" prop="relationCourseId">
-            <el-select
-              v-model="ruleForm.relationCourseIds"
-              placeholder="请选择课程"
-              multiple
-              style="width:350px"
-              size="mini"
-              @change="$forceUpdate()" 
-            >
-              <el-option
-                v-for="item in subjectsGetList"
-                :key="item.courseId"
-                :label="item.courseName"
-                :value="item.courseId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-
-
-          <el-form-item label="指定企业" prop="courseId">
-            <el-select v-model="ruleForm.enterpriseId" filterable placeholder="请选择指定企业" style="width:350px">
-             <el-option
-                v-for="item in enterpriseGetList"
-                :key="item.enterpriseId"
-                :label="item.enterpriseName"
-                :value="item.enterpriseId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
           <el-form-item label="优秀作品" prop="videoUrl">
             <input
-                type="file"
-                v-loading.fullscreen.lock="fullscreenLoading"
-                @change="uploadVideo($event)"
-                element-loading-text="拼命加载中，正在对上传文件进行技术处理，此过程可能需要几分钟，请耐心等待"
-              />
-              <el-input
-                size="small"
-                v-model="playerOptions.sources"
-                auto-complete="off"
-                placeholder="腾讯视频请直接输入VID"
-                style="width:80%"
-              ></el-input>
+              type="file"
+              v-loading.fullscreen.lock="fullscreenLoading"
+              @change="uploadVideo($event)"
+              element-loading-text="拼命加载中，正在对上传文件进行技术处理，此过程可能需要几分钟，请耐心等待"
+            />
+            <el-input
+              size="small"
+              v-model="playerOptions.sources"
+              auto-complete="off"
+              placeholder="腾讯视频请直接输入VID"
+              style="width:80%"
+            ></el-input>
           </el-form-item>
           <video-player
             class="video-player"
@@ -164,46 +160,39 @@
             <el-button @click="goback()">取消</el-button>
           </el-form-item>
         </el-form>
-        </div>
+      </div>
     </div>
-    <el-dialog :visible.sync="dialogVisible" id="imgpop">
+     <el-dialog :visible.sync="dialogVisible" id="imgpop">
       <img width="100%" style="" :src="dialogImageUrl" alt="">
     </el-dialog>
   </div>
+  
 </template>
 <script>
+import { actAdd, courseGet, enterpriseGet,selectAllEnumsActivity } from "@/api/getData";
 import { videoPlayer } from "vue-video-player";
-import "video.js/dist/video-js.css";
-import { actEdit,courseGet ,enterpriseGet ,courseResourcesFileDel,selectAllEnumsActivity} from "@/api/getData";
+import { newVideoUrl } from "@/config/env";
 import { imgUrl } from "@/config/env";
-import {
-  newVideoUrl,
-} from "@/config/env";
 export default {
   data() {
     return {
-        dialogVisible:false,
+       dialogVisible:false,
       dialogImageUrl:'',
        imgList: [],
         selectAllEnumsActivityList: [],
-      enterpriseGetList:[
-        {enterpriseId:'',enterpriseName:'无'}
-      ],
-      subjectsGetList: [
-        {courseId:'',courseName:'无'}
-      ],
-        imgUrl: imgUrl,
-         imgFileList: [],
+      enterpriseGetList: [{ enterpriseId: "", enterpriseName: "无" }],
+      subjectsGetList: [{ courseId: "", courseName: "无" }],
+       imgUrl: imgUrl,
+        imgFileList: [],
         ruleForm: {
-        activityId:"",
         activityName: "",
         rule: "",
-        startTime:"",
-        endTime:"",
-        courseId:"",
-        relationCourseId:"",
-        enterpriseId:"",
+        startTime: "",
+        endTime: "",
+        courseId: "",
         relationCourseIds: [],
+        relationCourseId: "",
+        enterpriseId: "",
         activityUserType: "",
         points: "",
         overMouth: "",
@@ -211,20 +200,14 @@ export default {
         userRegMode:""
       },
       rules: {
-        activityName: [{ required: true, message: "请输入用户名", trigger: "blur" }]
-      },
-      VideoVisible:false,
-      Videoform: {
-        fileName: "",
-        fileUrl: "",
-        fileLanguageTag: "",
-        fileSceneTypeTag: "",
-        fileContentTag: ""
+        activityName: [
+          { required: true, message: "请输入活动名称", trigger: "blur" }
+        ]
       },
       fullscreenLoading: false,
-       videoShow: false,
-       VideoList: [],
-       playerOptions: {
+      videoShow: false,
+      VideoList: [],
+      playerOptions: {
         playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
         autoplay: false, //如果true,浏览器准备好时开始回放。
         muted: false, // 默认情况下将会消除任何音频。
@@ -243,111 +226,20 @@ export default {
           fullscreenToggle: true //全屏按钮
         }
       },
-      newVideoUrl: newVideoUrl, 
+      newVideoUrl: newVideoUrl
     };
   },
+  created() {},
   // 注册组件
   components: {
     videoPlayer
   },
   mounted() {
-    var data = this.$route.query;
-    console.log("路由数据", data.row);
-   
-console.log("转换后的数据",this.ruleForm.relationCourseIds);
-    this.ruleForm = data.row;
-    if(data.row.relationCourseId!=""&&data.row.relationCourseId!=null){
- this.ruleForm.relationCourseIds = data.row.relationCourseId.split(',')
-    }
-
-    //this.ruleForm.relationCourseIds=[data.row.relationCourseId]
     this.getCourse();
     this.getenterprise();
-    this.getselectAllEnumsActivity();
-    this.playerOptions.sources=this.ruleForm.videoUrl
+    this.playerOptions.sources = this.ruleForm.videoUrl;
   },
   methods: {
-    VideoAdd() {
-      this.VideoVisible = true;
-    },
-    Videoedit(row) {
-      console.log(row);
-      this.Videoform = row;
-      this.VideoVisible = true;
-      this.VideoEdit = true;
-    },
-    closeVideoDialog() {
-      this.Videoform = {
-        fileName: "",
-        fileUrl: "",
-        fileLanguageTag: "",
-        fileSceneTypeTag: "",
-        fileContentTag: ""
-      };
-      this.VideoVisible = false;
-    },
-
-    // 上传封面图片前
-    beforeAvatarUpload(file) {
-      const isJPG = file.type;
-      console.log("type", isJPG);
-      if (
-        isJPG === "image/jpeg" ||
-        isJPG === "image/png" ||
-        isJPG === "image/jpg"
-      ) {
-        // this.$message.error("上传图片格式错误!");
-      } else {
-        this.$message.error("上传图片格式错误!");
-      }
-      return isJPG;
-    },
-
-// 获取课程默认封面列表
-    async getselectAllEnumsActivity() {
-      try {
-        //this.listLoading = true;
-        const res = await selectAllEnumsActivity();
-        if (res.status == 200) {
-          console.log("列表", res.data);
-          this.selectAllEnumsActivityList = res.data;
-          console.log(this.selectAllEnumsActivityList, "列表");
-         // this.listLoading = false;
-        } else {
-          this.$message({
-            type: "error",
-            message: res.error,
-          });
-          console.log(res);
-        }
-      } catch (err) {
-        this.$message({
-          type: "error",
-          message: "请重试",
-        });
-        console.log(err);
-      }
-    },
-
-    // 上传封面图片成功
-    handleAvatarSuccess(file) {
-      // console.log(file);
-      this.ruleForm.picUrl = file.url;
-    },
-    handlePictureCardPreview(file) {
-      console.log(file)
-        this.dialogImageUrl = file.response.url;
-        
-        var img = new Image()
-        img.src = this.dialogImageUrl
-        console.log(img.width ,img.height )
-        var width = img.width +"px"
-        var divShow = $('#imgpop .el-dialog')
-        console.log(divShow)
-        $(divShow).css("width",width)
-
-        this.dialogVisible = true;
-    },
     uploadVideo() {
       //上传视频
       var _this = this;
@@ -375,7 +267,7 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
           var file = new FormData();
           file.append("file", copyFile);
           file.append("submit", false);
-          console.log(this.newVideoUrl)
+          console.log(this.newVideoUrl);
           $.ajax({
             url: this.newVideoUrl,
             type: "post",
@@ -409,6 +301,67 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
         }
       }
     },
+
+// 获取课程默认封面列表
+    async getselectAllEnumsActivity() {
+      try {
+        this.listLoading = true;
+        const res = await selectAllEnumsActivity();
+        if (res.status == 200) {
+           console.log("列表", res.data);
+          this.selectAllEnumsActivityList = res.data;
+            console.log(this.selectAllEnumsActivityList,"列表");
+          this.listLoading = false;
+        } else {
+          this.$message({
+            type: "error",
+            message: res.error,
+          });
+          console.log(res);
+        }
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: "请重试",
+        });
+        console.log(err);
+      }
+    },
+
+    // 上传封面图片前
+    beforeAvatarUpload(file) {
+      const isJPG = file.type;
+      console.log("type", isJPG);
+      if (
+        isJPG === "image/jpeg" ||
+        isJPG === "image/png" ||
+        isJPG === "image/jpg"
+      ) {
+        // this.$message.error("上传图片格式错误!");
+      } else {
+        this.$message.error("上传图片格式错误!");
+      }
+      return isJPG;
+    },
+    // 上传封面图片成功
+    handleAvatarSuccess(file) {
+      // console.log(file);
+      this.ruleForm.picUrl = file.url;
+    },
+    handlePictureCardPreview(file) {
+      console.log(file)
+        this.dialogImageUrl = file.response.url;
+        
+        var img = new Image()
+        img.src = this.dialogImageUrl
+        console.log(img.width ,img.height )
+        var width = img.width +"px"
+        var divShow = $('#imgpop .el-dialog')
+        console.log(divShow)
+        $(divShow).css("width",width)
+
+        this.dialogVisible = true;
+    },
     submitVideoUrl() {
       console.log(this.Videoform);
       if (this.Videoform.fileName != "") {
@@ -423,7 +376,7 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
             if (fileUrl.indexOf("https") != -1) {
               this.playerOptions.sources = this.Videoform.fileUrl;
             }
-            this.ruleForm.videoUrl=this.Videoform.fileUrl
+            this.ruleForm.videoUrl = this.Videoform.fileUrl;
           }
           this.Videoform = {
             fileName: "",
@@ -447,24 +400,21 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
         });
       }
     },
-     // 获取课程列表
+    // 获取课程列表
     async getCourse(e) {
       try {
         const res = await courseGet();
         if (res.status == 200) {
           console.log("课程列表", res.data);
           res.data.list.forEach(element => {
-            this.subjectsGetList.push(element)
-          })
-
-          
-          // this.subjectsGetList =res.data.list;
+            this.subjectsGetList.push(element);
+          });
         } else {
           this.$message({
             type: "error",
             message: res.error
           });
-          console.log("课程列表",res);
+          console.log("课程列表", res);
         }
       } catch (err) {
         this.$message({
@@ -480,16 +430,15 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
         const res = await enterpriseGet();
         if (res.status == 200) {
           console.log("企业列表", res.data);
-           res.data.list.forEach(element => {
-            this.enterpriseGetList.push(element)
-          })
-         
+          res.data.list.forEach(element => {
+            this.enterpriseGetList.push(element);
+          });
         } else {
           this.$message({
             type: "error",
             message: res.error
           });
-          console.log("企业列表",res);
+          console.log("企业列表", res);
         }
       } catch (err) {
         this.$message({
@@ -502,30 +451,40 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          this.ruleForm.videoUrl=this.playerOptions.sources
-          console.log(this.ruleForm.relationCourseIds,"kdkkkkk");
-          if(this.ruleForm.relationCourseIds!=undefined){
-            this.ruleForm.relationCourseId = this.ruleForm.relationCourseIds.join();
-          }           
-          console.log(this.ruleForm);
-          const res = await actEdit(this.ruleForm);
+          this.ruleForm.videoUrl = this.playerOptions.sources;
+          this.ruleForm.relationCourseId = this.ruleForm.relationCourseIds.join();         
+          //  if (this.ruleForm.picUrl != "") {
+          const res = await actAdd(this.ruleForm);
           console.log(res);
           if (res !== "error") {
             this.$message({
               message: "提交成功",
               type: "success"
             });
-             this.$router.go(-1);//返回上一层
+            this.$router.go(-1); //返回上一层
+          } else {
+            this.$message({
+              type: "error",
+              message: res.error
+            });
+            console.log("提交失败", res);
           }
+        
+        }else{
+          this.$message({
+            type: "error",
+            message: "请完整填写信息"
+          });
         }
       });
     },
-    goback(){
-      this.$router.go(-1);//返回上一层
+    goback() {
+      this.$router.go(-1); //返回上一层
     }
   }
 };
 </script>
+
 <style scoped>
 /* 封面图片 */
 .avatar-uploader .avatar-uploader-icon {
@@ -540,7 +499,7 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
   cursor: pointer;
 }
  .avatar-uploader .avatar {
-  width: 50%;
+  width: 70%;
   display: block;
 } 
 </style>

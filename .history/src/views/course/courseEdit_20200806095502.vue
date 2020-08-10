@@ -79,9 +79,9 @@
         ></el-input>
       </el-form-item>
 
-  <el-form-item label="默认显示页面" prop="defaultCategory">
-            <el-select v-model="form.defaultCategory" filterable placeholder="请选择默认显示页面">              
-                  <el-option
+  <el-form-item label="请选择默认显示页面" prop="defaultCategory">
+            <el-select v-model="form.defaultCategory" filterable placeholder="请选择默认显示页面">
+                <el-option
             v-for="item in selectAllEnumsCourseList"
             :key="item.enumValue"
             :label="item.enumName"

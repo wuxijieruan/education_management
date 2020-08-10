@@ -67,7 +67,7 @@ export const updateCourseResourceBundleIndex = data => fetch('/courseResourceBun
 
 export const courseNameGet = data => fetch('/course/getCourseName', data, 'GET') // 查看课程列表
 
-export const selectAllEnumsCourse = data => fetch('/course/selectAllEnumsCourse', data, 'GET') // 查看课程默认封面列表
+export const courseNameGet = data => fetch('/course/selectAllEnumsCourse', data, 'GET') // 查看课程列表
 
 export const setFirst = data => fetch('/course/sortCourse?courseId='+ data,{}, 'POST') // 修改课程的序号
 
@@ -104,8 +104,6 @@ export const actDel = id => fetch('/activity?ids=' + id , {}, 'DELETE') // 删�
 export const actDetail = courseId => fetch('/activity/' + courseId, {}, 'GET') // 根据id查看课程详情
 
 export const enterpriseGet = data => fetch('/enterprise', data, 'GET') // 查看企业
-
-export const selectAllEnumsActivity = data => fetch('/activity/selectAllEnumsActivity', data, 'GET') // 查看活动注册方式
 
 
 //获取作业

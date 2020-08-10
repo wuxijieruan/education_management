@@ -79,14 +79,12 @@
         ></el-input>
       </el-form-item>
 
-  <el-form-item label="默认显示页面" prop="defaultCategory">
-            <el-select v-model="form.defaultCategory" filterable placeholder="请选择默认显示页面">              
-                  <el-option
-            v-for="item in selectAllEnumsCourseList"
-            :key="item.enumValue"
-            :label="item.enumName"
-            :value="item.enumValue"
-          ></el-option>
+  <el-form-item label="请选择默认显示页面" prop="defaultCategory">
+            <el-select v-model="form.defaultCategory" filterable placeholder="请选择默认显示页面">
+              <el-option :value="1" label="父母导读">父母导读</el-option>
+              <el-option :value="2" label="心选绘本">心选绘本</el-option>
+               <el-option :value="3" label="精彩解读">精彩解读</el-option>
+                <el-option :value="4" label="脑洞时间">脑洞时间</el-option>
             </el-select>
           </el-form-item>
 

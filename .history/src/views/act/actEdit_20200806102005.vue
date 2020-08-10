@@ -61,14 +61,10 @@
           </el-form-item>
 
 
-           <el-form-item label="用户注册方式" prop="studentIdentity">
+           <el-form-item label="注册方式" prop="studentIdentity">
             <el-select v-model="ruleForm.userRegMode" placeholder="请选择活动注册方式">
-                <el-option
-                v-for="item in selectAllEnumsActivityList"
-                :key="item.enumValue"
-                :label="item.enumName"
-                :value="item.enumValue"
-              ></el-option>
+              <el-option value="simple" label="快捷注册">快捷注册</el-option>
+              <el-option value="entire" label="完整注册">完整注册</el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="活动注册赠送积分" prop="points">
@@ -174,7 +170,7 @@
 <script>
 import { videoPlayer } from "vue-video-player";
 import "video.js/dist/video-js.css";
-import { actEdit,courseGet ,enterpriseGet ,courseResourcesFileDel,selectAllEnumsActivity} from "@/api/getData";
+import { actEdit,courseGet ,enterpriseGet ,courseResourcesFileDel} from "@/api/getData";
 import { imgUrl } from "@/config/env";
 import {
   newVideoUrl,
@@ -263,7 +259,6 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
     //this.ruleForm.relationCourseIds=[data.row.relationCourseId]
     this.getCourse();
     this.getenterprise();
-    this.getselectAllEnumsActivity();
     this.playerOptions.sources=this.ruleForm.videoUrl
   },
   methods: {
@@ -302,33 +297,6 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
       }
       return isJPG;
     },
-
-// 获取课程默认封面列表
-    async getselectAllEnumsActivity() {
-      try {
-        //this.listLoading = true;
-        const res = await selectAllEnumsActivity();
-        if (res.status == 200) {
-          console.log("列表", res.data);
-          this.selectAllEnumsActivityList = res.data;
-          console.log(this.selectAllEnumsActivityList, "列表");
-         // this.listLoading = false;
-        } else {
-          this.$message({
-            type: "error",
-            message: res.error,
-          });
-          console.log(res);
-        }
-      } catch (err) {
-        this.$message({
-          type: "error",
-          message: "请重试",
-        });
-        console.log(err);
-      }
-    },
-
     // 上传封面图片成功
     handleAvatarSuccess(file) {
       // console.log(file);
@@ -503,10 +471,7 @@ console.log("转换后的数据",this.ruleForm.relationCourseIds);
       this.$refs[formName].validate(async valid => {
         if (valid) {
           this.ruleForm.videoUrl=this.playerOptions.sources
-          console.log(this.ruleForm.relationCourseIds,"kdkkkkk");
-          if(this.ruleForm.relationCourseIds!=undefined){
             this.ruleForm.relationCourseId = this.ruleForm.relationCourseIds.join();
-          }           
           console.log(this.ruleForm);
           const res = await actEdit(this.ruleForm);
           console.log(res);

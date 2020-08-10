@@ -105,7 +105,7 @@ export const actDetail = courseId => fetch('/activity/' + courseId, {}, 'GET') /
 
 export const enterpriseGet = data => fetch('/enterprise', data, 'GET') // 查看企业
 
-export const selectAllEnumsActivity = data => fetch('/activity/selectAllEnumsActivity', data, 'GET') // 查看活动注册方式
+export const selectAllEnumsActivity = data => fetch('/course/selectAllEnumsActivity', data, 'GET') // 查看课程默认封面列表
 
 
 //获取作业

@@ -61,7 +61,7 @@
           </el-form-item>
 
 
-           <el-form-item label="用户注册方式" prop="studentIdentity">
+           <el-form-item label="注册方式" prop="studentIdentity">
             <el-select v-model="ruleForm.userRegMode" placeholder="请选择活动注册方式">
                 <el-option
                 v-for="item in selectAllEnumsActivityList"
