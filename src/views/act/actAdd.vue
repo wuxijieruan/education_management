@@ -158,6 +158,35 @@
             v-if="playerOptions.sources"
             style="margin-left:130px;margin-bottom: 20px;"
           ></video-player>
+          <el-form-item label="切换课程栏目时弹窗" prop="popupOnSwitchSection">
+            <el-switch
+              v-model="ruleForm.popupOnSwitchSection"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              @change="onSwitch"
+            ></el-switch>
+          </el-form-item>
+          <el-form-item
+            label="切换课程栏目时弹窗图片"
+            prop="popupImageOnSwitchSection"
+            v-if="popupOnSwitchSectionIsShow"
+          >
+            <el-upload
+              class="avatar-uploader"
+              :action="imgUrl"
+              :show-file-list="false"
+              :on-success="handlePopupSuccess"
+              :before-upload="beforeAvatarUpload"
+            >
+              <img
+                v-if="ruleForm.popupImageOnSwitchSection"
+                :src="ruleForm.popupImageOnSwitchSection"
+                class="avatar"
+              />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为630*800</div>
+            </el-upload>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
             <el-button @click="goback()">取消</el-button>
@@ -175,7 +204,7 @@ import {
   actAdd,
   courseGet,
   enterpriseGet,
-  selectAllEnumsActivity
+  selectAllEnumsActivity,
 } from "@/api/getData";
 import { videoPlayer } from "vue-video-player";
 import { newVideoUrl } from "@/config/env";
@@ -205,6 +234,8 @@ export default {
         overMouth: "",
         picUrl: "",
         userRegMode: "",
+        popupOnSwitchSection: false,
+        popupImageOnSwitchSection: "",
       },
       rules: {
         activityName: [
@@ -319,7 +350,7 @@ export default {
           console.log("列表", res.data);
           this.selectAllEnumsActivityList = res.data;
           console.log(this.selectAllEnumsActivityList, "列表");
-         // this.listLoading = false;
+          // this.listLoading = false;
         } else {
           this.$message({
             type: "error",
@@ -355,6 +386,12 @@ export default {
     handleAvatarSuccess(file) {
       // console.log(file);
       this.ruleForm.picUrl = file.url;
+    },
+      // 上传切换课程栏目时弹窗图片成功
+    handlePopupSuccess(file) {
+      // console.log(file);
+      this.ruleForm.popupImageOnSwitchSection = file.url;
+      console.log(this.ruleForm.popupImageOnSwitchSection);
     },
     handlePictureCardPreview(file) {
       console.log(file);
@@ -459,6 +496,21 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
+          if (this.ruleForm.popupOnSwitchSection) {
+            this.ruleForm.popupOnSwitchSection = 1;
+            if (
+              this.ruleForm.popupImageOnSwitchSection == null ||
+              this.ruleForm.popupImageOnSwitchSection == ""
+            ) {
+              this.$message({
+                message: "请上传切换课程栏目时弹窗图片",
+                type: "warning",
+              });
+              return false;
+            }
+          } else {
+            this.ruleForm.popupOnSwitchSection = 2;
+          }
           this.ruleForm.videoUrl = this.playerOptions.sources;
           this.ruleForm.relationCourseId = this.ruleForm.relationCourseIds.join();
           //  if (this.ruleForm.picUrl != "") {
@@ -487,6 +539,14 @@ export default {
     },
     goback() {
       this.$router.go(-1); //返回上一层
+    },
+    onSwitch() {
+      console.log("切换课程栏目时弹窗", this.ruleForm.popupOnSwitchSection);
+      if (this.ruleForm.popupOnSwitchSection) {
+        this.popupOnSwitchSectionIsShow = true;
+      } else {
+        this.popupOnSwitchSectionIsShow = false;
+      }
     },
   },
 };
