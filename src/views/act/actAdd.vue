@@ -265,6 +265,7 @@ export default {
         },
       },
       newVideoUrl: newVideoUrl,
+      popupOnSwitchSectionIsShow: false,
     };
   },
   created() {},
