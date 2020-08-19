@@ -363,9 +363,12 @@ export default {
     async getCourse() {
       try {
         this.listLoading = true;
-        // console.log("this.form", this.form);
+        console.log("this.form", this.form);
+        this.form.courseName=this.form.courseName.replace(/#/g,'@')
         const res = await courseGet(this.form);
+        this.form.courseName=this.form.courseName.replace( /@/g,'#')
         if (res.status == 200) {
+          
           console.log("课程列表", res.data);
           this.list = res.data.list;
           this.list.forEach((element) => {
