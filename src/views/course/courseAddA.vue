@@ -746,46 +746,42 @@ export default {
         }
       }
     },
-    submitVideoUrl() {
-      // console.log(this.Videoform);
+   submitVideoUrl() {
+      console.log(this.Videoform);
       if (this.Videoform.fileName != "") {
         if (this.Videoform.fileUrl != "") {
-           if (
-            this.Videoform.fileUrl.indexOf("https") <= 0 &&
-            this.Videoform.fileImgUrl == ""
-          ) {
-            this.$message({
+          console.log(this.Videoform.fileUrl.indexOf("https") != -1,"this.Videoform.fileUrl.");
+          if ((this.Videoform.fileUrl.indexOf("https") == -1)) {
+            if(this.Videoform.fileImgUrl == ""){
+              this.$message({
               type: "error",
               message: "当前是外部链接视频，无法获取其封面，请手动上传封面",
             });
             return;
+            }
+            
           }
 
-            console.log(this.Videoform.fileUrl);
-            var fileUrl = this.Videoform.fileUrl;
-            var list = this.Videoform;
-            if (this.VideoEdit) {
-              console.log("编辑");
-            } else {
-              console.log("新增");
-
-              this.VideoList.push(list);
-              console.log("this.VideoList", this.VideoList);
-              if (fileUrl.indexOf("https") != -1) {
-                this.playerOptions.sources = this.Videoform.fileUrl;
-              }
+          var fileUrl = this.Videoform.fileUrl;
+          var list = this.Videoform;
+          if (this.VideoEdit) {
+            console.log("编辑");
+          } else {
+            console.log("新增");
+            this.VideoList.push(list);
+            if (fileUrl.indexOf("https") != -1) {
+              this.playerOptions.sources = this.Videoform.fileUrl;
             }
-            console.log(this.VideoList);
-            this.Videoform = {
-              fileName: "",
-              fileUrl: "",
-              fileLanguageTag: "",
-              fileSceneTypeTag: "",
-              fileContentTag: "",
-            };
-            this.VideoEdit = false;
-            this.VideoVisible = false;
-        
+          }
+          this.Videoform = {
+            fileName: "",
+            fileUrl: "",
+            fileLanguageTag: "",
+            fileSceneTypeTag: "",
+            fileContentTag: "",
+          };
+          this.VideoEdit = false;
+          this.VideoVisible = false;
         } else {
           this.$message({
             type: "error",

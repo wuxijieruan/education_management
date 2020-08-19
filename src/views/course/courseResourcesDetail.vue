@@ -101,8 +101,7 @@
             <img
               v-if="scope.row.fileImgUrl"
               :src="scope.row.fileImgUrl"
-              width="80"
-              height="40"
+              width="50%"
               class="head_pic"
             />
             <span v-else>无</span>
@@ -785,15 +784,16 @@ export default {
       console.log(this.Videoform);
       if (this.Videoform.fileName != "") {
         if (this.Videoform.fileUrl != "") {
-          if (
-            this.Videoform.fileUrl.indexOf("https") <= 0 &&
-            this.Videoform.fileImgUrl == ""
-          ) {
-            this.$message({
+          console.log(this.Videoform.fileUrl.indexOf("https") != -1,"this.Videoform.fileUrl.");
+          if ((this.Videoform.fileUrl.indexOf("https") == -1)) {
+            if(this.Videoform.fileImgUrl == ""){
+              this.$message({
               type: "error",
               message: "当前是外部链接视频，无法获取其封面，请手动上传封面",
             });
             return;
+            }
+            
           }
 
           var fileUrl = this.Videoform.fileUrl;
