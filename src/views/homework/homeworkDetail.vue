@@ -19,6 +19,12 @@
             <el-form-item label="宝贝昵称：" prop="studentName" v-show="homeworkdetail.studentName">
                 {{homeworkdetail.studentName}}
             </el-form-item>
+              <el-form-item label="用户身份：" prop="studentIdentity" v-show="homeworkdetail.studentIdentity">
+                {{homeworkdetail.studentIdentity}}
+            </el-form-item>
+                <el-form-item label="企业名称：" prop="enterpriseName" v-show="homeworkdetail.enterpriseName">
+                {{homeworkdetail.enterpriseName}}
+            </el-form-item>
             <el-form-item label="年龄：" prop="studentAge" >
                 {{homeworkdetail.studentAge}}
             </el-form-item>

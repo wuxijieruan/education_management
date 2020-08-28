@@ -41,6 +41,8 @@
       <!-- <el-table-column align="center" type="index" label="序号" width="100"></el-table-column> -->
       <el-table-column align="center" prop="studentName" label="宝贝昵称" width="180"></el-table-column>
       <el-table-column align="center" prop="studentAge" label="年龄" min-width="80"></el-table-column>
+       <el-table-column align="center" prop="studentIdentity" label="用户身份" min-width="180"></el-table-column>
+        <el-table-column align="center" prop="enterpriseName" label="企业名称" min-width="180"></el-table-column>
       <el-table-column align="center" prop="hwtype" label="作业类型" width="140"></el-table-column>
       <el-table-column align="center" prop="courseName" label="课程" width="200"></el-table-column>
       <el-table-column align="center" prop="createTime" label="作业日期" width="200"></el-table-column>
@@ -81,7 +83,7 @@
             size="small"
             v-model="searchList.courseName"
             auto-complete="off"
-            placeholder="请输入用户名"
+            placeholder="请输入课程名称"
             style="width:220px"
           ></el-input>
         </el-form-item>
@@ -107,12 +109,12 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="作业类型" prop="exercisesType">
+        <!-- <el-form-item label="作业类型" prop="exercisesType">
           <el-select v-model="searchList.exercisesType" placeholder="请选择课程类型">
             <el-option value="1" label="作业">作业</el-option>
             <el-option value="2" label="游戏">游戏</el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="开始日期" prop="startTime">
           <el-date-picker
             value-format="yyyy-MM-dd"
@@ -456,10 +458,25 @@ export default {
     },
     // 获取作业列表
     async gethomework() {
-      console.log("searchList", this.searchList);
+      console.log("searchList", this.searchList.activityName);
       try {
         this.listLoading = true;
+        if(this.searchList.activityName!=''&&this.searchList.activityName!=null){
+          this.searchList.activityName=this.searchList.activityName.replace(/#/g,'@'); 
+        }
+
+        if(this.searchList.courseName!=''&&this.searchList.courseName!=null){
+        this.searchList.courseName=this.searchList.courseName.replace(/#/g,'@');
+        }
+      
         const res = await homeworkList(this.searchList);
+        if(this.searchList.activityName!=''&&this.searchList.activityName!=null){
+           this.searchList.activityName=this.searchList.activityName.replace( /@/g,'#');
+        }
+        if(this.searchList.courseName!=''&&this.searchList.courseName!=null){
+       this.searchList.courseName=this.searchList.courseName.replace( /@/g,'#');
+        }
+        
         if (res.status == 200) {
           console.log("作业列表", res.data);
           this.hwsList=[];
