@@ -8,7 +8,7 @@
 
     <!-- 搜索筛选 -->
     <div style="margin-bottom:10px;">
-      <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button>
+      <el-button  type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button>
 
       <!-- <router-link to="/courseAdd">
         <el-button size="small" type="primary" icon="el-icon-plus">添加</el-button>
@@ -117,31 +117,34 @@
         </el-form-item> -->
         <el-form-item label="开始日期" prop="startTime">
           <el-date-picker
-            value-format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd HH:mm:ss"
             v-model="searchList.startTime"
-            type="date"
+            type="datetime"
             placeholder="选择日期"
+            default-time="00:00:00"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="结束日期" prop="endTime">
           <el-date-picker
-            value-format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd HH:mm:ss"
             v-model="searchList.endTime"
-            type="date"
+            type="datetime"
             placeholder="选择日期"
+            default-time="23:59:59"
           ></el-date-picker>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+<el-button type="primary" icon="el-icon-search"  @click="gethomework" style="margin-right:20px;">搜索</el-button>
         <el-button
-          size="small"
+          
           type="danger"
           icon="el-icon-refresh"
           @click="reset"
-          style="margin-right:10px"
+          style="margin-right:10px;"
         >重置</el-button>
         <el-button @click="closeDialog">取消</el-button>
-        <el-button type="primary" @click="gethomework">搜索</el-button>
+        
       </span>
     </el-dialog>
   </div>
@@ -189,7 +192,9 @@ export default {
       coursesList: [], //课程列表
       searchList: {
         page: 1,
-        pageSize: 10
+        pageSize: 10,
+        
+    
       }, //搜索列表
       excelData: "",
           ispostexcel: false, //导出弹窗的显现
@@ -213,7 +218,7 @@ export default {
   },
   mounted() {
     this.actList();
-    // this.gethomework();
+     this.gethomework();
     this.getenterprise();
   },
   methods: {
@@ -338,8 +343,11 @@ export default {
     },
     // 重置
     reset() {
-      this.searchList.page = 1;
-      this.searchList.pageSize = 10;
+       this.searchList = {
+        page: 1,
+        pageSize: 10
+      };
+      
       this.form.page = 1;
       this.form.pageSize = 10;
       this.pageparm.currentPage = 1;
@@ -423,6 +431,8 @@ export default {
     },
     // 搜索页面
     submitSearch() {
+      this.searchList.page = 1;
+      this.searchList.pageSize = 10;
       this.searchVisible = true;
     },
     // 关闭弹出框
@@ -458,7 +468,7 @@ export default {
     },
     // 获取作业列表
     async gethomework() {
-      console.log("searchList", this.searchList.activityName);
+      console.log("searchList", this.searchList);
       try {
         this.listLoading = true;
         if(this.searchList.activityName!=''&&this.searchList.activityName!=null){
@@ -476,15 +486,18 @@ export default {
         if(this.searchList.courseName!=''&&this.searchList.courseName!=null){
        this.searchList.courseName=this.searchList.courseName.replace( /@/g,'#');
         }
-        
+        if(this.searchList.startTime==null){
+          delete this.searchList.startTime;
+        }if(this.searchList.endTime==null){
+          delete this.searchList.endTime;
+        }
         if (res.status == 200) {
-          console.log("作业列表", res.data);
+          console.log("作业列表", res.data.list.length);
           this.hwsList=[];
           this.hwsList = res.data.list;
-          this.searchList = {
-            page: this.form.page,
-            pageSize: 10
-          };
+          this.searchList.page=this.form.page;
+          this.searchList.pageSize=10;
+         
           this.hwsList.forEach(item => {
             if (item.answerImg) {
               item.hwtype = "图片";

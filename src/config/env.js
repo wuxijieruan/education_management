@@ -1,14 +1,14 @@
 // 公共地址
 
-// let baseUrl = 'https://www.bolekids.com/learn' //线上服务器
+ let baseUrl = 'https://www.bolekids.com/learn' //线上服务器
 
-// let baseFileUrl = 'https://www.bolekids.com' //线上服务器
+let baseFileUrl = 'https://www.bolekids.com' //线上服务器
 
-//let baseUrl = 'https://zhjy.917tou.com/learn' //测试服务器
+// let baseUrl = 'https://zhjy.917tou.com/learn' //测试服务器
 
-let baseFileUrl = 'https://zhjy.917tou.com' //测试服务器
+// let baseFileUrl = 'https://zhjy.917tou.com' //测试服务器
 
- let baseUrl = 'https://zhjy.917tou.com/learn';// 开发服务器
+//  let baseUrl = 'https://zhjy.917tou.com/learn';// 开发服务器
 
 let imgUrl = baseFileUrl+'/file-local-1.0.0/img/upload'//上传图片接口
 
