@@ -384,12 +384,12 @@ export default {
           const { export_json_to_excel } = require("../../excel/Export2Excel"); //这里必须使用绝对路径
 
           const filterVal = [
-            "platesCourseReViewCountName",
-            "platesCourseReViewCountSource",
+            "resourcesCountCountName",
+            "resourcesCountSource",
             "resourcesCountSourceType",
             "resourcesCountSourceFileType",
-            "platesCourseReViewCountTotal",
-            "platesCourseReViewCountStuTotal"
+            "resourcesCountCountTotal",
+            "resourcesCountStuTotal"
           ]; // 导出的表头名
 
           const tHeader = [
