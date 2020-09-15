@@ -1,6 +1,6 @@
 // 公共地址
 
- let baseUrl = 'https://www.bolekids.com/learn' //线上服务器
+let baseUrl = 'https://www.bolekids.com/learn' //线上服务器
 
 let baseFileUrl = 'https://www.bolekids.com' //线上服务器
 

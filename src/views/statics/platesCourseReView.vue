@@ -94,12 +94,12 @@
           @selection-change="selectionChange"
         >
           <el-table-column align="center" type="selection" width="60"></el-table-column>
-          <el-table-column align="center" prop="platesCourseReViewCountName" label="课程名称"></el-table-column>
-          <el-table-column align="center" prop="platesCourseReViewCountSource" label="资源名称"></el-table-column>
+          <el-table-column align="center" prop="resourcesCountCountName" label="课程名称"></el-table-column>
+          <el-table-column align="center" prop="resourcesCountSource" label="资源名称"></el-table-column>
           <el-table-column align="center" prop="resourcesCountSourceType" label="资源包类型"></el-table-column>
           <el-table-column align="center" prop="resourcesCountSourceFileType" label="资源类型"></el-table-column>
-          <el-table-column align="center" prop="platesCourseReViewCountTotal" label="复刷次数"></el-table-column>
-          <el-table-column align="center" prop="platesCourseReViewCountStuTotal" label="复刷人数"></el-table-column>
+          <el-table-column align="center" prop="resourcesCountCountTotal" label="复刷次数"></el-table-column>
+          <el-table-column align="center" prop="resourcesCountStuTotal" label="复刷人数"></el-table-column>
         </el-table>
         <!-- 分页组件 -->
         <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
