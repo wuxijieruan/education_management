@@ -720,6 +720,7 @@ export default {
             headers: {
               Authorization: localStorage.learn_token,
             },
+            
             processData: false,
             contentType: false,
             success: function (res) {

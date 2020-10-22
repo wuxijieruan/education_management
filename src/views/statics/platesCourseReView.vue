@@ -7,23 +7,26 @@
     </el-breadcrumb>
 
     <div style="margin-top:30px;">
+      <!-- 搜索条件 开始时间-结束时间 开始时间以00:00:00开头，结束时间为23:59:59-->
       <el-form>
         <el-form-item label="统计时间区间：">
           <el-date-picker
             v-model="formpage.startTime"
-            type="date"
+            type="datetime"
             placeholder="选择开始时间"
-            style="margin-left: 20px; margin-right: 20px;width:150px;"
-            value-format="yyyy-MM-dd"
-            format="yyyy-MM-dd"
+            style="margin-left: 20px; margin-right: 20px;width:250px;"
+            value-format="yyyy-MM-dd HH:mm:ss"
+             default-time="00:00:00"
+            
           ></el-date-picker>-
           <el-date-picker
             v-model="formpage.endTime"
-            type="date"
+            type="datetime"
             placeholder="选择结束时间"
-            style=" margin-left: 20px;width:150px"
-            value-format="yyyy-MM-dd"
-            format="yyyy-MM-dd"
+            style=" margin-left: 20px;width:250px"
+             value-format="yyyy-MM-dd HH:mm:ss"
+            
+             default-time="23:59:59"
           ></el-date-picker>
           <el-button
             size="small"
@@ -94,12 +97,12 @@
           @selection-change="selectionChange"
         >
           <el-table-column align="center" type="selection" width="60"></el-table-column>
-          <el-table-column align="center" prop="resourcesCountCountName" label="课程名称"></el-table-column>
-          <el-table-column align="center" prop="resourcesCountSource" label="资源名称"></el-table-column>
+          <el-table-column align="center" prop="platesCourseReViewCountName" label="课程名称"></el-table-column>
+          <el-table-column align="center" prop="platesCourseReViewCountSource" label="资源名称"></el-table-column>
           <el-table-column align="center" prop="resourcesCountSourceType" label="资源包类型"></el-table-column>
           <el-table-column align="center" prop="resourcesCountSourceFileType" label="资源类型"></el-table-column>
-          <el-table-column align="center" prop="resourcesCountCountTotal" label="复刷次数"></el-table-column>
-          <el-table-column align="center" prop="resourcesCountStuTotal" label="复刷人数"></el-table-column>
+          <el-table-column align="center" prop="platesCourseReViewCountTotal" label="复刷次数"></el-table-column>
+          <el-table-column align="center" prop="platesCourseReViewCountStuTotal" label="复刷人数"></el-table-column>
         </el-table>
         <!-- 分页组件 -->
         <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
@@ -384,12 +387,12 @@ export default {
           const { export_json_to_excel } = require("../../excel/Export2Excel"); //这里必须使用绝对路径
 
           const filterVal = [
-            "resourcesCountCountName",
-            "resourcesCountSource",
+            "platesCourseReViewCountName",
+            "platesCourseReViewCountSource",
             "resourcesCountSourceType",
             "resourcesCountSourceFileType",
-            "resourcesCountCountTotal",
-            "resourcesCountStuTotal"
+            "platesCourseReViewCountTotal",
+            "platesCourseReViewCountStuTotal"
           ]; // 导出的表头名
 
           const tHeader = [

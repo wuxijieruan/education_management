@@ -58,7 +58,7 @@
           v-loading="listLoading"
           border
           element-loading-text="拼命加载中"
-          style="width: 90%;"
+          style="width: 95%;"
           @selection-change="selectionChange"
         >
           <el-table-column align="center" type="selection" width="60"></el-table-column>
@@ -70,6 +70,9 @@
           <el-table-column align="center" prop="xieCheng" label="携程"></el-table-column>
           <el-table-column align="center" prop="zhongYin" label="中银电池"></el-table-column>
           <el-table-column align="center" prop="qianCheng" label="前程照明"></el-table-column>
+          <el-table-column align="center" prop="nanhang" label="南航"></el-table-column>
+          <el-table-column align="center" prop="mierreading" label="米儿阅读"></el-table-column>
+          <el-table-column align="center" prop="shaqgjsyyey" label="上海安乔国际双语幼儿园"></el-table-column>
         </el-table>
         <!-- 分页组件 -->
         <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
@@ -85,7 +88,7 @@
           v-loading="listLoading"
           border
           element-loading-text="拼命加载中"
-          style="width: 90%;"
+          style="width: 95%;"
           @selection-change="selectionChange"
         >
           <el-table-column align="center" type="selection" width="60"></el-table-column>
@@ -97,6 +100,10 @@
           <el-table-column align="center" prop="xieCheng" label="携程"></el-table-column>
           <el-table-column align="center" prop="zhongYin" label="中银电池"></el-table-column>
           <el-table-column align="center" prop="qianCheng" label="前程照明"></el-table-column>
+          <el-table-column align="center" prop="nanhang" label="南航"></el-table-column>
+          <el-table-column align="center" prop="mierreading" label="米儿阅读"></el-table-column>
+          <el-table-column align="center" prop="shaqgjsyyey" label="上海安乔国际双语幼儿园"></el-table-column>
+          
         </el-table>
         <!-- 分页组件 -->
         <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
@@ -282,6 +289,7 @@ export default {
       var that = this;
       if (that.form.resourceType == 0) {
         //累计
+         
         require.ensure([], () => {
           const { export_json_to_excel } = require("../../excel/Export2Excel"); //这里必须使用绝对路径
           const filterVal = [
@@ -292,7 +300,10 @@ export default {
             "newEnterpriseVipQtyTotalDay",
             "xieCheng",
             "zhongYin",
-            "qianCheng"
+            "qianCheng",
+            "nanhang",
+            "mierreading",
+            "shaqgjsyyey"
           ]; // 导出的表头名
           const tHeader = [
             "日期",
@@ -302,7 +313,10 @@ export default {
             "企业VIP",
             "携程",
             "中银电池",
-            "前程照明"
+            "前程照明",
+            "南航",
+            "米儿阅读",
+            "上海安乔国际双语幼儿园"
           ]; // 导出的表头字段名
           const list = that.excelData;
           const data = that.formatJson(filterVal, list);
@@ -336,7 +350,10 @@ export default {
             "newEnterpriseVipQtyPerDay",
             "xieCheng",
             "zhongYin",
-            "qianCheng"
+            "qianCheng",
+            "nanhang",
+            "mierreading",
+            "shaqgjsyyey"
           ]; // 导出的表头名
           const tHeader = [
             "日期",
@@ -346,7 +363,10 @@ export default {
             "企业VIP",
             "携程",
             "中银电池",
-            "前程照明"
+            "前程照明",
+             "南航",
+            "米儿阅读",
+            "上海安乔国际双语幼儿园"
           ]; // 导出的表头字段名
           const list = that.excelData;
           const data = that.formatJson(filterVal, list);

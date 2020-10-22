@@ -143,7 +143,7 @@
               v-for="item in enterpriseList"
               :key="item.enterpriseId"
               :label="item.enterpriseName"
-              :value="item.enterpriseName"
+              :value="item.enterpriseId"
             ></el-option>
           </el-select>
         </el-form-item>
