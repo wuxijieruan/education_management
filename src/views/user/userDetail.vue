@@ -78,7 +78,8 @@ export default {
         return{
             listLoading: false, //是显示加载
             usersdetail:{},//用户详情
-            changelist:{}
+            changelist:{},
+            gobackForm: {}
         }
     },
     components: {
@@ -89,17 +90,21 @@ export default {
         console.log("用户详情query", data);
         this.usersdetail=data.users
         console.log("用户详情", this.usersdetail);
-        
-
+         var data = this.$route.query;
+         this.gobackForm = data.searchList;
     },
     methods:{
         backback() {
-            this.$router.push({
-                path: "/user",
-                query: {
-                // courseData: this.courseData
-                }
-            });
+            this.$router.go(-1);
+  
+            
+            // this.$router.push({
+            //     path: "/user",
+            //     query: {
+            //     // courseData: this.courseData
+            //     searchList: this.gobackForm
+            //     }
+            // });
         },
         //保存
         async savechange(){

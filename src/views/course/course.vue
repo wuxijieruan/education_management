@@ -1,7 +1,10 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
+    <el-breadcrumb
+      separator-class="el-icon-arrow-right"
+      style="margin-bottom: 10px"
+    >
       <el-breadcrumb-item>
         课程管理
         <!-- <strong style="font-size:18px;">课程管理</strong> -->
@@ -10,30 +13,40 @@
     </el-breadcrumb>
 
     <!-- 搜索筛选 -->
-    <div style="margin-top:5px;margin-bottom:5px;">
+    <div style="margin-top: 5px; margin-bottom: 5px">
       <!-- <el-button size="small" type="primary" icon="el-icon-search" @click="submitSearch">搜索</el-button> -->
-      <el-form label-width="80px" :model="form" ref="form" v-loading="listLoading" :inline="true">
+      <el-form
+        label-width="80px"
+        :model="form"
+        ref="form"
+        v-loading="listLoading"
+        :inline="true"
+      >
         <el-form-item>
           <router-link to="/courseAdd">
-            <el-button size="small" type="primary" icon="el-icon-plus">添加</el-button>
+            <el-button size="small" type="primary" icon="el-icon-plus"
+              >添加</el-button
+            >
           </router-link>
           <el-button
             size="small"
             type="danger"
             icon="el-icon-refresh"
             @click="reset"
-            style="margin-right:10px"
-          >重置</el-button>
+            style="margin-right: 10px"
+            >重置</el-button
+          >
           <el-button
             size="mini"
             type="danger"
             icon="el-icon-delete"
             v-if="batchDeletionStatus"
             @click="batchDel"
-          >批量下架</el-button>
+            >批量下架</el-button
+          >
         </el-form-item>
         <el-form-item v-if="isxianshikaiguan" v-model="xianshikaiguanname">
-          <strong style="font-size:16px">{{xianshikaiguanname}}</strong>
+          <strong style="font-size: 16px">{{ xianshikaiguanname }}</strong>
 
           <!-- <el-switch
               v-model="isHidden"
@@ -65,9 +78,14 @@
             placeholder="请输入关键词"
             loading-text="加载中..."
             :loading="listLoading"
-            @change="getCourse"
+            @change="submitSearch"
           >
-            <el-option v-for="item in courseNameList" :key="item" :label="item" :value="item"></el-option>
+            <el-option
+              v-for="item in courseNameList"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
           </el-select>
           <!-- <el-input
             size="small"
@@ -79,7 +97,12 @@
           ></el-input>-->
         </el-form-item>
         <el-form-item label="课程话题" prop="subjectId">
-          <el-select v-model="form.subjectId" filterable placeholder="请选择话题" @change="getCourse">
+          <el-select
+            v-model="form.subjectId"
+            filterable
+            placeholder="请选择话题"
+            @change="submitSearch"
+          >
             <el-option value>请选择话题</el-option>
             <el-option
               v-for="item in subjectsGetList"
@@ -90,13 +113,22 @@
           </el-select>
         </el-form-item>
         <el-form-item label="课程类型" prop="courseType">
-          <el-select v-model="form.courseType" placeholder="请选择课程类型" @change="getCourse">
+          <el-select
+            v-model="form.courseType"
+            placeholder="请选择课程类型"
+            @change="submitSearch"
+          >
+            <el-option value>请选择课程类型</el-option>
             <el-option value="1" label="主课程">主课程</el-option>
             <el-option value="2" label="拓展课程">拓展课程</el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="课程状态" prop="isVail">
-          <el-select v-model="form.isVail" placeholder="请选择课程状态" @change="getCourse">
+          <el-select
+            v-model="form.isVail"
+            placeholder="请选择课程状态"
+            @change="submitSearch"
+          >
             <el-option value="-1" label="下架">下架</el-option>
             <el-option value="1" label="上架">上架</el-option>
           </el-select>
@@ -117,34 +149,76 @@
         v-loading="listLoading"
         border
         element-loading-text="拼命加载中"
-        style="width: 100%;"
+        style="width: 100%"
         @selection-change="selectionChange"
       >
-        <el-table-column align="center" type="selection" width="60"></el-table-column>
-        <el-table-column align="center" prop="courseType" label="课程类型" width="80"></el-table-column>
-        <el-table-column align="center" prop="subjectName" label="课程话题" width="100"></el-table-column>
-        <el-table-column align="center" prop="coursePicUrl" label="课程封面图片" width="240">
+        <el-table-column
+          align="center"
+          type="selection"
+          width="60"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="courseType"
+          label="课程类型"
+          width="80"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="subjectName"
+          label="课程话题"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="coursePicUrl"
+          label="课程封面图片"
+          width="240"
+        >
           <template slot-scope="scope">
             <img :src="scope.row.coursePicUrl" alt class="img_table" />
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="courseName" label="课程名称" min-width="200"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="courseName"
+          label="课程名称"
+          min-width="200"
+        ></el-table-column>
 
-        <el-table-column align="center" prop="remarks" label="发布人" width="100"></el-table-column>
-        <el-table-column align="center" prop="isVail" label="上下架状态" width="100">
+        <el-table-column
+          align="center"
+          prop="remarks"
+          label="发布人"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="isVail"
+          label="上下架状态"
+          width="100"
+        >
           <template slot-scope="scope">
-            <el-select v-model="scope.row.isVail" @change="changeisVail(scope.row)">
+            <el-select
+              v-model="scope.row.isVail"
+              @change="changeisVail(scope.row)"
+            >
               <el-option label="上架" value="1"></el-option>
               <el-option label="下架" value="-1"></el-option>
             </el-select>
           </template>
         </el-table-column>
 
-        <el-table-column align="center" prop="courseIndex" label="排列序号" min-width="100">
+        <el-table-column
+          align="center"
+          prop="courseIndex"
+          label="排列序号"
+          min-width="100"
+        >
           <template slot-scope="scope">
             <el-input-number
               size="small"
-              style="width:100px"
+              style="width: 100px"
               v-model="scope.row.courseIndex"
               auto-complete="off"
               @change="changecourseIndex(scope.row)"
@@ -152,8 +226,18 @@
             ></el-input-number>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="isHot" label="是否热门" width="80"></el-table-column>
-        <el-table-column align="center" prop="isTop" label="是否推荐" width="80"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="isHot"
+          label="是否热门"
+          width="80"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="isTop"
+          label="是否推荐"
+          width="80"
+        ></el-table-column>
         <el-table-column align="center" label="操作" width="350" fixed="right">
           <template slot-scope="scope">
             <el-button type="mini">
@@ -165,57 +249,110 @@
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>
                     <router-link
-                      :to="{ path: '/courseAddA',query: {courseId:scope.row.courseId,resourceType:1,router:1,courseData:form}}"
-                    >课程导读</router-link>
+                      :to="{
+                        path: '/courseAddA',
+                        query: {
+                          courseId: scope.row.courseId,
+                          resourceType: 1,
+                          router: 1,
+                          courseData: form,
+                        },
+                      }"
+                      >课程导读</router-link
+                    >
                   </el-dropdown-item>
                   <el-dropdown-item>
                     <router-link
-                      :to="{ path: '/courseAddA',query: {courseId:scope.row.courseId,resourceType:2,router:1,courseData:form}}"
-                    >课程绘本</router-link>
+                      :to="{
+                        path: '/courseAddA',
+                        query: {
+                          courseId: scope.row.courseId,
+                          resourceType: 2,
+                          router: 1,
+                          courseData: form,
+                        },
+                      }"
+                      >课程绘本</router-link
+                    >
                   </el-dropdown-item>
                   <el-dropdown-item>
                     <router-link
-                      :to="{ path: '/courseAddA',query: {courseId:scope.row.courseId,resourceType:4,router:1,courseData:form}}"
-                    >课程互动游戏</router-link>
+                      :to="{
+                        path: '/courseAddA',
+                        query: {
+                          courseId: scope.row.courseId,
+                          resourceType: 4,
+                          router: 1,
+                          courseData: form,
+                        },
+                      }"
+                      >课程互动游戏</router-link
+                    >
                   </el-dropdown-item>
                   <el-dropdown-item>
                     <router-link
-                      :to="{ path: '/courseAddA',query: {courseId:scope.row.courseId,resourceType:3,router:1,courseData:form}}"
-                    >课程知识点</router-link>
+                      :to="{
+                        path: '/courseAddA',
+                        query: {
+                          courseId: scope.row.courseId,
+                          resourceType: 3,
+                          router: 1,
+                          courseData: form,
+                        },
+                      }"
+                      >课程知识点</router-link
+                    >
                   </el-dropdown-item>
                   <el-dropdown-item>
                     <router-link
-                      :to="{ path: '/courseAddA',query: {courseId:scope.row.courseId,resourceType:5,router:1,courseData:form}}"
-                    >课程互动作业</router-link>
+                      :to="{
+                        path: '/courseAddA',
+                        query: {
+                          courseId: scope.row.courseId,
+                          resourceType: 5,
+                          router: 1,
+                          courseData: form,
+                        },
+                      }"
+                      >课程互动作业</router-link
+                    >
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-button>
             <router-link
-              :to="{ path: '/courseDetail',query: {courseId:scope.row.courseId,courseData:form}}"
+              :to="{
+                path: '/courseDetail',
+                query: { courseId: scope.row.courseId, courseData: form },
+              }"
             >
-              <el-button size="mini" style="margin-left:10px">编辑</el-button>
+              <el-button size="mini" style="margin-left: 10px">编辑</el-button>
             </router-link>
             <el-button
               size="mini"
               type="danger"
-              style="margin-left:10px"
+              style="margin-left: 10px"
               @click="courseSetTop(scope.row.courseId)"
-            >置顶</el-button>
+              >置顶</el-button
+            >
             <el-button
-              v-if="scope.row.courseType=='主课程'"
+              v-if="scope.row.courseType == '主课程'"
               type="warning"
               size="mini"
-              style="margin-left:10px"
+              style="margin-left: 10px"
               @click="courseSetline(scope.row.courseId)"
-            >排序置顶</el-button>
+              >排序置顶</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </el-form>
     <!-- 分页组件 -->
 
-    <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
+    <Pagination
+      v-bind:child-msg="pageparm"
+      @callFather="callFather"
+    ></Pagination>
 
     <!-- 搜索界面 -->
     <!-- <el-dialog title="搜索" width="900px" :visible.sync="searchVisible" @click="closeDialog"> -->
@@ -250,13 +387,13 @@ export default {
       isxianshikaiguan: false,
       xianshikaiguanname: "cccccc",
       form: {
+        page: 1,
         createUserId: "",
         subjectId: "", //话题id
         courseName: "", //课程名称
         isVail: "",
         isHidden: "",
         courseType: "",
-        page: 1,
         pageSize: 10,
       },
       // 分页参数
@@ -276,20 +413,20 @@ export default {
     Pagination,
   },
   created() {
-    this.user = JSON.parse(localStorage.getItem("userdata"));
-    this.form.createUserId = this.user.loginUser.id;
-    // console.log("用户信息", this.user);
-    var data = this.$route.query;
-    console.log("课程列表query", data);
-    if (data.courseData != undefined && data.courseData.page != undefined) {
-      this.form = data.courseData;
-      this.pageparm.currentPage = data.courseData.page;
+    //this.user = JSON.parse(localStorage.getItem("userdata"));
+    // this.form.createUserId = this.user.loginUser.id;
+    console.log("用户信息", localStorage.currentPage);
+    this.form.page = parseInt(localStorage.currentPage);
+    this.pageparm.currentPage = parseInt(localStorage.currentPage);
+    localStorage.fabricCurrentPage = 1;
+    if (localStorage.form != "") {
+      this.form = JSON.parse(localStorage.form);
     }
   },
   mounted() {
-    // this.getCourse();
     this.getSubject();
     this.getcourseName();
+    this.getCourse();
   },
   methods: {
     // 多选/全选
@@ -316,13 +453,13 @@ export default {
     },
     //批量显示
     async batchShow() {
-      console.log(this.isHidden);
+      // console.log(this.isHidden);
       var type = this.isHidden == true ? 1 : 2;
-      console.log(type);
+      // console.log(type);
       const res = await updateIsShowNumAll(type);
 
       if (res.status == 200) {
-        console.log(type);
+        //   console.log(type);
         if (type == 1) {
           this.xianshikaiguanname = "已隐藏浏览数显示";
         } else if (type == 2) {
@@ -343,6 +480,7 @@ export default {
     // 分页插件事件
     callFather(parm) {
       // console.log(parm)
+      localStorage.currentPage = parm.currentPage;
       this.form.page = parm.currentPage;
       this.form.pageSize = parm.pageSize;
       this.getCourse();
@@ -364,11 +502,11 @@ export default {
       try {
         this.listLoading = true;
         console.log("this.form", this.form);
-        this.form.courseName=this.form.courseName.replace(/#/g,'@')
+        localStorage.form = JSON.stringify(this.form);
+        this.form.courseName = this.form.courseName.replace(/#/g, "@");
         const res = await courseGet(this.form);
-        this.form.courseName=this.form.courseName.replace( /@/g,'#')
+        this.form.courseName = this.form.courseName.replace(/@/g, "#");
         if (res.status == 200) {
-          
           console.log("课程列表", res.data);
           this.list = res.data.list;
           this.list.forEach((element) => {
@@ -402,7 +540,7 @@ export default {
               this.xianshikaiguanname = "已隐藏浏览数显示";
             }
           });
-          console.log("this.xianshikaiguanname", this.xianshikaiguanname);
+          //    console.log("this.xianshikaiguanname", this.xianshikaiguanname);
           this.isxianshikaiguan = true;
           this.pageparm.total = res.data.total;
           this.listLoading = false;
@@ -452,9 +590,9 @@ export default {
         this.listLoading = true;
         const res = await courseNameGet();
         if (res.status == 200) {
-          console.log("话题列表", res.data);
+          //     console.log("话题列表", res.data);
           this.courseNameList = res.data.list;
-          console.log("课程名称列表", this.courseNameList);
+          //     console.log("课程名称列表", this.courseNameList);
           this.listLoading = false;
         } else {
           this.$message({
@@ -475,6 +613,11 @@ export default {
     // 搜索页面
     submitSearch() {
       this.searchVisible = true;
+      // 因没有搜索按钮，因此重置分页再列表显示
+      this.form.page = 1;
+      this.pageparm.currentPage = 1;
+      localStorage.currentPage = 1;
+      this.getCourse();
     },
     // 关闭弹出框
     closeDialog() {

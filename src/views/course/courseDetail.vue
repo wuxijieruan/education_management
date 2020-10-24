@@ -282,12 +282,13 @@ export default {
   },
   methods: {
     backback() {
-      this.$router.push({
-        path: "/course",
-        query: {
-          courseData: this.courseData
-        }
-      });
+      // this.$router.push({
+      //   path: "/course",
+      //   query: {
+      //     courseData: this.courseData
+      //   }
+      // });
+       this.$router.go(-1);
     },
     handleClick(tab, event) {
       // console.log(tab, event);

@@ -106,12 +106,7 @@ export default {
     },
     methods:{
         backback() {
-            this.$router.push({
-                path: "/homework",
-                query: {
-                // courseData: this.courseData
-                }
-            });
+           this.$router.go(-1);
         },
     }
 }

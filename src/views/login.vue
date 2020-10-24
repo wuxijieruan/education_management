@@ -60,6 +60,11 @@ export default {
       }
     };
   },
+ created() {
+    localStorage.form = "";
+    localStorage.currentPage = 1;
+   
+  },
   // 里面的函数只有调用才会执行
   methods: {
     //获取info列表

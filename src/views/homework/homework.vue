@@ -64,15 +64,15 @@
     <el-dialog title="搜索" width="900px" :visible.sync="searchVisible" @click="closeDialog">
       <el-form
         label-width="100px"
-        :model="searchList"
-        ref="searchList"
+        :model="form"
+        ref="form"
         style="width:850px"
         v-loading="listLoading"
       >
         <el-form-item label="宝贝昵称" prop="studentName">
           <el-input
             size="small"
-            v-model="searchList.studentName"
+            v-model="form.studentName"
             auto-complete="off"
             placeholder="请输入用户名"
             style="width:220px"
@@ -81,14 +81,14 @@
         <el-form-item label="课程名称" prop="courseName">
           <el-input
             size="small"
-            v-model="searchList.courseName"
+            v-model="form.courseName"
             auto-complete="off"
             placeholder="请输入课程名称"
             style="width:220px"
           ></el-input>
         </el-form-item>
         <el-form-item label="活动名称" prop="activityName">
-          <el-select v-model="searchList.activityName" filterable placeholder="请选择活动">
+          <el-select v-model="form.activityName" filterable placeholder="请选择活动">
             <el-option value>请选择活动</el-option>
             <el-option
               v-for="item in actsList"
@@ -99,7 +99,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="企业名称" prop="enterpriseName">
-          <el-select v-model="searchList.enterpriseId" filterable placeholder="请选择企业">
+          <el-select v-model="form.enterpriseId" filterable placeholder="请选择企业">
             <el-option value>请选择企业</el-option>
             <el-option
               v-for="item in enterpriseList"
@@ -110,7 +110,7 @@
           </el-select>
         </el-form-item>
         <!-- <el-form-item label="作业类型" prop="exercisesType">
-          <el-select v-model="searchList.exercisesType" placeholder="请选择课程类型">
+          <el-select v-model="form.exercisesType" placeholder="请选择课程类型">
             <el-option value="1" label="作业">作业</el-option>
             <el-option value="2" label="游戏">游戏</el-option>
           </el-select>
@@ -118,7 +118,7 @@
         <el-form-item label="开始日期" prop="startTime">
           <el-date-picker
             value-format="yyyy-MM-dd HH:mm:ss"
-            v-model="searchList.startTime"
+            v-model="form.startTime"
             type="datetime"
             placeholder="选择日期"
             default-time="00:00:00"
@@ -127,7 +127,7 @@
         <el-form-item label="结束日期" prop="endTime">
           <el-date-picker
             value-format="yyyy-MM-dd HH:mm:ss"
-            v-model="searchList.endTime"
+            v-model="form.endTime"
             type="datetime"
             placeholder="选择日期"
             default-time="23:59:59"
@@ -190,10 +190,15 @@ export default {
       enterpriseList: [], //企业列表
       hwsList: [], //作业列表
       coursesList: [], //课程列表
-      searchList: {
+      form: {
         page: 1,
         pageSize: 10,
-        
+        studentName:"",
+        courseName:"",
+        activityName:"",
+        enterpriseId:"",
+        startTime:"",
+        endTime:""
     
       }, //搜索列表
       excelData: "",
@@ -209,11 +214,12 @@ export default {
     this.user = JSON.parse(localStorage.getItem("userdata"));
     this.form.createUserId = this.user.loginUser.id;
     // console.log("用户信息", this.user);
-    var data = this.$route.query;
-    console.log("课程列表query", data);
-    if (data.courseData != undefined && data.courseData.page != undefined) {
-      this.form = data.courseData;
-      this.pageparm.currentPage = data.courseData.page;
+    this.form.createUserId = this.user.loginUser.id;
+      localStorage.fabricCurrentPage = 1;
+    this.form.page = parseInt(localStorage.currentPage);
+    this.pageparm.currentPage = parseInt(localStorage.currentPage);
+    if (localStorage.form != "") {
+      this.form = JSON.parse(localStorage.form);
     }
   },
   mounted() {
@@ -234,7 +240,7 @@ export default {
       } else if (this.postExcel == 2) {
         //全部导出
 
-       var data1 = this.searchList;
+       var data1 = this.form;
         delete data1.page;
         delete data1.pageSize;
         try {
@@ -335,15 +341,16 @@ export default {
     // 分页插件事件
     callFather(parm) {
       console.log(parm);
-      this.searchList.page = parm.currentPage;
-      this.searchList.pageSize = parm.pageSize;
+       localStorage.currentPage = parm.currentPage;
+      this.form.page = parm.currentPage;
+      this.form.pageSize = parm.pageSize;
       this.form.page = parm.currentPage;
       this.form.pageSize = parm.pageSize;
       this.gethomework();
     },
     // 重置
     reset() {
-       this.searchList = {
+       this.form = {
         page: 1,
         pageSize: 10
       };
@@ -431,13 +438,15 @@ export default {
     },
     // 搜索页面
     submitSearch() {
-      this.searchList.page = 1;
-      this.searchList.pageSize = 10;
+      
       this.searchVisible = true;
+      this.form.page = 1;
+      this.pageparm.currentPage = 1;
+      localStorage.currentPage = 1;
     },
     // 关闭弹出框
     closeDialog() {
-      this.searchList = {
+      this.form = {
         page: this.form.page,
         pageSize: 10
       };
@@ -468,35 +477,36 @@ export default {
     },
     // 获取作业列表
     async gethomework() {
-      console.log("searchList", this.searchList);
+      console.log("form", this.form);
+       localStorage.form = JSON.stringify(this.form);
       try {
         this.listLoading = true;
-        if(this.searchList.activityName!=''&&this.searchList.activityName!=null){
-          this.searchList.activityName=this.searchList.activityName.replace(/#/g,'@'); 
+        if(this.form.activityName!=''&&this.form.activityName!=null){
+          this.form.activityName=this.form.activityName.replace(/#/g,'@'); 
         }
 
-        if(this.searchList.courseName!=''&&this.searchList.courseName!=null){
-        this.searchList.courseName=this.searchList.courseName.replace(/#/g,'@');
+        if(this.form.courseName!=''&&this.form.courseName!=null){
+        this.form.courseName=this.form.courseName.replace(/#/g,'@');
         }
       
-        const res = await homeworkList(this.searchList);
-        if(this.searchList.activityName!=''&&this.searchList.activityName!=null){
-           this.searchList.activityName=this.searchList.activityName.replace( /@/g,'#');
+        const res = await homeworkList(this.form);
+        if(this.form.activityName!=''&&this.form.activityName!=null){
+           this.form.activityName=this.form.activityName.replace( /@/g,'#');
         }
-        if(this.searchList.courseName!=''&&this.searchList.courseName!=null){
-       this.searchList.courseName=this.searchList.courseName.replace( /@/g,'#');
+        if(this.form.courseName!=''&&this.form.courseName!=null){
+       this.form.courseName=this.form.courseName.replace( /@/g,'#');
         }
-        if(this.searchList.startTime==null){
-          delete this.searchList.startTime;
-        }if(this.searchList.endTime==null){
-          delete this.searchList.endTime;
+        if(this.form.startTime==null){
+          delete this.form.startTime;
+        }if(this.form.endTime==null){
+          delete this.form.endTime;
         }
         if (res.status == 200) {
           console.log("作业列表", res.data.list.length);
           this.hwsList=[];
           this.hwsList = res.data.list;
-          this.searchList.page=this.form.page;
-          this.searchList.pageSize=10;
+          this.form.page=this.form.page;
+          this.form.pageSize=10;
          
           this.hwsList.forEach(item => {
             if (item.answerImg) {
