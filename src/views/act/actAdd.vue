@@ -1,12 +1,15 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom: 20px;">
+    <el-breadcrumb
+      separator-class="el-icon-arrow-right"
+      style="margin-bottom: 20px"
+    >
       <el-breadcrumb-item>活动管理</el-breadcrumb-item>
       <el-breadcrumb-item>活动列表</el-breadcrumb-item>
       <el-breadcrumb-item>新增活动</el-breadcrumb-item>
     </el-breadcrumb>
-    <div style="margin-bottom: 20px;">
+    <div style="margin-bottom: 20px">
       <el-button size="small" type="danger" @click="goback">返回列表</el-button>
     </div>
     <div class="main_wraper">
@@ -16,30 +19,49 @@
           :rules="rules"
           ref="ruleForm"
           label-width="180px"
-          style="width:40%"
+          style="width: 40%"
           class="demo-ruleForm"
         >
           <el-form-item label="活动名称" prop="activityName">
-            <el-input v-model="ruleForm.activityName" placeholder="请输入活动名称"></el-input>
+            <el-input
+              v-model="ruleForm.activityName"
+              placeholder="请输入活动名称"
+            ></el-input>
           </el-form-item>
           <el-form-item label="活动代码" prop="activityCode">
-            <el-input v-model="ruleForm.activityCode" placeholder="请输入活动代码"></el-input>
+            <el-input
+              v-model="ruleForm.activityCode"
+              placeholder="请输入活动代码"
+            ></el-input>
           </el-form-item>
           <el-form-item label="活动规则" prop="rule">
-            <el-input type="textarea" :rows="5" v-model="ruleForm.rule" placeholder="请输入活动规则"></el-input>
+            <el-input
+              type="textarea"
+              :rows="5"
+              v-model="ruleForm.rule"
+              placeholder="请输入活动规则"
+            ></el-input>
           </el-form-item>
           <el-form-item label="活动开始时间（日期）" prop="startTime">
-            <el-date-picker v-model="ruleForm.startTime" type="date" placeholder="选择日期"></el-date-picker>
+            <el-date-picker
+              v-model="ruleForm.startTime"
+              type="date"
+              placeholder="选择日期"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item label="活动结束时间（日期）" prop="endTime">
-            <el-date-picker v-model="ruleForm.endTime" type="date" placeholder="选择日期"></el-date-picker>
+            <el-date-picker
+              v-model="ruleForm.endTime"
+              type="date"
+              placeholder="选择日期"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item label="绑定课程" prop="courseId">
             <el-select
               v-model="ruleForm.courseId"
               filterable
               placeholder="请选择课程"
-              style="width:350px"
+              style="width: 350px"
             >
               <el-option
                 v-for="item in subjectsGetList"
@@ -54,7 +76,7 @@
               v-model="ruleForm.relationCourseIds"
               placeholder="请选择课程"
               multiple
-              style="width:350px"
+              style="width: 350px"
               size="mini"
             >
               <el-option
@@ -71,7 +93,7 @@
               v-model="ruleForm.enterpriseId"
               filterable
               placeholder="请选择指定企业"
-              style="width:350px"
+              style="width: 350px"
             >
               <el-option
                 v-for="item in enterpriseGetList"
@@ -83,14 +105,20 @@
           </el-form-item>
 
           <el-form-item label="用户身份" prop="studentIdentity">
-            <el-select v-model="ruleForm.activityUserType" placeholder="请选择注册活动用户身份">
+            <el-select
+              v-model="ruleForm.activityUserType"
+              placeholder="请选择注册活动用户身份"
+            >
               <el-option value="初级VIP" label="初级VIP">初级VIP</el-option>
               <el-option value="企业VIP" label="企业VIP">企业VIP</el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="用户注册方式" prop="userRegMode">
-            <el-select v-model="ruleForm.userRegMode" placeholder="请选择活动注册方式">
+            <el-select
+              v-model="ruleForm.userRegMode"
+              placeholder="请选择活动注册方式"
+            >
               <el-option
                 v-for="item in selectAllEnumsActivityList"
                 :key="item.enumValue"
@@ -102,7 +130,7 @@
           <el-form-item label="活动注册赠送积分" prop="points">
             <el-input
               size="small"
-              style="width:350px"
+              style="width: 350px"
               v-model="ruleForm.points"
               auto-complete="off"
               type="number"
@@ -112,7 +140,7 @@
           <el-form-item label="活动注册赠送vip月份" prop="overMouth">
             <el-input
               size="small"
-              style="width:350px"
+              style="width: 350px"
               v-model="ruleForm.overMouth"
               auto-complete="off"
               type="number"
@@ -120,7 +148,11 @@
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="封面图片" prop="picUrl" style="display:block">
+          <el-form-item
+            label="活动弹框图片"
+            prop="picUrl"
+            style="display: block"
+          >
             <el-upload
               class="avatar-uploader"
               :action="imgUrl"
@@ -129,9 +161,40 @@
               :before-upload="beforeAvatarUpload"
               :on-preview="handlePictureCardPreview"
             >
-              <img v-if="ruleForm.picUrl" :src="ruleForm.picUrl" class="avatar" />
+              <img
+                v-if="ruleForm.picUrl"
+                :src="ruleForm.picUrl"
+                class="avatar"
+              />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为630*800</div>
+              <div slot="tip" class="el-upload__tip">
+                图片最佳上传尺寸为630*800
+              </div>
+            </el-upload>
+          </el-form-item>
+
+          <el-form-item
+            label="活动封面图片"
+            prop="coverImg"
+            style="display: block"
+          >
+            <el-upload
+              class="avatar-uploader"
+              :action="imgUrl"
+              :show-file-list="false"
+              :on-success="handlecoverImgSuccess"
+              :before-upload="beforeAvatarUpload"
+              :on-preview="handlePictureCardPreview"
+            >
+              <img
+                v-if="ruleForm.coverImg"
+                :src="ruleForm.coverImg"
+                class="avatar"
+              />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <div slot="tip" class="el-upload__tip">
+               图片最佳上传尺寸为700*265
+              </div>
             </el-upload>
           </el-form-item>
 
@@ -147,7 +210,7 @@
               v-model="playerOptions.sources"
               auto-complete="off"
               placeholder="腾讯视频请直接输入VID"
-              style="width:80%"
+              style="width: 80%"
             ></el-input>
           </el-form-item>
           <video-player
@@ -156,7 +219,7 @@
             :playsinline="true"
             :options="playerOptions"
             v-if="playerOptions.sources"
-            style="margin-left:130px;margin-bottom: 20px;"
+            style="margin-left: 130px; margin-bottom: 20px"
           ></video-player>
           <el-form-item label="切换课程栏目时弹窗" prop="popupOnSwitchSection">
             <el-switch
@@ -184,11 +247,15 @@
                 class="avatar"
               />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为630*800</div>
+              <div slot="tip" class="el-upload__tip">
+                图片最佳上传尺寸为630*800
+              </div>
             </el-upload>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
+            <el-button type="primary" @click="submitForm('ruleForm')"
+              >保存</el-button
+            >
             <el-button @click="goback()">取消</el-button>
           </el-form-item>
         </el-form>
@@ -236,6 +303,7 @@ export default {
         userRegMode: "",
         popupOnSwitchSection: false,
         popupImageOnSwitchSection: "",
+        coverImg: "",
       },
       rules: {
         activityName: [
@@ -388,11 +456,16 @@ export default {
       // console.log(file);
       this.ruleForm.picUrl = file.url;
     },
-      // 上传切换课程栏目时弹窗图片成功
+    // 上传切换课程栏目时弹窗图片成功
     handlePopupSuccess(file) {
       // console.log(file);
       this.ruleForm.popupImageOnSwitchSection = file.url;
       console.log(this.ruleForm.popupImageOnSwitchSection);
+    },
+    // 上传活动封面成功后
+    handlecoverImgSuccess(file) {
+      this.ruleForm.coverImg = file.url;
+      console.log(this.ruleForm.coverImg);
     },
     handlePictureCardPreview(file) {
       console.log(file);

@@ -14,19 +14,20 @@
         <el-form-item label="统计时间区间：">
           <el-date-picker
             v-model="formpage.startTime"
-            type="date"
+            type="datetime"
             placeholder="选择开始时间"
-            style="margin-left: 20px; margin-right: 20px;width:150px;"
-            value-format="yyyy-MM-dd"
-            format="yyyy-MM-dd"
+            style="margin-left: 20px; margin-right: 20px;width:200px;"
+            value-format="yyyy-MM-dd HH:mm:ss"
+             default-time="00:00:00"
+            
           ></el-date-picker>-
           <el-date-picker
             v-model="formpage.endTime"
-            type="date"
+            type="datetime"
             placeholder="选择结束时间"
-            style=" margin-left: 20px;width:150px"
-            value-format="yyyy-MM-dd"
-            format="yyyy-MM-dd"
+            style=" margin-left: 20px;width:200px"
+            value-format="yyyy-MM-dd HH:mm:ss"   
+             default-time="23:59:59"
           ></el-date-picker>
           <el-button
             size="small"
@@ -83,6 +84,7 @@
           <el-table-column align="center" type="selection" width="60"></el-table-column>
           <el-table-column align="center" prop="stuProfundityCountStuName" label="用户名"></el-table-column>
           <el-table-column align="center" prop="stuProfundityCountStuPhone"  label="手机号"></el-table-column>
+            <el-table-column align="center" prop="createTime"  label="注册时间"></el-table-column>
           <el-table-column align="center" prop="stuProfundityCountStuScenario" label="注册途径"></el-table-column>
           <el-table-column align="center" prop="stuProfundityCountRegisteredActivity" label="活动名称"></el-table-column>
           <el-table-column align="center" prop="stuProfundityCountUCourseTotal" label="累计解锁课程数量"></el-table-column>
@@ -280,8 +282,8 @@ export default {
                 if (that.form.resourceType == 0) {//累计
                     require.ensure([], () => {
                         const { export_json_to_excel } = require('../../excel/Export2Excel'); //这里必须使用绝对路径
-                        const filterVal = ['stuProfundityCountStuName','stuProfundityCountStuPhone', 'stuProfundityCountStuScenario', 'stuProfundityCountRegisteredActivity','stuProfundityCountUCourseTotal','stuProfundityCountExerciseTotal',"stuProfundityCountTimeTotal"]; // 导出的表头名
-                        const tHeader = ['用户名','手机号','注册途径', '活动名称','累计解锁课程数量','上传作业数量','每周平均使用时长']; // 导出的表头字段名
+                        const filterVal = ['stuProfundityCountStuName','stuProfundityCountStuPhone','createTime','stuProfundityCountStuScenario', 'stuProfundityCountRegisteredActivity','stuProfundityCountUCourseTotal','stuProfundityCountExerciseTotal',"stuProfundityCountTimeTotal"]; // 导出的表头名
+                        const tHeader = ['用户名','手机号','注册时间','注册途径', '活动名称','累计解锁课程数量','上传作业数量','每周平均使用时长']; // 导出的表头字段名
                         const list = that.excelData;
                         const data = that.formatJson(filterVal, list);
                         let datetime=new Date()

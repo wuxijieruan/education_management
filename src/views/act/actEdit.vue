@@ -87,7 +87,7 @@
               placeholder="请输入月份"
             ></el-input>
           </el-form-item>
-          <el-form-item label="封面图片" prop="picUrl" style="display:block">
+          <el-form-item label="活动弹框图片" prop="picUrl" style="display:block">
             <el-upload
               class="avatar-uploader"
               :action="imgUrl"
@@ -100,6 +100,32 @@
               <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为630*800</div>
             </el-upload>
           </el-form-item>
+
+         <el-form-item
+            label="活动封面图片"
+            prop="coverImg"
+            style="display: block"
+          >
+            <el-upload
+              class="avatar-uploader"
+              :action="imgUrl"
+              :show-file-list="false"
+              :on-success="handlecoverImgSuccess"
+              :before-upload="beforeAvatarUpload"
+              :on-preview="handlePictureCardPreview"
+            >
+              <img
+                v-if="ruleForm.coverImg"
+                :src="ruleForm.coverImg"
+                class="avatar"
+              />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <div slot="tip" class="el-upload__tip">
+               图片最佳上传尺寸为700*265
+              </div>
+            </el-upload>
+          </el-form-item>
+
 
           <el-form-item label="关联课程" prop="relationCourseId">
             <el-select
@@ -186,6 +212,7 @@
               <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为630*800</div>
             </el-upload>
           </el-form-item>
+          
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
             <el-button @click="goback()">取消</el-button>
@@ -238,6 +265,7 @@ export default {
         userRegMode: "",
         popupOnSwitchSection: false,
         popupImageOnSwitchSection: "",
+        coverImg:''
       },
       rules: {
         activityName: [
@@ -378,19 +406,23 @@ export default {
       this.ruleForm.popupImageOnSwitchSection = file.url;
       console.log(this.ruleForm.popupImageOnSwitchSection);
     },
-    // 点击查看大图
-    // handlePictureCardPreview(file) {
-    //   console.log(file);
-    //   this.dialogImageUrl = file.response.url;
-    //   var img = new Image();
-    //   img.src = this.dialogImageUrl;
-    //   console.log(img.width, img.height);
-    //   var width = img.width + "px";
-    //   var divShow = $("#imgpop .el-dialog");
-    //   console.log(divShow);
-    //   $(divShow).css("width", width);
-    //   this.dialogVisible = true;
-    // },
+     handlecoverImgSuccess(file) {
+      this.ruleForm.coverImg = file.url;
+      console.log(this.ruleForm.coverImg);
+    },
+   // 点击查看大图
+    handlePictureCardPreview(file) {
+      console.log(file);
+      this.dialogImageUrl = file.response.url;
+      var img = new Image();
+      img.src = this.dialogImageUrl;
+      console.log(img.width, img.height);
+      var width = img.width + "px";
+      var divShow = $("#imgpop .el-dialog");
+      console.log(divShow);
+      $(divShow).css("width", width);
+      this.dialogVisible = true;
+    },
 
     uploadVideo() {
       //上传视频

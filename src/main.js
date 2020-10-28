@@ -50,6 +50,23 @@ Object.keys(custom).forEach(key => {
 //   　　next();
 //   });
 
+router.beforeEach((to, from, next) => {
+    if (to.meta.title) {
+      document.title = to.meta.title
+    }
+    const type = to.meta.type
+    // 判断该路由是否需要登录权限
+    if (type === 'login') {
+      if (window.localStorage.getItem('userdata')) {
+        next()
+      } else {
+        next('/')
+      }
+    } else {
+      next()  // 确保一定要有next()被调用
+    }
+  })
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',

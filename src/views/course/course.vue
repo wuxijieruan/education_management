@@ -80,6 +80,7 @@
             :loading="listLoading"
             @change="submitSearch"
           >
+           <el-option value>请选择课程名称</el-option>
             <el-option
               v-for="item in courseNameList"
               :key="item"
@@ -103,6 +104,7 @@
             placeholder="请选择话题"
             @change="submitSearch"
           >
+          
             <el-option value>请选择话题</el-option>
             <el-option
               v-for="item in subjectsGetList"
@@ -123,12 +125,32 @@
             <el-option value="2" label="拓展课程">拓展课程</el-option>
           </el-select>
         </el-form-item>
+
+        <el-form-item label="企业专属" prop="enterpriseId">
+          <el-select
+            v-model="form.enterpriseId"
+            filterable
+            placeholder="请选择企业"
+            style="width: 250px"
+            @change="submitSearch"
+          >
+           <el-option value>请选择企业</el-option>
+            <el-option
+              v-for="item in enterpriseGetList"
+              :key="item.enterpriseId"
+              :label="item.enterpriseName"
+              :value="item.enterpriseId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="课程状态" prop="isVail">
           <el-select
             v-model="form.isVail"
             placeholder="请选择课程状态"
             @change="submitSearch"
           >
+           <el-option value>请选择课程状态</el-option>
             <el-option value="-1" label="下架">下架</el-option>
             <el-option value="1" label="上架">上架</el-option>
           </el-select>
@@ -374,6 +396,7 @@ import {
   updateCourseIndexByID,
   courseNameGet,
   setFirst,
+  enterpriseGet,
 } from "@/api/getData";
 export default {
   data() {
@@ -383,6 +406,7 @@ export default {
       gradeGetList: [],
       subjectsGetList: [],
       courseNameList: [],
+      enterpriseGetList: [],
       isHidden: false,
       isxianshikaiguan: false,
       xianshikaiguanname: "cccccc",
@@ -391,6 +415,7 @@ export default {
         createUserId: "",
         subjectId: "", //话题id
         courseName: "", //课程名称
+        enterpriseId: "",
         isVail: "",
         isHidden: "",
         courseType: "",
@@ -425,6 +450,7 @@ export default {
   },
   mounted() {
     this.getSubject();
+    this.getenterprise();
     this.getcourseName();
     this.getCourse();
   },
@@ -585,6 +611,28 @@ export default {
       }
     },
 
+    // 获取企业列表
+    async getenterprise(e) {
+      try {
+        const res = await enterpriseGet();
+        if (res.status == 200) {
+          console.log("企业列表", res.data);
+          this.enterpriseGetList = res.data.list;
+        } else {
+          this.$message({
+            type: "error",
+            message: res.error,
+          });
+          console.log("企业列表", res);
+        }
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: "请重试",
+        });
+        console.log(err);
+      }
+    },
     async getcourseName() {
       try {
         this.listLoading = true;

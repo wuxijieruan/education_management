@@ -1,5 +1,5 @@
 <template>
-  <div style="height:42rem;overflow-x: hidden;overflow-y: scroll;">
+  <div style="height: 42rem; overflow-x: hidden; overflow-y: scroll">
     <!-- 面包屑导航 -->
     <!-- <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
       <el-breadcrumb-item>课程管理</el-breadcrumb-item>
@@ -21,7 +21,12 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="*  关联主课程" prop="linkId" v-show="linkShow">
-        <el-select v-model="form.linkId" filterable placeholder="请选择关联主课程" style="width:350px">
+        <el-select
+          v-model="form.linkId"
+          filterable
+          placeholder="请选择关联主课程"
+          style="width: 350px"
+        >
           <el-option
             v-for="item in courseList"
             :key="item.index"
@@ -31,12 +36,17 @@
         </el-select>
       </el-form-item>
       <el-form-item label="课程名称" prop="courseName">
-        <el-input size="small" v-model="form.courseName" style="width:350px" placeholder="请输入课程名称"></el-input>
+        <el-input
+          size="small"
+          v-model="form.courseName"
+          style="width: 350px"
+          placeholder="请输入课程名称"
+        ></el-input>
       </el-form-item>
       <el-form-item label="课程标签" prop="characterTag">
         <el-input
           size="small"
-          style="width:350px"
+          style="width: 350px"
           v-model="form.characterTag"
           placeholder="请输入课程标签(以逗号分隔)"
         ></el-input>
@@ -44,7 +54,7 @@
       <el-form-item label="作业标签" prop="playTag">
         <el-input
           size="small"
-          style="width:350px"
+          style="width: 350px"
           v-model="form.playTag"
           placeholder="请输入作业标签(以逗号分隔)"
         ></el-input>
@@ -53,7 +63,7 @@
         <el-input
           size="small"
           v-model="form.teacherName"
-          style="width:350px"
+          style="width: 350px"
           auto-complete="off"
           placeholder="请输入课程老师"
         ></el-input>
@@ -61,7 +71,7 @@
       <el-form-item label="课程浏览数" prop="listenerCount">
         <el-input
           size="small"
-          style="width:350px"
+          style="width: 350px"
           v-model="form.listenerCount"
           auto-complete="off"
           type="number"
@@ -71,42 +81,82 @@
       <el-form-item label="课程所需积分" prop="unlockPoints">
         <el-input
           size="small"
-          style="width:350px"
+          style="width: 350px"
           v-model="form.unlockPoints"
           auto-complete="off"
-          
           placeholder="请输入课程所需积分"
         ></el-input>
       </el-form-item>
 
-  <el-form-item label="默认显示页面" prop="defaultCategory">
-            <el-select v-model="form.defaultCategory" filterable placeholder="请选择默认显示页面">              
-                  <el-option
+
+    <el-form-item label="课程状态" prop="isVail">
+          <el-select
+            v-model="form.isVail"
+            placeholder="请选择课程状态"
+          >
+            <el-option
+            v-for="item in isvalList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+          </el-select>
+        </el-form-item>
+
+      <el-form-item label="默认显示页面" prop="defaultCategory">
+        <el-select
+          v-model="form.defaultCategory"
+          filterable
+          placeholder="请选择默认显示页面"
+        >
+          <el-option
             v-for="item in selectAllEnumsCourseList"
             :key="item.enumValue"
             :label="item.enumName"
             :value="item.enumValue"
           ></el-option>
-            </el-select>
-          </el-form-item>
+        </el-select>
+      </el-form-item>
 
       <el-form-item label="课程有效时间" prop="unlockValidDay">
         <el-input
           size="small"
-          style="width:170px"
+          style="width: 170px"
           v-model="form.unlockValidDay"
           auto-complete="off"
-          
           placeholder="请输入课程有效时间"
-        ></el-input>天
+        ></el-input
+        >天
       </el-form-item>
       <el-form-item label="课程话题" prop="subjectId">
-        <el-select v-model="form.subjectId" filterable placeholder="请选择课程话题" style="width:350px">
+        <el-select
+          v-model="form.subjectId"
+          filterable
+          placeholder="请选择课程话题"
+          style="width: 350px"
+        >
           <el-option
             v-for="item in subjectsGetList"
             :key="item.subjectId"
             :label="item.subjectName"
             :value="item.subjectId"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+
+        <el-form-item label="企业专属" prop="enterpriseId">
+        <el-select
+          v-model="form.enterpriseId"
+          filterable
+          placeholder="请选择企业"
+          style="width: 350px"
+        >
+         <el-option value>请选择企业</el-option>
+          <el-option
+            v-for="item in enterpriseGetList"
+            :key="item.enterpriseId"
+            :label="item.enterpriseName"
+            :value="item.enterpriseId"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -116,7 +166,7 @@
           <el-radio label="0">否</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="封面图片" prop="coursePicUrl" style="display:block">
+      <el-form-item label="封面图片" prop="coursePicUrl" style="display: block">
         <el-upload
           class="avatar-uploader"
           :action="imgUrl"
@@ -125,34 +175,47 @@
           :before-upload="beforeAvatarUpload"
           :on-preview="handlePictureCardPreview"
         >
-          <img v-if="form.coursePicUrl" :src="form.coursePicUrl" class="avatar" />
+          <img
+            v-if="form.coursePicUrl"
+            :src="form.coursePicUrl"
+            class="avatar"
+          />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为700*265</div>
         </el-upload>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" type="primary" @click="submitAdd('form')">保存</el-button>
+        <el-button size="small" type="primary" @click="submitAdd('form')"
+          >保存</el-button
+        >
       </el-form-item>
     </el-form>
     <el-dialog :visible.sync="dialogVisible" id="imgpop">
-      <img width="100%" :src="dialogImageUrl" alt="">
+      <img width="100%" :src="dialogImageUrl" alt="" />
     </el-dialog>
   </div>
 </template>
 <script>
-import { coursePut, subjectsGet, courseGet, courseDetail,selectAllEnumsCourse} from "@/api/getData";
+import {
+  coursePut,
+  subjectsGet,
+  courseGet,
+  courseDetail,
+  selectAllEnumsCourse,
+  enterpriseGet
+} from "@/api/getData";
 import { imgUrl } from "@/config/env";
 export default {
   name: "First",
   data() {
     return {
-      dialogVisible:false,
-      dialogImageUrl:'',
-
+      dialogVisible: false,
+      dialogImageUrl: "",
+      enterpriseGetList: [],
       listLoading: false,
       imgUrl: imgUrl,
       subjectsGetList: [],
-      selectAllEnumsCourseList:[],
+      selectAllEnumsCourseList: [],
       courseList: [],
       linkShow: false,
       form: {
@@ -171,33 +234,48 @@ export default {
         linkId: "", //关联主课程ID
         playTag: "", //作业游戏标签
         playType: "录播", //播放类型
-        unlockPoints:0,//所需积分
-        unlockValidDay:0,//有效期
-        defaultCategory:""
+        unlockPoints: 0, //所需积分
+        unlockValidDay: 0, //有效期
+        defaultCategory: "",
+        enterpriseId:'' // 企业ID
       },
+       isvalList: [
+          {
+            value: '-1',
+            label: '下架' 
+          },
+          {
+            value: '1',
+            label: '上架' 
+          }
+      ],
       rules: {
         subjectId: [
-          { required: true, message: "请选择课程话题", trigger: "change" }
+          { required: true, message: "请选择课程话题", trigger: "change" },
         ],
         courseName: [
-          { required: true, message: "请输入课程名称", trigger: "blur" }
+          { required: true, message: "请输入课程名称", trigger: "blur" },
         ],
         teacherName: [
-          { required: true, message: "请输入课程老师", trigger: "blur" }
+          { required: true, message: "请输入课程老师", trigger: "blur" },
         ],
         coursePicUrl: [
-          { required: true, message: "请上传课程封面", trigger: "blur" }
+          { required: true, message: "请上传课程封面", trigger: "blur" },
         ],
         unlockPoints: [
-          { required: true, message: "请输入课程所需积分", trigger: "blur" }
+          { required: true, message: "请输入课程所需积分", trigger: "blur" },
         ],
         unlockValidDay: [
-          { required: true, message: "请输入课程有效时间", trigger: "blur" }
+          { required: true, message: "请输入课程有效时间", trigger: "blur" },
         ],
         defaultCategory: [
-          { required: true, message: "请输入课程默认显示页面", trigger: "blur" }
-        ]
-      }
+          {
+            required: true,
+            message: "请输入课程默认显示页面",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   created() {},
@@ -206,7 +284,7 @@ export default {
     // console.log("路由数据", data);
     this.form.courseId = data.courseId;
     this.getList();
-  
+    this.getenterprise();
   },
   methods: {
     async getList() {
@@ -217,7 +295,7 @@ export default {
         if (res.status == 200) {
           console.log(res.data);
           this.form = res.data;
-           console.log(this.form,"返回的数据");
+          console.log(this.form, "返回的数据");
           if (res.data.courseType == "1") {
             this.linkShow = false;
             this.form.courseType = "1";
@@ -231,6 +309,14 @@ export default {
           } else {
             this.form.isHot = "0";
           }
+          if(this.form.isVail!=null){
+            this.form.isVail=this.form.isVail+"";
+          }
+          // if(this.form.isVail==1){
+          //   this.form.isVail="1";
+          // }else{
+          //    this.form.isVail="-1";  
+          // }
           this.getSubject();
           this.getselectAllEnumsCourse();
           this.listLoading = false;
@@ -238,7 +324,7 @@ export default {
           this.listLoading = false;
           this.$message({
             type: "error",
-            message: res.msg
+            message: res.msg,
           });
           console.log(res.msg);
         }
@@ -246,7 +332,7 @@ export default {
         this.listLoading = false;
         this.$message({
           type: "error",
-          message: "请重试"
+          message: "请重试",
         });
       }
     },
@@ -272,38 +358,61 @@ export default {
           courseType: 1,
           isVail: 1,
           page: 1,
-          pageSize: 10000
+          pageSize: 10000,
         };
         const res = await courseGet(data);
         if (res.status == 200) {
           console.log("课程列表", res.data);
           this.courseList = res.data.list;
           var courseidList = [];
-          this.courseList.forEach(item => {
+          this.courseList.forEach((item) => {
             courseidList.push(item.courseId);
           });
-          var courseidStr=courseidList.toString()
-          var linkId=this.form.linkId;
-          console.log(courseidStr)
-          if(courseidStr.indexOf(linkId)==-1){
-            this.form.linkId=''
+          var courseidStr = courseidList.toString();
+          var linkId = this.form.linkId;
+        //  console.log(courseidStr);
+          if (courseidStr.indexOf(linkId) == -1) {
+            this.form.linkId = "";
           }
           this.listLoading = false;
         } else {
           this.$message({
             type: "error",
-            message: res.error
+            message: res.error,
           });
           console.log(res);
         }
       } catch (err) {
         this.$message({
           type: "error",
-          message: "请重试"
+          message: "请重试",
         });
         console.log(err);
       }
     },
+ // 获取企业列表
+    async getenterprise(e) {
+      try {
+        const res = await enterpriseGet();
+        if (res.status == 200) {
+          console.log("企业列表", res.data);
+          this.enterpriseGetList = res.data.list;
+        } else {
+          this.$message({
+            type: "error",
+            message: res.error,
+          });
+          console.log("企业列表", res);
+        }
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: "请重试",
+        });
+        console.log(err);
+      }
+    },
+
     // 获取话题列表
     async getSubject() {
       try {
@@ -316,28 +425,28 @@ export default {
         } else {
           this.$message({
             type: "error",
-            message: res.error
+            message: res.error,
           });
           console.log(res);
         }
       } catch (err) {
         this.$message({
           type: "error",
-          message: "请重试"
+          message: "请重试",
         });
         console.log(err);
       }
     },
 
-// 获取课程默认封面列表
+    // 获取课程默认封面列表
     async getselectAllEnumsCourse() {
       try {
         this.listLoading = true;
         const res = await selectAllEnumsCourse();
         if (res.status == 200) {
-           console.log("列表", res.data);
+          console.log("列表", res.data);
           this.selectAllEnumsCourseList = res.data;
-            console.log(this.selectAllEnumsCourseList,"列表");
+          console.log(this.selectAllEnumsCourseList, "列表");
           this.listLoading = false;
         } else {
           this.$message({
@@ -376,22 +485,22 @@ export default {
       this.form.coursePicUrl = file.url;
     },
     handlePictureCardPreview(file) {
-      console.log(file)
-        this.dialogImageUrl = file.response.url;
+      console.log(file);
+      this.dialogImageUrl = file.response.url;
 
-        var img = new Image()
-        img.src = this.dialogImageUrl
-        console.log(img.width ,img.height )
-        var width = img.width +"px"
-        var divShow = $('#imgpop .el-dialog')
-        console.log(divShow)
-        $(divShow).css("width",width)
+      var img = new Image();
+      img.src = this.dialogImageUrl;
+      console.log(img.width, img.height);
+      var width = img.width + "px";
+      var divShow = $("#imgpop .el-dialog");
+      console.log(divShow);
+      $(divShow).css("width", width);
 
-        this.dialogVisible = true;
+      this.dialogVisible = true;
     },
     //保存
     submitAdd(formName) {
-      this.$refs[formName].validate(async valid => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           console.log("课程新增", this.form);
           if (this.form.coursePicUrl != "") {
@@ -401,14 +510,14 @@ export default {
               if (res.status == 200) {
                 this.$message({
                   message: "提交成功",
-                  type: "success"
+                  type: "success",
                 });
                 this.listLoading = false;
                 this.back();
               } else {
                 this.$message({
                   type: "error",
-                  message: res.error
+                  message: res.error,
                 });
                 console.log(res);
                 this.listLoading = false;
@@ -420,14 +529,14 @@ export default {
                 if (res.status == 200) {
                   this.$message({
                     message: "提交成功",
-                    type: "success"
+                    type: "success",
                   });
                   this.listLoading = false;
                   this.back();
                 } else {
                   this.$message({
                     type: "error",
-                    message: res.error
+                    message: res.error,
                   });
                   console.log(res);
                   this.listLoading = false;
@@ -435,26 +544,26 @@ export default {
               } else {
                 this.$message({
                   type: "error",
-                  message: "请选择关联的主课程"
+                  message: "请选择关联的主课程",
                 });
               }
             }
           } else {
             this.$message({
               type: "error",
-              message: "请添加课程封面"
+              message: "请添加课程封面",
             });
           }
         } else {
           this.$message({
             type: "error",
-            message: "请将信息填写完整"
+            message: "请将信息填写完整",
           });
           return false;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -477,13 +586,13 @@ export default {
 }
 </style>
 <style >
-#imgpop .el-dialog{
+#imgpop .el-dialog {
   width: 70%;
 }
-#imgpop .el-dialog__header{
+#imgpop .el-dialog__header {
   padding: 0;
 }
-#imgpop .el-dialog__body{
+#imgpop .el-dialog__body {
   padding: 0;
 }
 </style>

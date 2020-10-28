@@ -22,7 +22,8 @@ const routes= [
     component: resolve => require(['@/views/resetPassword'], resolve),
     hidden: true,
     meta: {
-      requireAuth: false
+      requireAuth: false,
+      type: 'login'  // 是否需要判断是否登录,这里是需要判断
     }
   },
   {
@@ -37,7 +38,8 @@ const routes= [
         component: resolve => require(['@/views/course/course'], resolve),
         meta: {
           requireAuth: true,
-          keepAlive: true
+          keepAlive: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -46,7 +48,8 @@ const routes= [
         component: resolve =>
           require(['@/views/course/courseDetail'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -55,7 +58,8 @@ const routes= [
         component: resolve =>
           require(['@/views/course/courseAdd'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -64,7 +68,8 @@ const routes= [
         component: resolve =>
           require(['@/views/group/grade'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -73,7 +78,8 @@ const routes= [
         component: resolve =>
           require(['@/views/group/subject'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -82,7 +88,8 @@ const routes= [
         component: resolve =>
           require(['@/views/admin/adminAdd'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -91,7 +98,8 @@ const routes= [
         component: resolve =>
           require(['@/views/admin/adminEdit'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -100,7 +108,8 @@ const routes= [
         component: resolve =>
           require(['@/views/admin/adminList'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -109,7 +118,8 @@ const routes= [
         component: resolve =>
           require(['@/views/task/taskList'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -118,7 +128,8 @@ const routes= [
         component: resolve =>
           require(['@/views/task/taskDetial'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -127,7 +138,8 @@ const routes= [
         component: resolve =>
           require(['@/views/course/courseAddA'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -136,7 +148,8 @@ const routes= [
         component: resolve =>
           require(['@/views/course/courseResourcesDetail'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -145,7 +158,8 @@ const routes= [
         component: resolve =>
           require(['@/views/act/actList'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -154,7 +168,8 @@ const routes= [
         component: resolve =>
           require(['@/views/act/actAdd'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -163,7 +178,8 @@ const routes= [
         component: resolve =>
           require(['@/views/act/actEdit'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -172,7 +188,8 @@ const routes= [
         component: resolve =>
           require(['@/views/act/actDetial'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -180,7 +197,8 @@ const routes= [
         name: '作业列表',
         component: resolve => require(['@/views/homework/homework'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -188,7 +206,8 @@ const routes= [
         name: '作业详情',
         component: resolve =>require(['@/views/homework/homeworkDetail'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -196,7 +215,8 @@ const routes= [
         name: '用户列表',
         component: resolve => require(['@/views/user/user'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -204,7 +224,8 @@ const routes= [
         name: '用户详情',
         component: resolve =>require(['@/views/user/userDetail'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -212,7 +233,8 @@ const routes= [
         name: '课程维度统计详情',
         component: resolve =>require(['@/views/statics/platesCourseReView'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -220,7 +242,8 @@ const routes= [
         name: '用户维度统计详情',
         component: resolve =>require(['@/views/statics/userStatic'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -228,7 +251,8 @@ const routes= [
         name: '新增人数统计',
         component: resolve =>require(['@/views/statics/newStatics'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -236,7 +260,8 @@ const routes= [
         name: '消息列表',
         component: resolve =>require(['@/views/message/message'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -244,7 +269,8 @@ const routes= [
         name: '消息详情',
         component: resolve =>require(['@/views/message/messageDetails'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
       {
@@ -252,7 +278,8 @@ const routes= [
         name: '轮播图',
         component: resolve =>require(['@/views/banner/banner'], resolve),
         meta: {
-          requireAuth: true
+          requireAuth: true,
+          type: 'login'  // 是否需要判断是否登录,这里是需要判断
         }
       },
     ]
