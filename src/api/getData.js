@@ -124,7 +124,7 @@ export const changejifen = data => fetch('/wechat/updateStudentStudentIdentityOv
 
 export const toSubscribe = data => fetch('/wechat/updateStudentIsSubscribeByOPen', data, 'POST') // 邀请订阅
 
-
+export const updateUserDetails = data => fetch('/Student/updateStudent', data, 'POST') // 修改用户信息
 //统计
 //复刷板块
 export const plateList = data => fetch('/StudentBrowseDetal/selectPlatesReViewCount', data, 'GET') 
@@ -162,3 +162,5 @@ export const getTemID = data => fetch('/MessageTemplate/selectTemplateMessageAll
 export const postTemID = data => fetch('/MessageTemplate/sendMessageTemplate' , data, 'POST') // 发送消息模板
 
 
+// banner管理
+export const bannerList = data => fetch('/banner', data, 'GET') // 获取作业列表

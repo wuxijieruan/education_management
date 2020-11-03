@@ -21,26 +21,21 @@
         
         >
         <!-- <el-table-column align="center" type="selection" width="60"></el-table-column> -->
-        <el-table-column align="center" prop="banner_id" label="轮播图id" width="100"></el-table-column>
-        <el-table-column align="center" prop="banner_name"  label="图片名称" width="130"></el-table-column>
-        <el-table-column align="center" prop="banner_pic_url" label="图片" width="260">
+        <el-table-column align="center" prop="bannerId" label="轮播图id" width="100"></el-table-column>
+        <el-table-column align="center" prop="bannerName"  label="图片名称" width="130"></el-table-column>
+        <el-table-column align="center" prop="bannerPicUrl" label="图片" width="260">
           <template slot-scope="scope">
-      　　　　<img v-if="scope.row.banner_pic_url" :src="scope.row.banner_pic_url" width="190" height="80" class="head_pic"/>
+      　　　　<img v-if="scope.row.bannerPicUrl" :src="scope.row.bannerPicUrl" width="190" height="80" class="head_pic"/>
               <span v-else>无</span>
       　　</template>
         </el-table-column>
-        <el-table-column align="center" prop="priority" label="优先级" width="80"></el-table-column>
+        <el-table-column align="center" prop="bannerUrl" label="链接地址" width="260"></el-table-column>
+        <el-table-column align="center" prop="courseName" label="课程名称" width="260"></el-table-column>
         <el-table-column align="center" prop="isVail"  label="是否有效" min-width="50"></el-table-column>
-        <el-table-column align="center" prop="enterpriseId"  label="所属企业Id" width="180"></el-table-column>
+        <el-table-column align="center" prop="priority"  label="优先级" width="180"></el-table-column>
         <el-table-column align="center" prop="createTime"  label="创建时间" width="150"></el-table-column>
         <el-table-column align="center" label="操作" min-width="150" fixed="right">
-          <template slot-scope="scope">
-            <el-button size="small" type="primary" style="margin-left:10px">新增</el-button>
-            <el-button size="small" type="danger" style="margin-left:10px">删除</el-button>
-            <el-button size="small" type="success" style="margin-left:10px">启用</el-button>
-          
-            
-          </template>
+     
         </el-table-column>
       </el-table>
     <!-- 分页组件 -->
@@ -53,15 +48,13 @@
 import Pagination from "@/components/Pagination";
 import { baseUrl ,baseFileUrl} from '@/config/env'
 import {
-  getMessList
+  bannerList
 } from "@/api/getData";
 export default {
   data() {
     return {
       listLoading: false, //是显示加载
       list: [],
-      gradeGetList: [],
-      subjectsGetList: [],
       form: {
         page: 1,
         pageSize: 10
@@ -72,16 +65,12 @@ export default {
         pageSize: 10,
         total: 0
       },
-      batchDeletionStatus: false,
-      batchList: [],
       searchVisible: false,
-      hotCourseName: "",
-
       plist: {
         page: 1,
         pageSize: 10
       },
-      bannersList:[],//消息列表
+      bannersList:[],//bannerList
       searchList:{
         page: 1,
         pageSize: 10,
@@ -99,7 +88,7 @@ export default {
     
   },
   mounted() {
-    // this.getmessageList()
+     this.getmessageList()
     this.bannersList=[
       {
         banner_id:1,
@@ -114,45 +103,6 @@ export default {
   },
   methods: {
     // 导出
-    outExe() {
-                this.$confirm('此操作将导出excel文件, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.excelData = this.batchList //你要导出的数据list。
-                    this.export2Excel()
-                }).catch(() => {
-                
-                });
-    },
-    export2Excel() {
-                var that = this;
-                require.ensure([], () => {
-                    const { export_json_to_excel } = require('../../excel/Export2Excel'); //这里必须使用绝对路径
-                    const filterVal = ['activityName','studentName', 'studentAge', 'hwtype','courseName','createTime',"answerImg","answerTest"]; // 导出的表头名
-                    const tHeader = ['活动名称','宝贝昵称','年龄', '作业类型','课程','作业日期','图片','文字']; // 导出的表头字段名
-                    const list = that.excelData;
-                    const data = that.formatJson(filterVal, list);
-                    let datetime=new Date()
-                    var seperator1 = "-";
-                    var year = datetime.getFullYear();
-                    var month = datetime.getMonth() + 1;
-                    var strDate = datetime.getDate();
-                    if (month >= 1 && month <= 9) {
-                      month = "0" + month;
-                    }
-                    if (strDate >= 0 && strDate <= 9) {
-                      strDate = "0" + strDate;
-                    }
-                    var currentdate = year + seperator1 + month + seperator1 + strDate;
-                    export_json_to_excel(tHeader, data, `${currentdate}作业列表excel`);// 导出的表格名称，根据需要自己命名
-                })
-   },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => v[j]))
-    },
-  
   //搜索判定
   searchuser(){
     if(this.searchList!=[]){
@@ -194,6 +144,9 @@ reset() {
       this.pageparm.currentPage = 1;
       this.getmessageList();
 },
+
+
+
     // 搜索页面
     submitSearch() {
       this.searchList={
@@ -202,6 +155,8 @@ reset() {
        }
       this.searchVisible = true;
     },
+
+
     // 关闭弹出框
     closeDialog() {
       this.searchVisible = false; //搜索
@@ -214,7 +169,7 @@ reset() {
       try {
         this.listLoading = true;
         console.log('搜索消息列表',this.searchList)
-        const res = await getMessList(this.searchList);
+        const res = await bannerList(this.searchList);
         console.log("获取消息时返回",res);
         if(res.status==200){
           this.listLoading = false;

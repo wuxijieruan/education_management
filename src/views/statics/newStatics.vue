@@ -63,8 +63,8 @@
         >
           <el-table-column align="center" type="selection" width="60"></el-table-column>
           <el-table-column align="center" prop="useDate" label="日期"></el-table-column>
-          <el-table-column align="center" prop="newUserQtyTotalDay" label="总人数"></el-table-column>
-          <el-table-column align="center" prop="newTouristQtyTotalDay" label="游客"></el-table-column>
+          <el-table-column align="center" prop="newUserQtyTotalDay" label="总浏览数"></el-table-column>
+          <el-table-column align="center" prop="newTouristQtyTotalDay" label="总注册数"></el-table-column>
           <el-table-column align="center" prop="newComVipQtyTotalDay" label="初级VIP"></el-table-column>
           <el-table-column align="center" prop="newEnterpriseVipQtyTotalDay" label="企业VIP"></el-table-column>
           <el-table-column align="center" prop="xieCheng" label="携程"></el-table-column>
@@ -93,8 +93,8 @@
         >
           <el-table-column align="center" type="selection" width="60"></el-table-column>
           <el-table-column align="center" prop="useDate" label="日期"></el-table-column>
-          <el-table-column align="center" prop="newUserQtyPerDay" label="总人数"></el-table-column>
-          <el-table-column align="center" prop="newTouristQtyPerDay" label="游客"></el-table-column>
+          <el-table-column align="center" prop="newUserQtyPerDay" label="总浏览数"></el-table-column>
+          <el-table-column align="center" prop="newTouristQtyPerDay" label="总注册数"></el-table-column>
           <el-table-column align="center" prop="newComVipQtyPerDay" label="初级VIP"></el-table-column>
           <el-table-column align="center" prop="newEnterpriseVipQtyPerDay" label="企业VIP"></el-table-column>
           <el-table-column align="center" prop="xieCheng" label="携程"></el-table-column>
@@ -307,8 +307,8 @@ export default {
           ]; // 导出的表头名
           const tHeader = [
             "日期",
-            "总人数",
-            "游客",
+            "总浏览数",
+            "总注册数",
             "初级VIP",
             "企业VIP",
             "携程",
@@ -357,8 +357,8 @@ export default {
           ]; // 导出的表头名
           const tHeader = [
             "日期",
-            "总人数",
-            "游客",
+            "总浏览数",
+            "总注册数",
             "初级VIP",
             "企业VIP",
             "携程",
@@ -428,6 +428,9 @@ export default {
       }
     },
     searchlist() {
+      this.formpage.page = 1;
+      this.pageparm.currentPage = 1;
+     // localStorage.currentPage = 1;
       if (this.form.resourceType == 0) {
         this.getnew();
       } else if (this.form.resourceType == 1) {

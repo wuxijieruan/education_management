@@ -74,6 +74,7 @@ export default {
         this.logining = true;
         const res = await login(this.ruleForm.username, this.ruleForm.password);
         if (res.status == 200) {
+          console.log("res.data",res.data);
           this.logining = false;
           // 缓存用户个人信息
           localStorage.userdata = JSON.stringify(res.data);
