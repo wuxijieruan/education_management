@@ -73,6 +73,8 @@
           <el-table-column align="center" prop="nanhang" label="南航"></el-table-column>
           <el-table-column align="center" prop="mierreading" label="米儿阅读"></el-table-column>
           <el-table-column align="center" prop="shaqgjsyyey" label="上海安乔国际双语幼儿园"></el-table-column>
+           <el-table-column align="center" prop="pgytsg" label="蒲公英童书馆"></el-table-column>
+          <el-table-column align="center" prop="shwksyxx" label="上海万科双语学校"></el-table-column>
         </el-table>
         <!-- 分页组件 -->
         <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
@@ -103,6 +105,8 @@
           <el-table-column align="center" prop="nanhang" label="南航"></el-table-column>
           <el-table-column align="center" prop="mierreading" label="米儿阅读"></el-table-column>
           <el-table-column align="center" prop="shaqgjsyyey" label="上海安乔国际双语幼儿园"></el-table-column>
+           <el-table-column align="center" prop="pgytsg" label="蒲公英童书馆"></el-table-column>
+          <el-table-column align="center" prop="shwksyxx" label="上海万科双语学校"></el-table-column>
           
         </el-table>
         <!-- 分页组件 -->
@@ -303,7 +307,9 @@ export default {
             "qianCheng",
             "nanhang",
             "mierreading",
-            "shaqgjsyyey"
+            "shaqgjsyyey",
+            "pgytsg",
+            "shwksyxx"
           ]; // 导出的表头名
           const tHeader = [
             "日期",
@@ -316,7 +322,9 @@ export default {
             "前程照明",
             "南航",
             "米儿阅读",
-            "上海安乔国际双语幼儿园"
+            "上海安乔国际双语幼儿园",
+            "蒲公英童书馆",
+            "上海万科双语学校"
           ]; // 导出的表头字段名
           const list = that.excelData;
           const data = that.formatJson(filterVal, list);
@@ -353,8 +361,11 @@ export default {
             "qianCheng",
             "nanhang",
             "mierreading",
-            "shaqgjsyyey"
+            "shaqgjsyyey",
+            "pgytsg",
+            "shwksyxx"
           ]; // 导出的表头名
+           
           const tHeader = [
             "日期",
             "总浏览数",
@@ -366,7 +377,9 @@ export default {
             "前程照明",
              "南航",
             "米儿阅读",
-            "上海安乔国际双语幼儿园"
+            "上海安乔国际双语幼儿园",
+            "蒲公英童书馆",
+            "上海万科双语学校"
           ]; // 导出的表头字段名
           const list = that.excelData;
           const data = that.formatJson(filterVal, list);

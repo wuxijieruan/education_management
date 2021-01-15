@@ -556,12 +556,20 @@ export default {
         var suffix = urlname.substring(index2);
         // console.log(suffix);
         if (
-          suffix === ".mp4" ||
+       suffix === ".mp4" ||
+          suffix === ".MP4" ||
+          suffix === ".Mp4" ||
+          suffix === ".mP4" ||
           suffix === ".avi" ||
+          suffix === ".AVI" ||
           suffix === ".mov" ||
+          suffix === ".MOV" ||
           suffix === ".rmvb" ||
+          suffix === ".RMVB" ||
           suffix === ".flv" ||
-          suffix === ".3gp"
+          suffix === ".FLV" ||
+          suffix === ".3gp"||
+          suffix === ".3GP" 
         ) {
           _this.fullscreenLoading = true;
           var newVideoCreateTime = Date.parse(new Date());

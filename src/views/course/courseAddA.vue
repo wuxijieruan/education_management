@@ -688,11 +688,19 @@ export default {
         // console.log(suffix);
         if (
           suffix === ".mp4" ||
+          suffix === ".MP4" ||
+          suffix === ".Mp4" ||
+          suffix === ".mP4" ||
           suffix === ".avi" ||
+          suffix === ".AVI" ||
           suffix === ".mov" ||
+          suffix === ".MOV" ||
           suffix === ".rmvb" ||
+          suffix === ".RMVB" ||
           suffix === ".flv" ||
-          suffix === ".3gp"
+          suffix === ".FLV" ||
+          suffix === ".3gp"||
+          suffix === ".3GP" 
         ) {
           _this.fullscreenLoading = true;
           var newVideoCreateTime = Date.parse(new Date());
@@ -890,6 +898,7 @@ export default {
               file: file,
             };
           }
+           console.log(data);
           $.ajax({
             url: this.VideoUrl,
             type: "post",
@@ -907,7 +916,7 @@ export default {
             error: function (res) {
               console.log(res);
               _this.fullscreenLoading = false;
-              this.$message({
+              _this.$message({
                 type: "error",
                 message: res.msg,
               });

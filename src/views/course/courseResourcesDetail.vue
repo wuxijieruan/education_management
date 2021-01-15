@@ -600,7 +600,7 @@ export default {
         imgList.push({ url, name, response, courseResourceBundleFileId });
       });
       this.imgList = imgList;
-      // console.log(this.imgList);
+       console.log(this.imgList,"sdsdsdsdsdsdsds");
     }
     if (
       data.data.pictureBookFileList != "" &&
@@ -722,11 +722,19 @@ export default {
         // console.log(suffix);
         if (
           suffix === ".mp4" ||
+          suffix === ".MP4" ||
+          suffix === ".Mp4" ||
+          suffix === ".mP4" ||
           suffix === ".avi" ||
+          suffix === ".AVI" ||
           suffix === ".mov" ||
+          suffix === ".MOV" ||
           suffix === ".rmvb" ||
+          suffix === ".RMVB" ||
           suffix === ".flv" ||
-          suffix === ".3gp"
+          suffix === ".FLV" ||
+          suffix === ".3gp"||
+          suffix === ".3GP" 
         ) {
           _this.fullscreenLoading = true;
           var newVideoCreateTime = Date.parse(new Date());
