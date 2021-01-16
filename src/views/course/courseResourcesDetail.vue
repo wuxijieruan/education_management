@@ -1,61 +1,105 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:10px;">
+    <el-breadcrumb
+      separator-class="el-icon-arrow-right"
+      style="margin-bottom: 10px"
+    >
       <el-breadcrumb-item>课程管理</el-breadcrumb-item>
       <el-breadcrumb-item>课程列表</el-breadcrumb-item>
-      <el-breadcrumb-item v-show="resourceTypeA">添加课程导读</el-breadcrumb-item>
-      <el-breadcrumb-item v-show="resourceTypeB">添加课程绘本</el-breadcrumb-item>
-      <el-breadcrumb-item v-show="resourceTypeC">添加课程知识点</el-breadcrumb-item>
-      <el-breadcrumb-item v-show="resourceTypeD">添加课程互动游戏</el-breadcrumb-item>
-      <el-breadcrumb-item v-show="resourceTypeE">添加课程互动作业</el-breadcrumb-item>
+      <el-breadcrumb-item v-show="resourceTypeA"
+        >添加课程导读</el-breadcrumb-item
+      >
+      <el-breadcrumb-item v-show="resourceTypeB"
+        >添加课程绘本</el-breadcrumb-item
+      >
+      <el-breadcrumb-item v-show="resourceTypeC"
+        >添加课程知识点</el-breadcrumb-item
+      >
+      <el-breadcrumb-item v-show="resourceTypeD"
+        >添加课程互动游戏</el-breadcrumb-item
+      >
+      <el-breadcrumb-item v-show="resourceTypeE"
+        >添加课程互动作业</el-breadcrumb-item
+      >
     </el-breadcrumb>
-    <el-button size="small" type="danger" style="margin: 20px 0;" @click="back">返回列表</el-button>
+    <el-button size="small" type="danger" style="margin: 20px 0" @click="back"
+      >返回列表</el-button
+    >
     <el-button size="small" type="primary" @click="submit()">保存</el-button>
-    <el-form label-width="200px" :model="form" ref="form" element-loading-text="拼命加载中">
-      <el-form-item label="导读名称" prop="resourceTitle" v-show="resourceTypeA">
+    <el-form
+      label-width="200px"
+      :model="form"
+      ref="form"
+      element-loading-text="拼命加载中"
+    >
+      <el-form-item
+        label="导读名称"
+        prop="resourceTitle"
+        v-show="resourceTypeA"
+      >
         <el-input
           size="small"
           v-model="form.resourceTitle"
-          style="width:350px"
+          style="width: 350px"
           placeholder="请输入导读名称"
         ></el-input>
       </el-form-item>
-      <el-form-item label="绘本名称" prop="resourceTitle" v-show="resourceTypeB">
+      <el-form-item
+        label="绘本名称"
+        prop="resourceTitle"
+        v-show="resourceTypeB"
+      >
         <el-input
           size="small"
           v-model="form.resourceTitle"
-          style="width:350px"
+          style="width: 350px"
           placeholder="请输入绘本名称"
         ></el-input>
       </el-form-item>
-      <el-form-item label="知识点名称" prop="resourceTitle" v-show="resourceTypeC">
+      <el-form-item
+        label="知识点名称"
+        prop="resourceTitle"
+        v-show="resourceTypeC"
+      >
         <el-input
           size="small"
           v-model="form.resourceTitle"
-          style="width:350px"
+          style="width: 350px"
           placeholder="请输入知识点名称"
         ></el-input>
       </el-form-item>
 
-      <el-form-item label="知识点互动游戏名称" prop="resourceTitle" v-show="resourceTypeD">
+      <el-form-item
+        label="知识点互动游戏名称"
+        prop="resourceTitle"
+        v-show="resourceTypeD"
+      >
         <el-input
           size="small"
           v-model="form.resourceTitle"
-          style="width:350px"
+          style="width: 350px"
           placeholder="请输入知识点互动游戏名称"
         ></el-input>
       </el-form-item>
-      <el-form-item label="* 作业名称" prop="resourceTitle" v-show="resourceTypeE">
+      <el-form-item
+        label="* 作业名称"
+        prop="resourceTitle"
+        v-show="resourceTypeE"
+      >
         <el-input
           size="small"
           v-model="form.resourceTitle"
-          style="width:350px"
+          style="width: 350px"
           placeholder="请输入作业名称"
         ></el-input>
       </el-form-item>
       <el-form-item label="适合年龄段" prop="gradeId" v-show="resourceTypeH">
-        <el-select v-model="form.gradeId" placeholder="请选择适合年龄段" style="width:350px">
+        <el-select
+          v-model="form.gradeId"
+          placeholder="请选择适合年龄段"
+          style="width: 350px"
+        >
           <el-option
             v-for="item in gradeGetList"
             :key="item.gradeId"
@@ -64,15 +108,22 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <div style="margin-left:130px;margin-bottom: 20px;" v-show="resourceTypeF">
+      <div
+        style="margin-left: 130px; margin-bottom: 20px"
+        v-show="resourceTypeF"
+      >
         <el-button size="small" @click="videoType">+ 视频</el-button>
         <el-button size="small" @click="audioType">+ 音频</el-button>
         <el-button size="small" @click="imgType">+ 图片</el-button>
-        <el-button size="small" @click="pictureBookType" v-show="resourceTypeG">+ 电子书</el-button>
+        <el-button size="small" @click="pictureBookType" v-show="resourceTypeG"
+          >+ 电子书</el-button
+        >
       </div>
 
       <el-form-item label="课程视频" v-show="videoShow">
-        <el-button size="small" type="primary" @click="VideoAdd">上传视频</el-button>
+        <el-button size="small" type="primary" @click="VideoAdd"
+          >上传视频</el-button
+        >
       </el-form-item>
       <video-player
         class="video-player"
@@ -80,7 +131,7 @@
         :playsinline="true"
         :options="playerOptions"
         v-if="playerOptions.sources"
-        style="margin-left:130px;margin-bottom: 20px;"
+        style="margin-left: 130px; margin-bottom: 20px"
       ></video-player>
       <!-- 视频列表 -->
       <el-table
@@ -91,11 +142,20 @@
         highlight-current-row
         border
         element-loading-text="拼命加载中"
-        style="width: 80%;margin-left:130px;margin-bottom: 20px;"
-        v-if="VideoList!=''"
+        style="width: 80%; margin-left: 130px; margin-bottom: 20px"
+        v-if="VideoList != ''"
       >
-        <el-table-column align="center" prop="fileName" label="视频名称" width="200"></el-table-column>
-        <el-table-column align="center" prop="fileUrl" label="视频地址"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileName"
+          label="视频名称"
+          width="200"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileUrl"
+          label="视频地址"
+        ></el-table-column>
         <el-table-column align="center" prop="fileImgUrl" label="视频封面">
           <template slot-scope="scope">
             <img
@@ -107,27 +167,58 @@
             <span v-else>无</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
-        <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
-        <el-table-column align="center" prop="fileContentTag" label="内容标签" width="100"></el-table-column>
-        <el-table-column align="center" prop="fileIndex" label="内容标签" width="100"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileLanguageTag"
+          label="语种标签"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileSceneTypeTag"
+          label="场景类型标签"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileContentTag"
+          label="内容标签"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileIndex"
+          label="内容标签"
+          width="100"
+        ></el-table-column>
         <el-table-column align="center" label="操作" width="240">
           <template slot-scope="scope">
-            <el-button size="small" type="primary" @click="Videoedit(scope.row)">编辑</el-button>
-            <el-button size="small" type="primary" @click="VideoPlay(scope.row.fileUrl)">播放</el-button>
-            <el-button size="small" type="danger" @click="VideoDel(scope.row)">删除</el-button>
+            <el-button size="small" type="primary" @click="Videoedit(scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              size="small"
+              type="primary"
+              @click="VideoPlay(scope.row.fileUrl)"
+              >播放</el-button
+            >
+            <el-button size="small" type="danger" @click="VideoDel(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
 
       <el-form-item label="课程音频" v-show="audioShow">
-        <el-button size="small" type="primary" @click="audioAdd">上传音频</el-button>
+        <el-button size="small" type="primary" @click="audioAdd"
+          >上传音频</el-button
+        >
       </el-form-item>
       <audio
         v-if="audioUrl"
         :src="audioUrl"
         controls
-        style="margin-left:130px;margin-bottom: 20px;"
+        style="margin-left: 130px; margin-bottom: 20px"
       ></audio>
       <!-- 音频列表 -->
       <el-table
@@ -138,11 +229,20 @@
         highlight-current-row
         border
         element-loading-text="拼命加载中"
-        style="width: 80%;margin-left:130px;margin-bottom: 20px;"
-        v-if="audioList!=''"
+        style="width: 80%; margin-left: 130px; margin-bottom: 20px"
+        v-if="audioList != ''"
       >
-        <el-table-column align="center" prop="fileName" label="音频名称" width="200"></el-table-column>
-        <el-table-column align="center" prop="fileUrl" label="音频地址"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileName"
+          label="音频名称"
+          width="200"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileUrl"
+          label="音频地址"
+        ></el-table-column>
         <el-table-column align="center" prop="fileImgUrl" label="音频封面">
           <template slot-scope="scope">
             <img
@@ -155,15 +255,44 @@
             <span v-else>无</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="teacherName" label="主讲老师" width="150"></el-table-column>
-        <el-table-column align="center" prop="fileLanguageTag" label="语种标签" width="100"></el-table-column>
-        <el-table-column align="center" prop="fileSceneTypeTag" label="场景类型标签" width="100"></el-table-column>
-        <el-table-column align="center" prop="fileContentTag" label="内容标签" width="100"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="teacherName"
+          label="主讲老师"
+          width="150"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileLanguageTag"
+          label="语种标签"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileSceneTypeTag"
+          label="场景类型标签"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileContentTag"
+          label="内容标签"
+          width="100"
+        ></el-table-column>
         <el-table-column align="center" label="操作" width="240">
           <template slot-scope="scope">
-            <el-button size="small" type="primary" @click="audioedit(scope.row)">编辑</el-button>
-            <el-button size="small" type="primary" @click="audioPlay(scope.row.fileUrl)">播放</el-button>
-            <el-button size="small" type="danger" @click="audioDel(scope.row)">删除</el-button>
+            <el-button size="small" type="primary" @click="audioedit(scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              size="small"
+              type="primary"
+              @click="audioPlay(scope.row.fileUrl)"
+              >播放</el-button
+            >
+            <el-button size="small" type="danger" @click="audioDel(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -183,7 +312,9 @@
       </el-form-item>
 
       <el-form-item label="课程电子书" v-show="pictureBookShow">
-        <el-button size="small" type="primary" @click="pictureBookAdd">上传电子书</el-button>
+        <el-button size="small" type="primary" @click="pictureBookAdd"
+          >上传电子书</el-button
+        >
       </el-form-item>
       <!-- 电子书列表 -->
       <el-table
@@ -194,34 +325,63 @@
         highlight-current-row
         border
         element-loading-text="拼命加载中"
-        style="width: 80%;margin-left:130px;margin-bottom: 20px;"
-        v-if="pictureBookList!=''"
+        style="width: 80%; margin-left: 130px; margin-bottom: 20px"
+        v-if="pictureBookList != ''"
       >
-        <el-table-column align="center" prop="fileName" label="电子书名称" width="200"></el-table-column>
-        <el-table-column align="center" prop="fileUrl" label="电子书地址"></el-table-column>
-        <el-table-column align="center" prop="fileImgUrl" label="电子书图片" width="200">
+        <el-table-column
+          align="center"
+          prop="fileName"
+          label="电子书名称"
+          width="200"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileUrl"
+          label="电子书地址"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fileImgUrl"
+          label="电子书图片"
+          width="200"
+        >
           <template slot-scope="scope">
             <img :src="scope.row.fileImgUrl" alt class="fileImgUrl" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="100">
           <template slot-scope="scope">
-            <el-button size="small" type="danger" @click="pictureBookDel(scope.row)">删除</el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="pictureBookDel(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </el-form>
 
     <!-- 上传视频 -->
-    <el-dialog title="视频内容" width="900px" :visible.sync="VideoVisible" @click="closeVideoDialog">
-      <el-form label-width="120px" :model="Videoform" ref="Videoform" style="width:850px">
+    <el-dialog
+      title="视频内容"
+      width="900px"
+      :visible.sync="VideoVisible"
+      @click="closeVideoDialog"
+    >
+      <el-form
+        label-width="120px"
+        :model="Videoform"
+        ref="Videoform"
+        style="width: 850px"
+      >
         <el-form-item label="* 视频名称" prop="fileName">
           <el-input
             size="small"
             v-model="Videoform.fileName"
             auto-complete="off"
             placeholder="请输入视频名称"
-            style="width:90%"
+            style="width: 90%"
           ></el-input>
         </el-form-item>
         <el-form-item label="* 视频地址" prop="fileUrl">
@@ -236,11 +396,11 @@
             v-model="Videoform.fileUrl"
             auto-complete="off"
             placeholder="腾讯视频请直接输入VID"
-            style="width:80%"
+            style="width: 80%"
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="视频图片" prop="fileImgUrl" style="display:block">
+        <el-form-item label="视频图片" prop="fileImgUrl" style="display: block">
           <el-upload
             class="avatar-uploader"
             :action="imgUrl"
@@ -249,7 +409,11 @@
             :before-upload="beforeAvatarUpload"
             :on-preview="handlePictureCardPreview"
           >
-            <img v-if="Videoform.fileImgUrl" :src="Videoform.fileImgUrl" class="avatar" />
+            <img
+              v-if="Videoform.fileImgUrl"
+              :src="Videoform.fileImgUrl"
+              class="avatar"
+            />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <div slot="tip" class="el-upload__tip">图片最佳上传为长方形</div>
           </el-upload>
@@ -261,7 +425,7 @@
             v-model="Videoform.fileLanguageTag"
             auto-complete="off"
             placeholder="请输入语种标签"
-            style="width:90%"
+            style="width: 90%"
           ></el-input>
         </el-form-item>
         <el-form-item label="场景类型标签" prop="fileSceneTypeTag">
@@ -270,7 +434,7 @@
             v-model="Videoform.fileSceneTypeTag"
             auto-complete="off"
             placeholder="请输入场景类型标签"
-            style="width:90%"
+            style="width: 90%"
           ></el-input>
         </el-form-item>
         <el-form-item label="内容标签" prop="fileContentTag">
@@ -279,13 +443,15 @@
             v-model="Videoform.fileContentTag"
             auto-complete="off"
             placeholder="请输入内容标签"
-            style="width:90%"
+            style="width: 90%"
           ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeVideoDialog">取消</el-button>
-        <el-button type="primary" @click="submitVideoUrl('Videoform')">确定</el-button>
+        <el-button type="primary" @click="submitVideoUrl('Videoform')"
+          >确定</el-button
+        >
       </span>
     </el-dialog>
 
@@ -297,17 +463,22 @@
       @click="closeaudioDialog"
       close="closeaudioDialog"
     >
-      <el-form label-width="120px" :model="audioform" ref="audioform" style="width:850px">
+      <el-form
+        label-width="120px"
+        :model="audioform"
+        ref="audioform"
+        style="width: 850px"
+      >
         <el-form-item label="* 音频名称" prop="fileName">
           <el-input
             size="small"
             v-model="audioform.fileName"
             auto-complete="off"
             placeholder="请输入音频名称"
-            style="width:90%"
+            style="width: 90%"
           ></el-input>
         </el-form-item>
-        <el-form-item label="* 音频地址" prop="fileUrl">
+        <!-- <el-form-item label="* 音频地址" prop="fileUrl">
           <input
             type="file"
             v-loading.fullscreen.lock="fullscreenLoading"
@@ -321,8 +492,38 @@
             placeholder="请输入音频地址"
             style="width:80%"
           ></el-input>
+        </el-form-item> -->
+
+        <!--  :on-progress="uploadVideoProcess" -->
+        <el-form-item label="音频地址" prop="fileUrl">
+          <el-upload
+            :show-file-list="false"
+            :on-success="onSuccess"
+            :on-error="onError"
+            :before-upload="beforeUpload"
+            :on-remove="handleRemove"
+            :action="upLoadMp3File"
+            accept=".mp3,.MP3,Mp3,.mP3"
+            v-loading.fullscreen.lock="fullscreenLoading"
+            element-loading-text="拼命加载中，正在对上传文件进行技术处理，此过程可能需要几分钟，请耐心等待"
+          >
+            <el-button plain type="primary">选择音频</el-button>
+          </el-upload>
+          <!-- 进度条 -->
+          <el-progress
+            v-if="progressFlag"
+            :percentage="loadProgress"
+          ></el-progress>
+          <el-input
+            size="small"
+            v-model="audioform.fileUrl"
+            auto-complete="off"
+            placeholder="请输入音频地址"
+            style="width: 90%"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="封面图片" prop="fileImgUrl" style="display:block">
+
+        <el-form-item label="封面图片" prop="fileImgUrl" style="display: block">
           <el-upload
             class="avatar-uploader"
             :action="imgUrl"
@@ -331,7 +532,11 @@
             :before-upload="beforeAvatarUpload"
             :on-preview="handlePictureCardPreview"
           >
-            <img v-if="audioform.fileImgUrl" :src="audioform.fileImgUrl" class="avatar" />
+            <img
+              v-if="audioform.fileImgUrl"
+              :src="audioform.fileImgUrl"
+              class="avatar"
+            />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <div slot="tip" class="el-upload__tip">图片最佳上传为正方形</div>
           </el-upload>
@@ -342,7 +547,7 @@
             v-model="audioform.teacherName"
             auto-complete="off"
             placeholder="请输入主讲老师"
-            style="width:90%"
+            style="width: 90%"
           ></el-input>
         </el-form-item>
         <el-form-item label="语种标签" prop="fileLanguageTag">
@@ -351,7 +556,7 @@
             v-model="audioform.fileLanguageTag"
             auto-complete="off"
             placeholder="请输入语种标签"
-            style="width:90%"
+            style="width: 90%"
           ></el-input>
         </el-form-item>
         <el-form-item label="场景类型标签" prop="fileSceneTypeTag">
@@ -360,7 +565,7 @@
             v-model="audioform.fileSceneTypeTag"
             auto-complete="off"
             placeholder="请输入场景类型标签"
-            style="width:90%"
+            style="width: 90%"
           ></el-input>
         </el-form-item>
         <el-form-item label="内容标签" prop="fileContentTag">
@@ -369,7 +574,7 @@
             v-model="audioform.fileContentTag"
             auto-complete="off"
             placeholder="请输入内容标签"
-            style="width:90%"
+            style="width: 90%"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -390,7 +595,7 @@
         label-width="120px"
         :model="pictureBookform"
         ref="pictureBookform"
-        style="width:850px"
+        style="width: 850px"
       >
         <el-form-item label="* 电子书名称" prop="fileName">
           <el-input
@@ -398,7 +603,7 @@
             v-model="pictureBookform.fileName"
             auto-complete="off"
             placeholder="请输入电子书名称"
-            style="width:90%"
+            style="width: 90%"
           ></el-input>
         </el-form-item>
         <el-form-item label="* 电子书地址" prop="fileUrl">
@@ -413,7 +618,7 @@
             v-model="pictureBookform.fileUrl"
             auto-complete="off"
             placeholder="请输入电子书地址"
-            style="width:80%"
+            style="width: 80%"
           ></el-input>
         </el-form-item>
         <el-form-item label="* 绘本封面图片" prop="fileImgUrl">
@@ -425,9 +630,15 @@
             :before-upload="beforeAvatarUpload"
             :on-preview="handlePictureCardPreview"
           >
-            <img v-if="pictureBookform.fileImgUrl" :src="pictureBookform.fileImgUrl" class="avatar" />
+            <img
+              v-if="pictureBookform.fileImgUrl"
+              :src="pictureBookform.fileImgUrl"
+              class="avatar"
+            />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <div slot="tip" class="el-upload__tip">图片最佳上传尺寸为265*265</div>
+            <div slot="tip" class="el-upload__tip">
+              图片最佳上传尺寸为265*265
+            </div>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -455,13 +666,14 @@ import {
   imagesUrl,
   newVideoUrl,
   zipFileUrl,
+  upLoadMp3File,
 } from "@/config/env";
 export default {
   data() {
     return {
       dialogVisible: false,
       dialogImageUrl: "",
-
+      upLoadMp3File: upLoadMp3File,
       newVideoUrl: newVideoUrl,
       VideoUrl: VideoUrl,
       imgUrl: imgUrl,
@@ -541,6 +753,8 @@ export default {
       audioVisible: false,
       pictureBookVisible: false,
       // workImgUrl: ""
+      loadProgress: 0, // 动态显示进度条
+      progressFlag: false, // 关闭进度条
     };
   },
   // 注册组件
@@ -600,7 +814,7 @@ export default {
         imgList.push({ url, name, response, courseResourceBundleFileId });
       });
       this.imgList = imgList;
-       console.log(this.imgList,"sdsdsdsdsdsdsds");
+      console.log(this.imgList, "sdsdsdsdsdsdsds");
     }
     if (
       data.data.pictureBookFileList != "" &&
@@ -626,6 +840,52 @@ export default {
     },
   },
   methods: {
+    uploadVideoProcess(event, file, fileList) {
+      this.progressFlag = true; // 显示进度条
+      this.loadProgress = parseInt(event.percent); // 动态获取文件上传进度
+      if (this.loadProgress >= 100) {
+        this.loadProgress = 100;
+        setTimeout(() => {
+          this.progressFlag = false;
+        }, 1000); // 一秒后关闭进度条
+      }
+    },
+
+    //js方法
+    handleRemove(file, fileList) {},
+
+    /**
+     * 上传之前回调函数
+     */
+    beforeUpload(file) {
+      // console.log(file.name);
+      this.fullscreenLoading = true;
+      this.uploaDialog = true;
+    },
+    /**
+     * 上传失败回调函数
+     */
+    onError(err, file, fileList) {
+      this.enabledUploadBtn = false;
+      this.fullscreenLoading = false;
+      this.$message({
+        message: "上传失败",
+        type: "error",
+      });
+    },
+    /**
+     * 上传成功回调函数
+     */
+    onSuccess(response, file, fileList) {
+      this.enabledUploadBtn = false;
+      this.fullscreenLoading = false;
+      //console.log(response);
+      this.$message({
+        message: "上传成功",
+        type: "success",
+      });
+      this.audioform.fileUrl = response.url;
+    },
     videoType() {
       this.videoShow = true;
     },
@@ -733,8 +993,8 @@ export default {
           suffix === ".RMVB" ||
           suffix === ".flv" ||
           suffix === ".FLV" ||
-          suffix === ".3gp"||
-          suffix === ".3GP" 
+          suffix === ".3gp" ||
+          suffix === ".3GP"
         ) {
           _this.fullscreenLoading = true;
           var newVideoCreateTime = Date.parse(new Date());
@@ -792,16 +1052,18 @@ export default {
       console.log(this.Videoform);
       if (this.Videoform.fileName != "") {
         if (this.Videoform.fileUrl != "") {
-          console.log(this.Videoform.fileUrl.indexOf("https") != -1,"this.Videoform.fileUrl.");
-          if ((this.Videoform.fileUrl.indexOf("https") == -1)) {
-            if(this.Videoform.fileImgUrl == ""){
+          console.log(
+            this.Videoform.fileUrl.indexOf("https") != -1,
+            "this.Videoform.fileUrl."
+          );
+          if (this.Videoform.fileUrl.indexOf("https") == -1) {
+            if (this.Videoform.fileImgUrl == "") {
               this.$message({
-              type: "error",
-              message: "当前是外部链接视频，无法获取其封面，请手动上传封面",
-            });
-            return;
+                type: "error",
+                message: "当前是外部链接视频，无法获取其封面，请手动上传封面",
+              });
+              return;
             }
-            
           }
 
           var fileUrl = this.Videoform.fileUrl;
@@ -903,74 +1165,74 @@ export default {
       };
       this.audioVisible = false;
     },
-    uploadaudio() {
-      //上传音频
-      var _this = this;
-      var audiofile = event.target.files;
-      // console.log(audiofile);
-      var myfile = audiofile[0];
-      if (myfile != undefined) {
-        // console.log(myfile);
-        var urlname = myfile.name;
-        var index2 = urlname.lastIndexOf(".");
-        var suffix = urlname.substring(index2);
-        // console.log(suffix);
-        if (
-          suffix === ".cd" ||
-          suffix === ".ogg" ||
-          suffix === ".mp3" ||
-          suffix === ".MP3" ||
-          suffix === ".asf.wma" ||
-          suffix === ".wav" ||
-          suffix === ".mp3pro" ||
-          suffix === ".rm" ||
-          suffix === ".real" ||
-          suffix === ".ape" ||
-          suffix === ".module" ||
-          suffix === ".midi" ||
-          suffix === ".vqf"
-        ) {
-          _this.fullscreenLoading = true;
-          var newaudioCreateTime = Date.parse(new Date());
-          var copyFile = new File([myfile], `${newaudioCreateTime}${suffix}`);
-          // console.log(copyFile);
-          var file = new FormData();
-          file.append("file", copyFile);
-          file.append("submit", false);
+    // uploadaudio() {
+    //   //上传音频
+    //   var _this = this;
+    //   var audiofile = event.target.files;
+    //   // console.log(audiofile);
+    //   var myfile = audiofile[0];
+    //   if (myfile != undefined) {
+    //     // console.log(myfile);
+    //     var urlname = myfile.name;
+    //     var index2 = urlname.lastIndexOf(".");
+    //     var suffix = urlname.substring(index2);
+    //     // console.log(suffix);
+    //     if (
+    //       suffix === ".cd" ||
+    //       suffix === ".ogg" ||
+    //       suffix === ".mp3" ||
+    //       suffix === ".MP3" ||
+    //       suffix === ".asf.wma" ||
+    //       suffix === ".wav" ||
+    //       suffix === ".mp3pro" ||
+    //       suffix === ".rm" ||
+    //       suffix === ".real" ||
+    //       suffix === ".ape" ||
+    //       suffix === ".module" ||
+    //       suffix === ".midi" ||
+    //       suffix === ".vqf"
+    //     ) {
+    //       _this.fullscreenLoading = true;
+    //       var newaudioCreateTime = Date.parse(new Date());
+    //       var copyFile = new File([myfile], `${newaudioCreateTime}${suffix}`);
+    //       // console.log(copyFile);
+    //       var file = new FormData();
+    //       file.append("file", copyFile);
+    //       file.append("submit", false);
 
-          $.ajax({
-            url: this.VideoUrl,
-            type: "post",
-            data: file,
-            headers: {
-              Authorization: localStorage.learn_token,
-            },
-            processData: false,
-            contentType: false,
-            success: function (res) {
-              // console.log(res);
-              _this.fullscreenLoading = false;
-              _this.audioform.fileUrl = res.url;
-            },
-            error: function (res) {
-              console.log(res);
-              _this.fullscreenLoading = false;
-              this.$message({
-                type: "error",
-                message: res.msg,
-              });
-            },
-          });
-          event.target.value = "";
-        } else {
-          this.$message({
-            type: "error",
-            message: "上传的音频文件格式错误，请选择正确的文件格式",
-          });
-          event.target.value = "";
-        }
-      }
-    },
+    //       $.ajax({
+    //         url: this.VideoUrl,
+    //         type: "post",
+    //         data: file,
+    //         headers: {
+    //           Authorization: localStorage.learn_token,
+    //         },
+    //         processData: false,
+    //         contentType: false,
+    //         success: function (res) {
+    //           // console.log(res);
+    //           _this.fullscreenLoading = false;
+    //           _this.audioform.fileUrl = res.url;
+    //         },
+    //         error: function (res) {
+    //           console.log(res);
+    //           _this.fullscreenLoading = false;
+    //           this.$message({
+    //             type: "error",
+    //             message: res.msg,
+    //           });
+    //         },
+    //       });
+    //       event.target.value = "";
+    //     } else {
+    //       this.$message({
+    //         type: "error",
+    //         message: "上传的音频文件格式错误，请选择正确的文件格式",
+    //       });
+    //       event.target.value = "";
+    //     }
+    //   }
+    // },
     submitaudioUrl() {
       // console.log(this.audioform);
       if (this.audioform.fileName != "") {
@@ -1386,10 +1648,10 @@ export default {
   border-radius: 6px;
   cursor: pointer;
 }
- .avatar-uploader .avatar {
+.avatar-uploader .avatar {
   width: 50%;
   display: block;
-} 
+}
 /* .fileImgUrl {
   width: 132px;
   height: 132px;

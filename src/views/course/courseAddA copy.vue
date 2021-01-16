@@ -268,7 +268,7 @@
             style="width:90%"
           ></el-input>
         </el-form-item>
-        <el-form-item label="* 音频地址" prop="fileUrl">
+        <!-- <el-form-item label="* 音频地址" prop="fileUrl">
           <input
             type="file"
             v-loading.fullscreen.lock="fullscreenLoading"
@@ -281,7 +281,36 @@
             placeholder="请输入音频地址"
             style="width:80%"
           ></el-input>
+        </el-form-item> -->
+             <el-form-item label="音频地址" prop="fileUrl">
+          <el-upload
+            :show-file-list="false"
+            :on-success="onSuccess"
+            :on-error="onError"
+            :before-upload="beforeUpload"
+            :on-remove="handleRemove"
+            :action="upLoadMp3File"
+          
+            accept=".mp3,.MP3,Mp3,.mP3"
+              v-loading.fullscreen.lock="fullscreenLoading"
+             element-loading-text="拼命加载中，正在对上传文件进行技术处理，此过程可能需要几分钟，请耐心等待"
+          >
+            <el-button plain type="primary">选择音频</el-button>
+          </el-upload>
+          <!-- 进度条 -->
+          <el-progress
+            v-if="progressFlag"
+            :percentage="loadProgress"
+          ></el-progress>
+          <el-input
+            size="small"
+            v-model="audioform.fileUrl"
+            auto-complete="off"
+            placeholder="请输入音频地址"
+            style="width: 90%"
+          ></el-input>
         </el-form-item>
+
         <el-form-item label="语种标签" prop="fileLanguageTag">
           <el-input
             size="small"
@@ -382,7 +411,8 @@ import {
   imgUrl,
   imagesUrl,
   newVideoUrl,
-  zipFileUrl
+  zipFileUrl,
+   upLoadMp3File,
 } from "@/config/env";
 export default {
   data() {
@@ -390,6 +420,7 @@ export default {
       newVideoUrl: newVideoUrl,
       VideoUrl: VideoUrl,
       imgUrl: imgUrl,
+       upLoadMp3File: upLoadMp3File,
       imagesUrl: imagesUrl,
       zipFileUrl: zipFileUrl,
       resourceTypeA: false,
@@ -459,7 +490,9 @@ export default {
       pictureBookVisible: false,
       dialogImageVisible: false,
       dialogImageUrl: "",
-      workImgUrl: ""
+      workImgUrl: "",
+         loadProgress: 0, // 动态显示进度条
+      progressFlag: false, // 关闭进度条
     };
   },
   // 注册组件
@@ -488,6 +521,54 @@ export default {
     }
   },
   methods: {
+uploadVideoProcess(event, file, fileList) {
+      this.progressFlag = true; // 显示进度条
+      this.loadProgress = parseInt(event.percent); // 动态获取文件上传进度
+      if (this.loadProgress >= 100) {
+        this.loadProgress = 100;
+        setTimeout(() => {
+          this.progressFlag = false;
+        }, 1000); // 一秒后关闭进度条
+      }
+    },
+
+    //js方法
+    handleRemove(file, fileList) {},
+
+    /**
+     * 上传之前回调函数
+     */
+    beforeUpload(file) {
+     // console.log(file.name);
+      this.fullscreenLoading = true
+      this.uploaDialog = true;
+    },
+    /**
+     * 上传失败回调函数
+     */
+    onError(err, file, fileList) {
+      this.enabledUploadBtn = false;
+      this.fullscreenLoading = false
+      this.$message({
+        message: "上传失败",
+        type: "error",
+      });
+    },
+    /**
+     * 上传成功回调函数
+     */
+    onSuccess(response, file, fileList) {
+      this.enabledUploadBtn = false;
+      this.fullscreenLoading = false;
+      //console.log(response);
+      this.$message({
+        message: "上传成功",
+        type: "success",
+      });
+      this.audioform.fileUrl = response.url;
+    },
+
+
     videoType() {
       var type = this.videoShow;
       if (type) {
@@ -692,67 +773,67 @@ export default {
       };
       this.audioVisible = false;
     },
-    uploadaudio() {
-      //上传音频
-      var _this = this;
-      var audiofile = event.target.files;
-      // console.log(audiofile);
-      var myfile = audiofile[0];
-      if (myfile != undefined) {
-        // console.log(myfile);
-        var urlname = myfile.name;
-        var index2 = urlname.lastIndexOf(".");
-        var suffix = urlname.substring(index2);
-        // console.log(suffix);
-        if (
-          suffix === ".cd" ||
-          suffix === ".ogg" ||
-          suffix === ".mp3" ||
-          suffix === ".asf.wma" ||
-          suffix === ".wav" ||
-          suffix === ".mp3pro" ||
-          suffix === ".rm" ||
-          suffix === ".real" ||
-          suffix === ".ape" ||
-          suffix === ".module" ||
-          suffix === ".midi" ||
-          suffix === ".vqf"
-        ) {
-          _this.fullscreenLoading = true;
-          var newaudioCreateTime = Date.parse(new Date());
-          var copyFile = new File([myfile], `${newaudioCreateTime}${suffix}`);
-          // console.log(copyFile);
-          var file = new FormData();
-          file.append("file", copyFile);
-          file.append("submit", false);
-          $.ajax({
-            url: this.VideoUrl,
-            type: "post",
-            data: file,
-            headers: {
-              Authorization: localStorage.learn_token
-            },
-            processData: false,
-            contentType: false,
-            success: function(res) {
-              // console.log(res);
-              _this.fullscreenLoading = false;
-              _this.audioform.fileUrl = res.url;
-            },
-            error: function(res) {
-              // console.log(res);
-            }
-          });
-          event.target.value = "";
-        } else {
-          this.$message({
-            type: "error",
-            message: "上传的音频文件格式错误，请选择正确的文件格式"
-          });
-          event.target.value = "";
-        }
-      }
-    },
+    // uploadaudio() {
+    //   //上传音频
+    //   var _this = this;
+    //   var audiofile = event.target.files;
+    //   // console.log(audiofile);
+    //   var myfile = audiofile[0];
+    //   if (myfile != undefined) {
+    //     // console.log(myfile);
+    //     var urlname = myfile.name;
+    //     var index2 = urlname.lastIndexOf(".");
+    //     var suffix = urlname.substring(index2);
+    //     // console.log(suffix);
+    //     if (
+    //       suffix === ".cd" ||
+    //       suffix === ".ogg" ||
+    //       suffix === ".mp3" ||
+    //       suffix === ".asf.wma" ||
+    //       suffix === ".wav" ||
+    //       suffix === ".mp3pro" ||
+    //       suffix === ".rm" ||
+    //       suffix === ".real" ||
+    //       suffix === ".ape" ||
+    //       suffix === ".module" ||
+    //       suffix === ".midi" ||
+    //       suffix === ".vqf"
+    //     ) {
+    //       _this.fullscreenLoading = true;
+    //       var newaudioCreateTime = Date.parse(new Date());
+    //       var copyFile = new File([myfile], `${newaudioCreateTime}${suffix}`);
+    //       // console.log(copyFile);
+    //       var file = new FormData();
+    //       file.append("file", copyFile);
+    //       file.append("submit", false);
+    //       $.ajax({
+    //         url: this.VideoUrl,
+    //         type: "post",
+    //         data: file,
+    //         headers: {
+    //           Authorization: localStorage.learn_token
+    //         },
+    //         processData: false,
+    //         contentType: false,
+    //         success: function(res) {
+    //           // console.log(res);
+    //           _this.fullscreenLoading = false;
+    //           _this.audioform.fileUrl = res.url;
+    //         },
+    //         error: function(res) {
+    //           // console.log(res);
+    //         }
+    //       });
+    //       event.target.value = "";
+    //     } else {
+    //       this.$message({
+    //         type: "error",
+    //         message: "上传的音频文件格式错误，请选择正确的文件格式"
+    //       });
+    //       event.target.value = "";
+    //     }
+    //   }
+    // },
     submitaudioUrl() {
       // console.log(this.audioform);
       if (this.audioform.fileName != "") {
