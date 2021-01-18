@@ -10,6 +10,9 @@ let baseFileUrl = 'http://localhost:8088' //开发服务器
 // let baseFileUrl = 'https://www.bolekids.com' //线上服务器
 
 let imgUrl = baseFileUrl+'/file-local-1.0.0/img/upload'//上传图片接口
+    
+let upLoadMp3File = baseFileUrl+'/file-local-1.0.0/upLoadFile'//上传音频（new）
+
 
 let newVideoUrl = baseUrl+'/file/uploadAndChangeFomart'//上传视频接口
 
@@ -26,5 +29,6 @@ export {
     VideoUrl,
     imagesUrl,
     newVideoUrl,
-    zipFileUrl
+    zipFileUrl,
+    upLoadMp3File
 }
